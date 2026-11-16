@@ -20,7 +20,8 @@ import argparse
 import json
 import os
 import sys
-from concurrent.futures import ThreadPoolExecutor
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prompts as P  # noqa: E402
@@ -28,6 +29,12 @@ from data import load_humaneval, load_syntax_rule, read_jsonl, write_jsonl  # no
 from llm import chat, extract_code, strip_main  # noqa: E402
 from repair_hints import match_hints  # noqa: E402
 from runner import compile_and_run  # noqa: E402
+
+try:
+    from tqdm import tqdm
+except ImportError:
+    def tqdm(x, **k):
+        return x
 
 
 def first_prompt(item: dict, mode: str, syntax_rule: str) -> str:
@@ -108,14 +115,37 @@ def main():
     if args.limit:
         items = items[: args.limit]
 
+    # 断点续跑：读取已完成且无 error 的题目，边跑边追加写入
+    done: dict[int, dict] = {}
+    if os.path.exists(args.output):
+        for r in read_jsonl(args.output):
+            if "error" not in r:
+                done[int(r["id"])] = r
+        print(f"[resume] 已完成 {len(done)}/{len(items)} 题，跳过")
+
+    todo = [it for it in items if it["id"] not in done]
+    os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
+    lock = threading.Lock()
+
     def run(it):
         try:
             return solve(it, args, syntax_rule, init.get(it["id"]) if args.init else None)
         except Exception as e:
             return {"id": it["id"], "passed": False, "error": repr(e), "history": []}
 
-    with ThreadPoolExecutor(args.workers) as ex:
-        rows = list(ex.map(run, items))
+    with open(args.output, "a", encoding="utf-8") as fout, ThreadPoolExecutor(args.workers) as ex:
+        futs = [ex.submit(run, it) for it in todo]
+        for fut in tqdm(as_completed(futs), total=len(futs)):
+            row = fut.result()
+            with lock:
+                fout.write(json.dumps(row, ensure_ascii=False) + "\n")
+                fout.flush()
+            if "error" not in row:
+                done[int(row["id"])] = row
+            else:
+                done.setdefault(int(row["id"]), row)
+
+    rows = [done[it["id"]] for it in items if it["id"] in done]
     rows.sort(key=lambda r: r["id"])
     write_jsonl(args.output, rows)
 
