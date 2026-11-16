@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "results/exp/doubao_mini_syntax_hint_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    44.51,
+    65.85,
+    75.0,
+    81.71,
+    84.76,
+    86.59
+  ],
+  "round0_compile_rate": 50.61,
+  "total_prompt_tokens": 1369565,
+  "total_completion_tokens": 795650,
+  "errors": 0
+}

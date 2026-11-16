@@ -1,0 +1,27 @@
+{
+  "config": {
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "direct",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "results/exp/doubao_mini_direct_hint_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    9.76,
+    25.0,
+    32.93,
+    39.02,
+    45.12,
+    51.22
+  ],
+  "round0_compile_rate": 10.37,
+  "total_prompt_tokens": 924658,
+  "total_completion_tokens": 1049545,
+  "errors": 0
+}

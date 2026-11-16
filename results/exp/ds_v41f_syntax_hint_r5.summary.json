@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "results/exp/ds_v41f_syntax_hint_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    93.29,
+    98.78,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 93.29,
+  "total_prompt_tokens": 445297,
+  "total_completion_tokens": 384751,
+  "errors": 0
+}

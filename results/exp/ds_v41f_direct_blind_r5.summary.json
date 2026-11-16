@@ -1,0 +1,27 @@
+{
+  "config": {
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "direct",
+    "feedback": "blind",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 8,
+    "output": "results/exp/ds_v41f_direct_blind_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    73.78,
+    85.37,
+    89.63,
+    93.9,
+    94.51,
+    95.12
+  ],
+  "round0_compile_rate": 75.0,
+  "total_prompt_tokens": 141324,
+  "total_completion_tokens": 1368850,
+  "errors": 0
+}
