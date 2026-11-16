@@ -60,7 +60,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         messages.append({"role": "assistant", "content": f"```cangjie\n{init_code}\n```"})
     else:
         messages.append({"role": "user", "content": first_prompt(item, args.prompt, syntax_rule)})
-        reply, u = chat(messages)
+        reply, u = chat(messages, model=args.model)
         messages.append({"role": "assistant", "content": reply})
         for k in usage_total:
             usage_total[k] += u[k]
@@ -73,7 +73,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         if res.passed or rnd == args.rounds:
             break
         messages.append({"role": "user", "content": repair_prompt(res, args.feedback)})
-        reply, u = chat(messages)
+        reply, u = chat(messages, model=args.model)
         messages.append({"role": "assistant", "content": reply})
         for k in usage_total:
             usage_total[k] += u[k]
@@ -86,6 +86,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--model", default=None, help="模型名（默认读取 LLM_MODEL）")
     ap.add_argument("--prompt", choices=["direct", "syntax"], default="syntax")
     ap.add_argument("--feedback", choices=["blind", "raw", "hint"], default="raw")
     ap.add_argument("--rounds", type=int, default=3, help="最多修复轮数（0 = 不修复，即单次生成基线）")
