@@ -1,0 +1,453 @@
+﻿template,count,example
+"expected '(', found '<ID>'",2266,"expected '(', found 'poly'"
+"expected '(' after 'if', found '<ID>'",1493,"expected '(' after 'if', found 'shift'"
+undeclared identifier '<ID>',820,undeclared identifier 'Random'
+"expected '{', found keyword 'return'",483,"expected '{', found keyword 'return'"
+"expected expression or declaration, found keyword 'else'",370,"expected expression or declaration, found keyword 'else'"
+no matching function for operator '()' function call,348,no matching function for operator '()' function call
+'<ID>' is not a member of struct 'String',319,'substring' is not a member of struct 'String'
+trailing closure can only be used on function calls with function or variable names,298,trailing closure can only be used on function calls with function or variable names
+unclosed delimiter: '(',285,unclosed delimiter: '('
+mismatched types,269,mismatched types
+function 'main' has overload conflicts,262,function 'main' has overload conflicts
+multiple 'main's are found in source files,259,multiple 'main's are found in source files
+"expected operator or end of expression, found ':'",223,"expected operator or end of expression, found ':'"
+"expected expression or declaration, found '}'",173,"expected expression or declaration, found '}'"
+'<ID>' is not a member of class 'ArrayList<Int64>',161,'filter' is not a member of class 'ArrayList<Int64>'
+"expected '{', found '<ID>'",151,"expected '{', found 'a'"
+"expected expression after '..', found '<'",149,"expected expression after '..', found '<'"
+invalid binary operator '==' on type 'UInt8' and 'Struct-String',138,invalid binary operator '==' on type 'UInt8' and 'Struct-String'
+"expected pattern, found keyword 'var'",136,"expected pattern, found keyword 'var'"
+"expected identifier or pattern after 'let', found keyword 'mut'",113,"expected identifier or pattern after 'let', found keyword 'mut'"
+"expected '{', found keyword 'if'",112,"expected '{', found keyword 'if'"
+undeclared type name '<ID>',92,undeclared type name 'ArrayList'
+"expected ';' or '<NL>', found '<ID>'",84,"expected ';' or '<NL>', found 'or'"
+"expected '(' after 'if', found '!'",83,"expected '(' after 'if', found '!'"
+"expected '.', '(', '[', '{' or '?' after '?'",80,"expected '.', '(', '[', '{' or '?' after '?'"
+'<ID>' is not a member of class 'ArrayList<Struct-String>',77,'filter' is not a member of class 'ArrayList<Struct-String>'
+"expected ';' or '<NL>', found '=>'",75,"expected ';' or '<NL>', found '=>'"
+type incompatible in this compound assignment expression,75,type incompatible in this compound assignment expression
+"expected 'in' in for-in expression, found ','",74,"expected 'in' in for-in expression, found ','"
+"expected pattern, found keyword 'let'",67,"expected pattern, found keyword 'let'"
+cannot assign to immutable value,65,cannot assign to immutable value
+can not access field '<ID>',59,can not access field 'length'
+unclosed delimiter: '{',55,unclosed delimiter: '{'
+"expected ';' or '<NL>', found '!'",55,"expected ';' or '<NL>', found '!'"
+unknown suffix '<ID>' for number literal,50,unknown suffix 'L' for number literal
+invalid binary operator '>=' on type 'UInt8' and 'Struct-String',47,invalid binary operator '>=' on type 'UInt8' and 'Struct-String'
+"expected type name after ':', found '['",47,"expected type name after ':', found '['"
+"expected '=>' in lambda expression, found ''",46,"expected '=>' in lambda expression, found ''"
+"expected ';' or '<NL>', found keyword 'else'",44,"expected ';' or '<NL>', found keyword 'else'"
+"expected ';' or '<NL>', found '?'",42,"expected ';' or '<NL>', found '?'"
+"expected '=>' in lambda expression, found keyword 'if'",41,"expected '=>' in lambda expression, found keyword 'if'"
+can not find package 'std.string',41,can not find package 'std.string'
+"expected ';' or '<NL>', found literal '.<N>'",39,"expected ';' or '<NL>', found literal '.1'"
+"expected '{', found keyword 'var'",36,"expected '{', found keyword 'var'"
+invalid binary operator '%' on type 'Float64' and 'Float64',35,invalid binary operator '%' on type 'Float64' and 'Float64'
+'<ID>' is not a member of struct 'Array<Int64>',34,'append' is not a member of struct 'Array<Int64>'
+"expected '=>' in lambda expression, found '<ID>'",33,"expected '=>' in lambda expression, found 'current_depth'"
+"expected ';' or '<NL>', found '->'",33,"expected ';' or '<NL>', found '->'"
+"expected 'case' in match, found '}'",30,"expected 'case' in match, found '}'"
+"expected a func name after keyword 'func', found '('",29,"expected a func name after keyword 'func', found '('"
+unclosed delimiter: '[',29,unclosed delimiter: '['
+'<ID>' is not a member of struct 'Array<Struct-String>',28,'add' is not a member of struct 'Array<Struct-String>'
+"expected expression after '(', found '|'",27,"expected expression after '(', found '|'"
+"expected '=>' in lambda expression, found keyword 'let'",26,"expected '=>' in lambda expression, found keyword 'let'"
+"expected '=>' in lambda expression, found '}'",25,"expected '=>' in lambda expression, found '}'"
+invalid binary operator '**' on type 'Int64' and 'Int64',25,invalid binary operator '**' on type 'Int64' and 'Int64'
+"expected ';' or '<NL>', found ','",23,"expected ';' or '<NL>', found ','"
+unexpected main function in function body,22,unexpected main function in function body
+unmatched delimiter: ')',22,unmatched delimiter: ')'
+the expression for numeric type conversion must have a numeric type,21,the expression for numeric type conversion must have a numeric type
+'<ID>' is not a member of class 'Iterator<Rune>',21,'rev' is not a member of class 'Iterator<Rune>'
+"expected '=>' in lambda expression, found keyword 'var'",20,"expected '=>' in lambda expression, found keyword 'var'"
+"expected '{', found keyword 'let'",19,"expected '{', found keyword 'let'"
+extra argument given for parameter list '()' in call,18,extra argument given for parameter list '()' in call
+invalid binary operator '-' on type 'Rune' and 'Rune',18,invalid binary operator '-' on type 'Rune' and 'Rune'
+"expected expression after '(', found keyword 'func'",18,"expected expression after '(', found keyword 'func'"
+"expected '{', found '||'",18,"expected '{', found '||'"
+cannot convert a boolean literal to type 'Int64',17,cannot convert a boolean literal to type 'Int64'
+'<ID>' is not a member of class '<ID>',17,'write' is not a member of class 'StringBuilder'
+"expected '{', found '-'",17,"expected '{', found '-'"
+'<ID>' is not a member of struct 'Array<Rune>',17,'append' is not a member of struct 'Array<Rune>'
+invalid binary operator '+' on type 'Struct-String' and 'UInt8',17,invalid binary operator '+' on type 'Struct-String' and 'UInt8'
+invalid binary operator '>' on type 'Float64' and 'Int64',16,invalid binary operator '>' on type 'Float64' and 'Int64'
+"expected declaration, found '<ID>'",16,"expected declaration, found 'neg'"
+invalid binary operator '/' on type 'Int64' and 'Float64',16,invalid binary operator '/' on type 'Int64' and 'Float64'
+unable to infer generic argument of this function,15,unable to infer generic argument of this function
+invalid binary operator '==' on type 'Rune' and 'Struct-String',14,invalid binary operator '==' on type 'Rune' and 'Struct-String'
+"expected '(', found 'true'",14,"expected '(', found 'true'"
+"expected '{', found '=='",14,"expected '{', found '=='"
+no matching function declaration for function call '<ID>',14,no matching function declaration for function call 'append'
+invalid binary operator '==' on type 'UInt8' and 'Rune',14,invalid binary operator '==' on type 'UInt8' and 'Rune'
+'<ID>' is not a member of class 'ArrayList<Rune>',14,'append' is not a member of class 'ArrayList<Rune>'
+"expected '{', found '}'",13,"expected '{', found '}'"
+'<ID>' is not a member of class 'ArrayList<Float64>',13,'fold' is not a member of class 'ArrayList<Float64>'
+"expected identifier or pattern after 'var', found keyword 'match'",12,"expected identifier or pattern after 'var', found keyword 'match'"
+"expected '{', found keyword 'while'",12,"expected '{', found keyword 'while'"
+'<ID>' is not a member of enum 'Option<Struct-String>',12,'replace' is not a member of enum 'Option<Struct-String>'
+rune literal may only contain one character,12,rune literal may only contain one character
+invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Int64',12,invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Int64'
+unexpected '<' in enum pattern,12,unexpected '<' in enum pattern
+'<ID>' is not a member of enum 'Option<Int64>',11,'getOr' is not a member of enum 'Option<Int64>'
+invalid binary operator '-' on type 'UInt8' and 'Struct-String',11,invalid binary operator '-' on type 'UInt8' and 'Struct-String'
+"expected '(' or '{' after 'match', found '<ID>'",11,"expected '(' or '{' after 'match', found 'a'"
+"expected '(' or '{' after 'match', found '='",10,"expected '(' or '{' after 'match', found '='"
+"expected '(' or '{' after 'match', found ')'",10,"expected '(' or '{' after 'match', found ')'"
+"expected '=>' in lambda expression, found '('",10,"expected '=>' in lambda expression, found '('"
+invalid binary operator '>=' on type 'UInt8' and 'Rune',10,invalid binary operator '>=' on type 'UInt8' and 'Rune'
+can not find package 'std.algorithm',10,can not find package 'std.algorithm'
+invalid binary operator '<' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>',10,invalid binary operator '<' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>'
+can not find package 'std.option',10,can not find package 'std.option'
+"missing argument for parameter list '(Int64, (Int64) -> Generics-T)' in call",9,"missing argument for parameter list '(Int64, (Int64) -> Generics-T)' in call"
+invalid binary operator '/' on type 'Float64' and 'Int64',9,invalid binary operator '/' on type 'Float64' and 'Int64'
+invalid binary operator '<' on type 'Int64' and '<ID>',9,invalid binary operator '<' on type 'Int64' and 'UInt32'
+"expected ';' or '<NL>', found keyword 'in'",9,"expected ';' or '<NL>', found keyword 'in'"
+body of function '<ID>' is missing,9,body of function 'is_palindrome' is missing
+"'<ID>' is not a member of class 'HashMap<Int64, Int64>'",9,"'set' is not a member of class 'HashMap<Int64, Int64>'"
+missing argument prefix 'delimiter:' for named parameter,9,missing argument prefix 'delimiter:' for named parameter
+invalid binary operator '+' on type 'Rune' and 'Int64',9,invalid binary operator '+' on type 'Rune' and 'Int64'
+"expected expression or declaration, found keyword 'import'",8,"expected expression or declaration, found keyword 'import'"
+the pattern in for-in expression must be irrefutable,8,the pattern in for-in expression must be irrefutable
+"expected '{', found ''",8,"expected '{', found ''"
+'<ID>' is not a member of class 'HashSet<Int64>',8,'put' is not a member of class 'HashSet<Int64>'
+"expected expression after '(', found '$'",8,"expected expression after '(', found '$'"
+type of left operand does not support coalescing operation. coalescing is only valid for '<ID>',8,type of left operand does not support coalescing operation. coalescing is only valid for 'Option'
+"expected '(', found '!'",7,"expected '(', found '!'"
+"expected expression after ',', found keyword 'func'",7,"expected expression after ',', found keyword 'func'"
+"expected '=>' in lambda expression, found '->'",7,"expected '=>' in lambda expression, found '->'"
+invalid binary operator '!=' on type 'UInt8' and 'Struct-String',7,invalid binary operator '!=' on type 'UInt8' and 'Struct-String'
+'<ID>' is not a member of class 'Iterator<Int64>',7,'collectArrayList' is not a member of class 'Iterator<Int64>'
+package name cannot be referred independently,7,package name cannot be referred independently
+"expected '{', found literal '<N>'",6,"expected '{', found literal '1'"
+invalid binary operator '&' on type 'Int64' and 'Bool',6,invalid binary operator '&' on type 'Int64' and 'Bool'
+"expected '=>' in lambda expression, found literal '<N>'",6,"expected '=>' in lambda expression, found literal '1'"
+"expected '{', found '&&'",6,"expected '{', found '&&'"
+'<ID>' is not accessible in package 'std.collection',6,'sort' is not accessible in package 'std.collection'
+"missing arguments for parameter list '(Struct-String, Int64, Bool)' in call",6,"missing arguments for parameter list '(Struct-String, Int64, Bool)' in call"
+'main' declaration doesn't need 'func' keyword,6,'main' declaration doesn't need 'func' keyword
+"expected declaration, found keyword 'import'",6,"expected declaration, found keyword 'import'"
+"missing argument for parameter list '(Generics-T, Generics-T, Struct-Array<Generics-T>)' in call",6,"missing argument for parameter list '(Generics-T, Generics-T, Struct-Array<Generics-T>)' in call"
+"'<ID>' is not a member of class 'ArrayList<Tuple<Int64, Int64>>'",5,"'append' is not a member of class 'ArrayList<Tuple<Int64, Int64>>'"
+missing argument prefix 'stable:' or 'descending:' for named parameter,5,missing argument prefix 'stable:' or 'descending:' for named parameter
+"invalid named arguments prefix 'n:', target is not a named parameter",5,"invalid named arguments prefix 'n:', target is not a named parameter"
+"expected '{', found '('",5,"expected '{', found '('"
+"expected '(', found keyword 'var'",5,"expected '(', found keyword 'var'"
+invalid binary operator '+' on type 'Int64' and 'Enum-Option<Int64>',5,invalid binary operator '+' on type 'Int64' and 'Enum-Option<Int64>'
+invalid binary operator '%' on type 'Enum-Option<Int64>' and 'Int64',5,invalid binary operator '%' on type 'Enum-Option<Int64>' and 'Int64'
+"expected pattern, found keyword 'is'",5,"expected pattern, found keyword 'is'"
+"expected declaration, found keyword 'return'",5,"expected declaration, found keyword 'return'"
+"expected '(' after 'catch', found '{'",5,"expected '(' after 'catch', found '{'"
+no matching function declaration for function call 'String',5,no matching function declaration for function call 'String'
+invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>',5,invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>'
+unknown suffix 'Int64' for number literal,5,unknown suffix 'Int64' for number literal
+function '<ID>' has overload conflicts,5,function 'string_xor' has overload conflicts
+invalid binary operator '>=' on type 'Rune' and 'Struct-String',4,invalid binary operator '>=' on type 'Rune' and 'Struct-String'
+invalid binary operator '+' on type 'UInt8' and 'Struct-String',4,invalid binary operator '+' on type 'UInt8' and 'Struct-String'
+'<ID>' is not a member of struct 'Range<Int64>',4,'reversed' is not a member of struct 'Range<Int64>'
+"expected expression after '(', found keyword 'Int64'",4,"expected expression after '(', found keyword 'Int64'"
+"expected 'in' in for-in expression, found '='",4,"expected 'in' in for-in expression, found '='"
+object cannot access static member '<ID>',4,object cannot access static member 'empty'
+"expected ';' or '<NL>', found '['",4,"expected ';' or '<NL>', found '['"
+invalid binary operator '>=' on type 'Enum-Option<Int64>' and 'Int64',4,invalid binary operator '>=' on type 'Enum-Option<Int64>' and 'Int64'
+"expected 'in' in for-in expression, found '<-'",4,"expected 'in' in for-in expression, found '<-'"
+parameters of this lambda expression must have type annotations,4,parameters of this lambda expression must have type annotations
+"expected '(' after 'if', found keyword 'let'",4,"expected '(' after 'if', found keyword 'let'"
+invalid binary operator '>' on type 'Enum-Option<Int64>' and 'Int64',4,invalid binary operator '>' on type 'Enum-Option<Int64>' and 'Int64'
+"'<ID>' is not a member of class 'HashMap<Struct-String, Int64>'",4,"'put' is not a member of class 'HashMap<Struct-String, Int64>'"
+'<ID>' is not a member of class 'HashSet<Rune>',4,'intersection' is not a member of class 'HashSet<Rune>'
+invalid binary operator '==' on type 'Float64' and 'Enum-Option<Float64>',4,invalid binary operator '==' on type 'Float64' and 'Enum-Option<Float64>'
+invalid binary operator '+' on type 'Int64' and 'Float64',4,invalid binary operator '+' on type 'Int64' and 'Float64'
+"expected '=>' in lambda expression, found keyword 'return'",4,"expected '=>' in lambda expression, found keyword 'return'"
+invalid binary operator '-' on type 'Rune' and 'Int64',4,invalid binary operator '-' on type 'Rune' and 'Int64'
+invalid binary operator '-' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>',3,invalid binary operator '-' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>'
+type incompatible in this assignment,3,type incompatible in this assignment
+generic type should be used with type argument,3,generic type should be used with type argument
+"expected expression after '', found keyword 'func'",3,"expected expression after '', found keyword 'func'"
+body of function is missing,3,body of function is missing
+unterminated single-line string,3,unterminated single-line string
+invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>',3,invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>'
+"expected a member name after '.' in qualified name, found keyword 'init'",3,"expected a member name after '.' in qualified name, found keyword 'init'"
+invalid binary operator '+' on type 'Struct-String' and 'Enum-Option<Struct-String>',3,invalid binary operator '+' on type 'Struct-String' and 'Enum-Option<Struct-String>'
+"expected '{', found '>'",3,"expected '{', found '>'"
+invalid binary operator '-' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>',3,invalid binary operator '-' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>'
+comparison operators cannot be chained,3,comparison operators cannot be chained
+unknown named argument prefix 'radix:',3,unknown named argument prefix 'radix:'
+unknown start of token: \,3,unknown start of token: \
+"expected expression after '', found keyword 'Int64'",3,"expected expression after '', found keyword 'Int64'"
+parameters and arguments mismatch,3,parameters and arguments mismatch
+cannot define 'var' variable in 'const' function,3,cannot define 'var' variable in 'const' function
+expected 'const' expression,3,expected 'const' expression
+unrecognized escape '\(' in string literal,3,unrecognized escape '\(' in string literal
+expected 'const' expression guaranteed to be evaluated at compile time,3,expected 'const' expression guaranteed to be evaluated at compile time
+'<ID>' is not a member of enum 'Option<Class-ArrayList<Int64>>',3,'get' is not a member of enum 'Option<Class-ArrayList<Int64>>'
+"expected expression after '', found ':'",3,"expected expression after '', found ':'"
+"expected pattern, found ')'",3,"expected pattern, found ')'"
+"expected '=>' in case, found keyword 'if'",3,"expected '=>' in case, found keyword 'if'"
+array literal type cannot be inferred,3,array literal type cannot be inferred
+"expected expression after '=', found '~'",3,"expected expression after '=', found '~'"
+'<ID>' is not accessible in package 'std.math',3,'truncate' is not accessible in package 'std.math'
+invalid binary operator '==' on type 'Float64' and 'Int64',3,invalid binary operator '==' on type 'Float64' and 'Int64'
+"invalid named arguments prefix 'num:', target is not a named parameter",3,"invalid named arguments prefix 'num:', target is not a named parameter"
+ambiguous match for function call '<ID>',3,ambiguous match for function call 'string_xor'
+redefinition of declaration '<ID>',3,redefinition of declaration 'arr'
+unexpected main function in block,3,unexpected main function in block
+invalid subscript operator [] on type 'Class-Iterator<Rune>' with index type 'Int64',3,invalid subscript operator [] on type 'Class-Iterator<Rune>' with index type 'Int64'
+match case cannot be empty,3,match case cannot be empty
+"expected expression or declaration, found ']'",3,"expected expression or declaration, found ']'"
+missing argument prefix 'removeEmpty:' for named parameter,3,missing argument prefix 'removeEmpty:' for named parameter
+"missing argument for parameter list '(Struct-Array<Generics-T>, (Generics-T, Generics-T) -> Enum-Ordering, Bool, Bool)' in call",3,"missing argument for parameter list '(Struct-Array<Generics-T>, (Generics-T, Generics-T) -> Enum-Ordering, Bool, Bool)' in call"
+"expected '=>' in case, found ','",3,"expected '=>' in case, found ','"
+"expected '{', found '.'",3,"expected '{', found '.'"
+invalid binary operator '<' on type 'Float64' and 'Int64',3,invalid binary operator '<' on type 'Float64' and 'Int64'
+invalid binary operator '/' on type 'Enum-Option<Float64>' and 'Float64',3,invalid binary operator '/' on type 'Enum-Option<Float64>' and 'Float64'
+"expected '(', found keyword 'let'",3,"expected '(', found keyword 'let'"
+cannot convert an integer literal to type 'Float64',3,cannot convert an integer literal to type 'Float64'
+range operators cannot be chained,3,range operators cannot be chained
+invalid binary operator '==' on type 'Rune' and 'UInt8',2,invalid binary operator '==' on type 'Rune' and 'UInt8'
+"missing arguments for parameter list '(Generics-T, Generics-T, Struct-Array<Generics-T>)' in call",2,"missing arguments for parameter list '(Generics-T, Generics-T, Struct-Array<Generics-T>)' in call"
+invalid binary operator '**' on type 'Enum-Option<Int64>' and 'Int64',2,invalid binary operator '**' on type 'Enum-Option<Int64>' and 'Int64'
+invalid binary operator '!=' on type 'Rune' and 'Struct-String',2,invalid binary operator '!=' on type 'Rune' and 'Struct-String'
+"expected ';' or '<NL>', found keyword 'match'",2,"expected ';' or '<NL>', found keyword 'match'"
+"expected '(' after 'catch', found '<ID>'",2,"expected '(' after 'catch', found '_'"
+"expected type name after ':', found '='",2,"expected type name after ':', found '='"
+invalid binary operator '-' on type 'Float64' and 'Enum-Option<Float64>',2,invalid binary operator '-' on type 'Float64' and 'Enum-Option<Float64>'
+the type Enum-Option<Struct-String> of expression in for-in expression does not implement Iterator,2,the type Enum-Option<Struct-String> of expression in for-in expression does not implement Iterator
+"expected expression after ',', found '|'",2,"expected expression after ',', found '|'"
+"expected '=>' in lambda expression, found keyword 'in'",2,"expected '=>' in lambda expression, found keyword 'in'"
+"expected a '*' or identifier after '.' in qualified name, found keyword 'Int64'",2,"expected a '*' or identifier after '.' in qualified name, found keyword 'Int64'"
+"expected expression after '', found '>'",2,"expected expression after '', found '>'"
+"expected '(', found '{'",2,"expected '(', found '{'"
+"expected ':', found '<ID>'",2,"expected ':', found 'num'"
+can not find package 'std.set',2,can not find package 'std.set'
+unknown named argument prefix 'msg:',2,unknown named argument prefix 'msg:'
+'<ID>' is not a member of struct 'Array<UInt8>',2,'sort' is not a member of struct 'Array<UInt8>'
+"expected expression after ',', found '+'",2,"expected expression after ',', found '+'"
+"expected expression after '+', found ')'",2,"expected expression after '+', found ')'"
+variable declaration '<ID>' needs either type or initializer,2,variable declaration 'mutable' needs either type or initializer
+"expected ';' or '<NL>', found keyword 'if'",2,"expected ';' or '<NL>', found keyword 'if'"
+invalid binary operator '+' on type 'Int64' and 'UInt8',2,invalid binary operator '+' on type 'Int64' and 'UInt8'
+'<ID>' is not a member of interface '<ID>',2,'toString' is not a member of interface 'Any'
+"expected expression or declaration, found ')'",2,"expected expression or declaration, found ')'"
+"expected a '*' or identifier after '.' in qualified name, found keyword 'Float64'",2,"expected a '*' or identifier after '.' in qualified name, found keyword 'Float64'"
+invalid binary operator '>' on type 'Int64' and '<ID>',2,invalid binary operator '>' on type 'Int64' and 'UInt32'
+can not find package 'std.util',2,can not find package 'std.util'
+lambda capturing mutable variables needs to be called directly,2,lambda capturing mutable variables needs to be called directly
+unterminated raw string,2,unterminated raw string
+"invalid named arguments prefix 'value:', target is not a named parameter",2,"invalid named arguments prefix 'value:', target is not a named parameter"
+"expected expression after '[', found ':'",2,"expected expression after '[', found ':'"
+unknown named argument prefix 'item:',2,unknown named argument prefix 'item:'
+'<ID>' is not a member of class 'Iterator<Struct-String>',2,'toArray' is not a member of class 'Iterator<Struct-String>'
+'<ID>' is not a member of struct '<ID>',2,'intPart' is not a member of struct 'Decimal'
+invalid binary operator '-' on type 'Float64' and 'Int64',2,invalid binary operator '-' on type 'Float64' and 'Int64'
+"expected expression after ',', found ''",2,"expected expression after ',', found ''"
+"expected '(' after 'if', found keyword 'match'",2,"expected '(' after 'if', found keyword 'match'"
+invalid subscript operator [] on type 'Interface-EquatableCollection<Struct-String>' with index type 'Int64',2,invalid subscript operator [] on type 'Interface-EquatableCollection<Struct-String>' with index type 'Int64'
+'<ID>' is not a member of enum 'Option<Rune>',2,'get' is not a member of enum 'Option<Rune>'
+invalid binary operator '+' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>',2,invalid binary operator '+' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>'
+"expected '=>' in lambda expression, found keyword 'match'",2,"expected '=>' in lambda expression, found keyword 'match'"
+invalid binary operator '%' on type 'Int64' and '<ID>',2,invalid binary operator '%' on type 'Int64' and 'UInt32'
+invalid binary operator '<=' on type 'Float64' and 'Int64',2,invalid binary operator '<=' on type 'Float64' and 'Int64'
+unrecognized escape '\d' in string literal,2,unrecognized escape '\d' in string literal
+cannot assign to this subscript expression,2,cannot assign to this subscript expression
+invalid binary operator '>=' on type 'Float64' and 'Int64',2,invalid binary operator '>=' on type 'Float64' and 'Int64'
+invalid binary operator '>' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>',2,invalid binary operator '>' on type 'Enum-Option<Int64>' and 'Enum-Option<Int64>'
+"unable to infer return type, please add type annotation",2,"unable to infer return type, please add type annotation"
+"expected ';' or '<NL>', found 'String'",2,"expected ';' or '<NL>', found 'String'"
+"expected '=>' in case, found '>'",2,"expected '=>' in case, found '>'"
+"expected expression after '[', found keyword 'Int64'",2,"expected expression after '[', found keyword 'Int64'"
+invalid binary operator '<' on type 'UInt8' and 'Struct-String',2,invalid binary operator '<' on type 'UInt8' and 'Struct-String'
+invalid binary operator '-' on type 'UInt8' and 'Rune',2,invalid binary operator '-' on type 'UInt8' and 'Rune'
+unterminated string interpolation,1,unterminated string interpolation
+'<ID>' is not a member of class 'Iterator<Float64>',1,'hasNext' is not a member of class 'Iterator<Float64>'
+invalid binary operator '<=' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>',1,invalid binary operator '<=' on type 'Enum-Option<Float64>' and 'Enum-Option<Float64>'
+type argument's number does not match type parameter's number,1,type argument's number does not match type parameter's number
+the type () -> Class-Iterator<Rune> of expression in for-in expression does not implement Iterator,1,the type () -> Class-Iterator<Rune> of expression in for-in expression does not implement Iterator
+invalid unary operator '!' on type '() -> Bool' with return type 'Bool',1,invalid unary operator '!' on type '() -> Bool' with return type 'Bool'
+"expected hexadecimal digit, found '''",1,"expected hexadecimal digit, found '''"
+"expected a '*' or identifier after '.' in qualified name, found keyword '<ID>'",1,"expected a '*' or identifier after '.' in qualified name, found keyword 'Int32'"
+"expected a argument name after '(' in parameter list, found keyword 'type'",1,"expected a argument name after '(' in parameter list, found keyword 'type'"
+'<ID>' is not a member of struct 'Array<Int32>',1,'add' is not a member of struct 'Array<Int32>'
+invalid binary operator '-' on type '(Struct-String) -> Int64' and 'Int64',1,invalid binary operator '-' on type '(Struct-String) -> Int64' and 'Int64'
+"expected ';' or '<NL>', found '|'",1,"expected ';' or '<NL>', found '|'"
+extra argument given for parameter list '((Generics-T) -> Bool)' in call,1,extra argument given for parameter list '((Generics-T) -> Bool)' in call
+"expected expression after '=', found keyword 'Float64'",1,"expected expression after '=', found keyword 'Float64'"
+invalid binary operator '/' on type 'Enum-Option<Float64>' and 'Int64',1,invalid binary operator '/' on type 'Enum-Option<Float64>' and 'Int64'
+"expected expression after keyword 'case', found keyword 'let'",1,"expected expression after keyword 'case', found keyword 'let'"
+"expected '=>' in case, found keyword 'let'",1,"expected '=>' in case, found keyword 'let'"
+"expected pattern, found keyword 'Int64'",1,"expected pattern, found keyword 'Int64'"
+"expected expression after '|', found '*'",1,"expected expression after '|', found '*'"
+"expected expression after '(', found keyword 'type'",1,"expected expression after '(', found keyword 'type'"
+"expected '{', found keyword 'mut'",1,"expected '{', found keyword 'mut'"
+"expected ':', found ','",1,"expected ':', found ','"
+"expected ':', found ')'",1,"expected ':', found ')'"
+"expected expression or declaration, found '$'",1,"expected expression or declaration, found '$'"
+"expected ';' or '<NL>', found keyword 'let'",1,"expected ';' or '<NL>', found keyword 'let'"
+'<ID>' is not a member of enum 'Option<Generics-T>',1,'empty' is not a member of enum 'Option<Generics-T>'
+invalid binary operator '+' on type 'Float64' and 'Enum-Option<Float64>',1,invalid binary operator '+' on type 'Float64' and 'Enum-Option<Float64>'
+invalid binary operator '-' on type 'Enum-Option<Float64>' and 'Float64',1,invalid binary operator '-' on type 'Enum-Option<Float64>' and 'Float64'
+"expected '{', found keyword 'for'",1,"expected '{', found keyword 'for'"
+"expected '(' after 'if', found keyword 'Int64'",1,"expected '(' after 'if', found keyword 'Int64'"
+"expected '{', found '!='",1,"expected '{', found '!='"
+invalid binary operator '<=' on type 'Struct-String' and 'UInt8',1,invalid binary operator '<=' on type 'Struct-String' and 'UInt8'
+"expected a '*' or identifier after '.' in qualified name, found keyword 'type'",1,"expected a '*' or identifier after '.' in qualified name, found keyword 'type'"
+"expected expression after '<=', found '>'",1,"expected expression after '<=', found '>'"
+"expected expression after '(', found keyword 'Float64'",1,"expected expression after '(', found keyword 'Float64'"
+'from' is not a member of class 'ArrayList<Generics-T>',1,'from' is not a member of class 'ArrayList<Generics-T>'
+can not find package '<ID>',1,can not find package 'math'
+enum pattern is not matched,1,enum pattern is not matched
+"expected expression after '=', found keyword 'func'",1,"expected expression after '=', found keyword 'func'"
+"expected expression after '?', found ':'",1,"expected expression after '?', found ':'"
+cannot convert a character literal to type 'UInt8',1,cannot convert a character literal to type 'UInt8'
+invalid binary operator '<' on type '<ID>' and 'Int64',1,invalid binary operator '<' on type 'Int32' and 'Int64'
+"'<ID>' is non-static member, cannot access by type name",1,"'toString' is non-static member, cannot access by type name"
+"expected expression after ',', found ']'",1,"expected expression after ',', found ']'"
+"at least one default case, such as wildcard pattern, variable pattern or '[...]' for sequence pattern in match case.",1,"at least one default case, such as wildcard pattern, variable pattern or '[...]' for sequence pattern in match case."
+invalid binary operator '^' on type 'Int64' and 'Float64',1,invalid binary operator '^' on type 'Int64' and 'Float64'
+extra argument given for parameter list '(Struct-Array<Rune>)' in call,1,extra argument given for parameter list '(Struct-Array<Rune>)' in call
+"expected ':', found '('",1,"expected ':', found '('"
+"expected ';' or '<NL>', found ''",1,"expected ';' or '<NL>', found ''"
+expected a type argument and size literal between '<' and '>' of '<ID>' type,1,expected a type argument and size literal between '<' and '>' of 'VArray' type
+can not find package 'std.array',1,can not find package 'std.array'
+can not find package 'std.collections',1,can not find package 'std.collections'
+invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Int64',1,invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Int64'
+"expected expression after ',', found keyword 'init'",1,"expected expression after ',', found keyword 'init'"
+"expected 'while' in do-while expression, found keyword 'catch'",1,"expected 'while' in do-while expression, found keyword 'catch'"
+"expected expression after keyword 'return', found keyword 'Unit'",1,"expected expression after keyword 'return', found keyword 'Unit'"
+"invalid named arguments prefix 'key:', target is not a named parameter",1,"invalid named arguments prefix 'key:', target is not a named parameter"
+"extra argument given for parameter list '(Interface-Collection<Tuple<Generics-K, Generics-V>>)' in call",1,"extra argument given for parameter list '(Interface-Collection<Tuple<Generics-K, Generics-V>>)' in call"
+"missing argument for parameter list '(Interface-Collection<Generics-T>, Int64)' in call",1,"missing argument for parameter list '(Interface-Collection<Generics-T>, Int64)' in call"
+missing argument prefix 'm:' for named parameter,1,missing argument prefix 'm:' for named parameter
+"expected '(' or '<', found '<ID>'",1,"expected '(' or '<', found 'NB'"
+"missing argument for parameter list '(Struct-String, Int64, Bool)' in call",1,"missing argument for parameter list '(Struct-String, Int64, Bool)' in call"
+"invalid named arguments prefix 'strArray:', target is not a named parameter",1,"invalid named arguments prefix 'strArray:', target is not a named parameter"
+multi-line string may need start with newline character,1,multi-line string may need start with newline character
+invalid subscript operator [] on type 'Unit' with index type 'Struct-Range<Int64>',1,invalid subscript operator [] on type 'Unit' with index type 'Struct-Range<Int64>'
+"expected '#' or '""' in raw string, found '<ID>'",1,"expected '#' or '""' in raw string, found 'A'"
+"expected expression after '(', found keyword '<ID>'",1,"expected expression after '(', found keyword 'Int32'"
+unknown named argument prefix 'key:',1,unknown named argument prefix 'key:'
+'<ID>' is not a member of class 'Iterator<Generics-T>',1,'range' is not a member of class 'Iterator<Generics-T>'
+unexpected class declaration in function body,1,unexpected class declaration in function body
+"expected expression or declaration, found keyword 'extend'",1,"expected expression or declaration, found keyword 'extend'"
+can not find package 'std.lang',1,can not find package 'std.lang'
+"expected '(' or '<', found '.'",1,"expected '(' or '<', found '.'"
+invalid binary operator '<=' on type 'Rune' and 'UInt8',1,invalid binary operator '<=' on type 'Rune' and 'UInt8'
+can not find package 'std.char',1,can not find package 'std.char'
+invalid binary operator '+' on type 'Enum-Option<Int32>' and 'Int64',1,invalid binary operator '+' on type 'Enum-Option<Int32>' and 'Int64'
+invalid binary operator '<=' on type 'Enum-Option<Int64>' and 'Int64',1,invalid binary operator '<=' on type 'Enum-Option<Int64>' and 'Int64'
+can not find package 'std.core.string',1,can not find package 'std.core.string'
+invalid binary operator '/' on type 'Enum-Option<Int64>' and 'Int64',1,invalid binary operator '/' on type 'Enum-Option<Int64>' and 'Int64'
+invalid binary operator '-' on type 'Enum-Option<Int32>' and 'Struct-String',1,invalid binary operator '-' on type 'Enum-Option<Int32>' and 'Struct-String'
+the type () -> Interface-EquatableCollection<Int64> of expression in for-in expression does not implement Iterator,1,the type () -> Interface-EquatableCollection<Int64> of expression in for-in expression does not implement Iterator
+can not find package 'std.conversion',1,can not find package 'std.conversion'
+invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Float64',1,invalid binary operator '*' on type 'Enum-Option<Int64>' and 'Float64'
+"expected ';' or '<NL>', found keyword 'Float64'",1,"expected ';' or '<NL>', found keyword 'Float64'"
+"expected '=>' in case, found '..='",1,"expected '=>' in case, found '..='"
+invalid binary operator '*' on type 'Int64' and 'Float64',1,invalid binary operator '*' on type 'Int64' and 'Float64'
+the type 'Interface-Any' should implement interface '<ID>' in the '<ID>' package,1,the type 'Interface-Any' should implement interface 'ToString' in the 'core' package
+'<ID>' is not a member of enum 'Option<Float64>',1,'sqrt' is not a member of enum 'Option<Float64>'
+positional argument cannot appear after named argument,1,positional argument cannot appear after named argument
+extra argument given for parameter list '(Float16)' in call,1,extra argument given for parameter list '(Float16)' in call
+can not find package 'std.conv',1,can not find package 'std.conv'
+"invalid named arguments prefix 'old:', target is not a named parameter",1,"invalid named arguments prefix 'old:', target is not a named parameter"
+unsafe function or native function should be invoked in unsafe context.,1,unsafe function or native function should be invoked in unsafe context.
+'<ID>' is not accessible in package 'std.core',1,'split' is not accessible in package 'std.core'
+invalid binary operator '*' on type 'Int64' and 'Enum-Option<Int64>',1,invalid binary operator '*' on type 'Int64' and 'Enum-Option<Int64>'
+"expected '{', found keyword 'this'",1,"expected '{', found keyword 'this'"
+unknown named argument prefix 'default:',1,unknown named argument prefix 'default:'
+invalid binary operator '-' on type 'Enum-Option<UInt32>' and 'Struct-String',1,invalid binary operator '-' on type 'Enum-Option<UInt32>' and 'Struct-String'
+invalid binary operator '==' on type 'UInt8' and 'Enum-Option<UInt8>',1,invalid binary operator '==' on type 'UInt8' and 'Enum-Option<UInt8>'
+'<ID>' is not a member of enum 'Option<Int32>',1,'toFloat64' is not a member of enum 'Option<Int32>'
+'<ID>' is not a member of enum 'Option<Float32>',1,'toFloat64' is not a member of enum 'Option<Float32>'
+'<ID>' is not a member of enum 'Option<Int16>',1,'toFloat64' is not a member of enum 'Option<Int16>'
+'<ID>' is not a member of enum 'Option<Int8>',1,'toFloat64' is not a member of enum 'Option<Int8>'
+invalid binary operator '+' on type 'UInt8' and 'Int64',1,invalid binary operator '+' on type 'UInt8' and 'Int64'
+"expected expression after '=', found '|'",1,"expected expression after '=', found '|'"
+"expected expression or declaration, found '>'",1,"expected expression or declaration, found '>'"
+"expected '(' after 'if', found keyword 'type'",1,"expected '(' after 'if', found keyword 'type'"
+"expected identifier or pattern after 'let', found '['",1,"expected identifier or pattern after 'let', found '['"
+invalid binary operator '<' on type 'Int64' and 'Enum-Option<Int64>',1,invalid binary operator '<' on type 'Int64' and 'Enum-Option<Int64>'
+missing argument prefix 'upperCase:' for named parameter,1,missing argument prefix 'upperCase:' for named parameter
+'<ID>' is not a member of struct 'Array<Float64>',1,'sort' is not a member of struct 'Array<Float64>'
+can not find package 'std.algorithm.sorting',1,can not find package 'std.algorithm.sorting'
+"expected '=>' in lambda expression, found '-'",1,"expected '=>' in lambda expression, found '-'"
+"expected '{', found '<='",1,"expected '{', found '<='"
+invalid binary operator '<=' on type 'Int64' and '<ID>',1,invalid binary operator '<=' on type 'Int64' and 'UInt32'
+no matching constructor for call '<ID>',1,no matching constructor for call 'Error'
+unrecognized escape '\.' in rune literal,1,unrecognized escape '\.' in rune literal
+"invalid named arguments prefix 'k:', target is not a named parameter",1,"invalid named arguments prefix 'k:', target is not a named parameter"
+missing argument prefix 'stable:' for named parameter,1,missing argument prefix 'stable:' for named parameter
+invalid binary operator '>' on type 'UInt8' and 'Struct-String',1,invalid binary operator '>' on type 'UInt8' and 'Struct-String'
+invalid binary operator '==' on type 'Enum-Option<UInt8>' and 'Struct-String',1,invalid binary operator '==' on type 'Enum-Option<UInt8>' and 'Struct-String'
+invalid binary operator '+' on type 'Struct-String' and 'Enum-Option<UInt8>',1,invalid binary operator '+' on type 'Struct-String' and 'Enum-Option<UInt8>'
+"expected 'in' in for-in expression, found 'from'",1,"expected 'in' in for-in expression, found 'from'"
+"expected a name after this, found keyword 'Int64'",1,"expected a name after this, found keyword 'Int64'"
+"invalid named arguments prefix 'fraction:', target is not a named parameter",1,"invalid named arguments prefix 'fraction:', target is not a named parameter"
+invalid binary operator '>' on type 'Enum-Option<Rune>' and 'Enum-Option<Rune>',1,invalid binary operator '>' on type 'Enum-Option<Rune>' and 'Enum-Option<Rune>'
+type incompatible in this MatchCase,1,type incompatible in this MatchCase
+invalid unary operator '-' on type 'Enum-Option<Int64>',1,invalid unary operator '-' on type 'Enum-Option<Int64>'
+"expected '=>' in case, found '=='",1,"expected '=>' in case, found '=='"
+can not find package 'std.collection.ArrayList',1,can not find package 'std.collection.ArrayList'
+"expected expression after '^', found ')'",1,"expected expression after '^', found ')'"
+"expected expression after '^', found '='",1,"expected expression after '^', found '='"
+extra argument given for parameter list '(Interface-Collection<Generics-T>)' in call,1,extra argument given for parameter list '(Interface-Collection<Generics-T>)' in call
+"expected '=>' in case, found '->'",1,"expected '=>' in case, found '->'"
+can not find package 'std.types',1,can not find package 'std.types'
+"expected '{', found keyword 'continue'",1,"expected '{', found keyword 'continue'"
+'<ID>' is not a member of interface 'Collection<Int64>',1,'max' is not a member of interface 'Collection<Int64>'
+"expected '#' or '""' in raw string, found ' '",1,"expected '#' or '""' in raw string, found ' '"
+invalid binary operator '!=' on type 'Enum-Option<Struct-MatchData>' and 'Enum-Option<Generics-T>',1,invalid binary operator '!=' on type 'Enum-Option<Struct-MatchData>' and 'Enum-Option<Generics-T>'
+invalid binary operator '<' on type 'Class-ArrayList<Int64>' and 'Class-ArrayList<Int64>',1,invalid binary operator '<' on type 'Class-ArrayList<Int64>' and 'Class-ArrayList<Int64>'
+'<ID>' is not a member of enum 'Option<UInt8>',1,'unwrap' is not a member of enum 'Option<UInt8>'
+"invalid named arguments prefix 'size:', target is not a named parameter",1,"invalid named arguments prefix 'size:', target is not a named parameter"
+type before arrow of function type should be surrounded by parentheses,1,type before arrow of function type should be surrounded by parentheses
+"expected ',' or ')', found '='",1,"expected ',' or ')', found '='"
+"invalid named arguments prefix 'base:', target is not a named parameter",1,"invalid named arguments prefix 'base:', target is not a named parameter"
+macro declaration must be defined in macro package,1,macro declaration must be defined in macro package
+macro declaration must be modified with 'public',1,macro declaration must be modified with 'public'
+"expected a macro name after keyword 'macro', found keyword 'package'",1,"expected a macro name after keyword 'macro', found keyword 'package'"
+body of macro is missing,1,body of macro is missing
+"expected a member name after '.' in qualified name, found keyword 'type'",1,"expected a member name after '.' in qualified name, found keyword 'type'"
+"expected '=', found keyword 'let'",1,"expected '=', found keyword 'let'"
+"expected identifier after '$', found keyword 'func'",1,"expected identifier after '$', found keyword 'func'"
+"expected expression after '..', found '<='",1,"expected expression after '..', found '<='"
+"expected '(' or '{' after 'match', found '['",1,"expected '(' or '{' after 'match', found '['"
+"invalid named arguments prefix 'digit:', target is not a named parameter",1,"invalid named arguments prefix 'digit:', target is not a named parameter"
+"expected pattern, found '['",1,"expected pattern, found '['"
+missing argument prefix 'value:' for named parameter,1,missing argument prefix 'value:' for named parameter
+invalid binary operator '!=' on type 'Enum-Option<Struct-MatchData>' and 'Enum-Option<Struct-MatchData>',1,invalid binary operator '!=' on type 'Enum-Option<Struct-MatchData>' and 'Enum-Option<Struct-MatchData>'
+'<ID>' is not accessible in package 'std.math.numeric',1,'RoundingMode' is not accessible in package 'std.math.numeric'
+"expected '{', found 'false'",1,"expected '{', found 'false'"
+unrecognized escape '\|' in string literal,1,unrecognized escape '\|' in string literal
+extra arguments given for parameter list '()' in call,1,extra arguments given for parameter list '()' in call
+can not find package 'std.collection.hash',1,can not find package 'std.collection.hash'
+invalid binary operator '-' on type '<ID>' and 'Int64',1,invalid binary operator '-' on type 'Int32' and 'Int64'
+missing argument prefix 'roundingMode:' for named parameter,1,missing argument prefix 'roundingMode:' for named parameter
+"expected expression or declaration, found '|'",1,"expected expression or declaration, found '|'"
+"expected a member name after '.' in qualified name, found keyword 'extend'",1,"expected a member name after '.' in qualified name, found keyword 'extend'"
+"expected identifier or pattern after 'let', found keyword 'match'",1,"expected identifier or pattern after 'let', found keyword 'match'"
+"expected '(' or '{' after 'match', found '.'",1,"expected '(' or '{' after 'match', found '.'"
+"missing arguments for parameter list '(Generics-T, Generics-T, Int64, Bool, Bool, Bool)' in call",1,"missing arguments for parameter list '(Generics-T, Generics-T, Int64, Bool, Bool, Bool)' in call"
+"expected '<-' in while-let expression, found '='",1,"expected '<-' in while-let expression, found '='"
+"expected '{', found '<EOF>'",1,"expected '{', found '<EOF>'"
+"expected type name after ':', found '&'",1,"expected type name after ':', found '&'"
+"expected expression after '(', found keyword 'let'",1,"expected expression after '(', found keyword 'let'"
+"expected '#' or '""' in raw string, found '/'",1,"expected '#' or '""' in raw string, found '/'"
+"expected '#' or '""' in raw string, found ','",1,"expected '#' or '""' in raw string, found ','"
+"missing argument for parameter list '(Int64, Int64)' in call",1,"missing argument for parameter list '(Int64, Int64)' in call"
+"expected expression after '(', found keyword 'where'",1,"expected expression after '(', found keyword 'where'"
+"expected ';' or '<NL>', found '.'",1,"expected ';' or '<NL>', found '.'"
+"expected '{', found keyword 'break'",1,"expected '{', found keyword 'break'"
+invalid binary operator '>=' on type 'Enum-Option<Rune>' and 'Rune',1,invalid binary operator '>=' on type 'Enum-Option<Rune>' and 'Rune'
+"invalid named arguments prefix 's:', target is not a named parameter",1,"invalid named arguments prefix 's:', target is not a named parameter"
+"expected '=>' in case, found '..'",1,"expected '=>' in case, found '..'"
+invalid binary operator '==' on type 'Int64' and '<ID>',1,invalid binary operator '==' on type 'Int64' and 'IntNative'
+invalid binary operator '*' on type 'Enum-Option<Float64>' and 'Float64',1,invalid binary operator '*' on type 'Enum-Option<Float64>' and 'Float64'
+invalid binary operator '+' on type 'Enum-Option<Float64>' and 'Float64',1,invalid binary operator '+' on type 'Enum-Option<Float64>' and 'Float64'
+can not find package 'std.parse',1,can not find package 'std.parse'
+generics type arguments do not match the constraint of 'Struct-Range<Generics-T>',1,generics type arguments do not match the constraint of 'Struct-Range<Generics-T>'
+"expected '=>' in lambda expression, found keyword 'throw'",1,"expected '=>' in lambda expression, found keyword 'throw'"
+"expected expression after ':', found keyword 'Int64'",1,"expected expression after ':', found keyword 'Int64'"
+generics type arguments do not match the constraint of 'Class-HashSet<Generics-T>',1,generics type arguments do not match the constraint of 'Class-HashSet<Generics-T>'
+the object thrown must derive from `core.Exception`,1,the object thrown must derive from `core.Exception`
+invalid binary operator '<=' on type 'Struct-String' and 'Rune',1,invalid binary operator '<=' on type 'Struct-String' and 'Rune'

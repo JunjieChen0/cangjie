@@ -1,0 +1,76 @@
+"""OpenAI 兼容接口的大模型调用（DeepSeek / 通义千问 / 智谱 / Kimi / 硅基流动 / 本地 Ollama 都支持）。
+
+通过环境变量配置：
+  LLM_BASE_URL   例如 https://api.deepseek.com/v1  或  http://localhost:11434/v1 (Ollama)
+  LLM_API_KEY    API Key（Ollama 随便填）
+  LLM_MODEL      例如 deepseek-chat / qwen2.5-coder:7b
+"""
+from __future__ import annotations
+
+import os
+import re
+import time
+
+_client = None
+
+
+def get_client():
+    global _client
+    if _client is None:
+        from openai import OpenAI
+        _client = OpenAI(
+            base_url=os.environ.get("LLM_BASE_URL", "https://api.deepseek.com/v1"),
+            api_key=os.environ.get("LLM_API_KEY", "EMPTY"),
+        )
+    return _client
+
+
+def chat(messages: list[dict], model: str | None = None, temperature: float = 0.0,
+         max_retries: int = 5) -> tuple[str, dict]:
+    """返回 (回复文本, token 用量)。"""
+    model = model or os.environ.get("LLM_MODEL", "deepseek-chat")
+    for attempt in range(max_retries):
+        try:
+            resp = get_client().chat.completions.create(
+                model=model, messages=messages, temperature=temperature,
+            )
+            u = resp.usage
+            usage = {"prompt_tokens": getattr(u, "prompt_tokens", 0) or 0,
+                     "completion_tokens": getattr(u, "completion_tokens", 0) or 0}
+            return resp.choices[0].message.content or "", usage
+        except Exception as e:  # 限流/网络抖动时退避重试
+            if attempt == max_retries - 1:
+                raise
+            wait = 2 ** attempt
+            print(f"[llm] {type(e).__name__}: {e}; retry in {wait}s")
+            time.sleep(wait)
+    raise RuntimeError("unreachable")
+
+
+_CODE_RE = re.compile(r"```(?:cangjie|cj)?\s*\n(.*?)```", re.S | re.I)
+
+
+def extract_code(text: str) -> str:
+    """取回复中最后一个代码块；没有代码块就返回原文。"""
+    blocks = _CODE_RE.findall(text)
+    return (blocks[-1] if blocks else text).strip()
+
+
+def strip_main(code: str) -> str:
+    """去掉模型自己写的 main()，避免与测试代码中的 main 冲突（DUPLICATE_DEFINITION）。
+
+    注意：这是一个可选的后处理，做消融实验时可以开关对比。
+    """
+    m = re.search(r"^\s*main\s*\([^)]*\)\s*(:\s*\w+\s*)?\{", code, re.M)
+    if not m:
+        return code
+    depth, i = 0, m.end() - 1
+    while i < len(code):
+        if code[i] == "{":
+            depth += 1
+        elif code[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return (code[: m.start()] + code[i + 1:]).strip()
+        i += 1
+    return code

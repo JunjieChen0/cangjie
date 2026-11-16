@@ -1,0 +1,5 @@
+﻿external/
+results/try/
+__pycache__/
+*.pyc
+.env

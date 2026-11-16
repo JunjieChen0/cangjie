@@ -1,0 +1,11 @@
+{
+  "n": 164,
+  "pass@1": 40.85,
+  "compile_rate": 47.56,
+  "failure_kinds": {
+    "passed": 67,
+    "compile_error": 86,
+    "test_failure": 10,
+    "runtime_exception": 1
+  }
+}
