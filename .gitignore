@@ -7,3 +7,6 @@ __pycache__/
 results/exp/*_r5.jsonl
 results/ablation/*.jsonl
 results/reeval/*.jsonl
+results/stage3/pilot/
+results/stage3/logs/
+results/stage3/**/*.jsonl

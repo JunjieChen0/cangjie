@@ -29,6 +29,7 @@ src/
   doc_retrieval.py     rag 反馈：用报错从官方文档（CangjieDocCorpus）BM25 检索片段
   repair.py            核心实验：生成 + 多轮修复（含只给编译错误、共享第 0 轮、ClassEval 全部测试驱动等选项）
   sample_passk.py      独立重采样基线（pass@k）
+  run_matrix.py        第 3 阶段实验矩阵批量运行器（共享第 0 轮、3 次重复、断点续跑、自动检查）
   reeval_classeval.py  ClassEval 全部测试复评（官方 pass_rate 口径）
   analyze.py           统计汇总、McNemar 检验、错误类别修复率
   split_eval.py        5:5 题目划分一致性检查
@@ -49,6 +50,7 @@ results/
 docs/
   实验汇总报告.md       全部实验结果与结论（写论文主要参考）
   RAG检索人工检查.md     rag 检索质量的人工抽查（实验前）
+  第3阶段实验清单.md     第 3 阶段实验的运行步骤（给运行实验的作者）
   研究计划.md           研究问题、实验设计
   项目计划书.md
 ```
