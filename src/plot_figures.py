@@ -25,23 +25,45 @@ plt.rcParams["axes.unicode_minus"] = False
 OUT_DIR = os.path.join(ROOT, "results", "figures")
 
 
-def plot_curves(summaries: dict[str, dict]):
-    fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.6), sharey=True)
-    groups = [
-        ("DeepSeek-V4.1-Flash", [
-            ("ds_v41f_syntax_hint_r5", "Syntax + Hint", "-o", "#2ca02c"),
-            ("ds_v41f_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
-            ("ds_v41f_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
-            ("ds_v41f_direct_blind_r5","Direct + Blind",":x", "#7f7f7f"),
-        ]),
-        ("Doubao-Seed-2.0-Mini (轻量模型)", [
-            ("doubao_mini_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
-            ("doubao_mini_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
-            ("doubao_mini_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
-            ("doubao_mini_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
-            ("doubao_mini_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
-        ]),
-    ]
+HE_GROUPS = [
+    ("DeepSeek-V4.1-Flash", [
+        ("ds_v41f_syntax_hint_r5", "Syntax + Hint", "-o", "#2ca02c"),
+        ("ds_v41f_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
+        ("ds_v41f_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
+        ("ds_v41f_direct_blind_r5","Direct + Blind",":x", "#7f7f7f"),
+    ]),
+    ("Doubao-Seed-2.0-Mini (轻量模型)", [
+        ("doubao_mini_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
+        ("doubao_mini_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
+        ("doubao_mini_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
+        ("doubao_mini_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
+        ("doubao_mini_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
+    ]),
+    ("Kimi-K3.1-Pro", [
+        ("kimik31p_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
+        ("kimik31p_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
+    ]),
+]
+
+CE_GROUPS = [
+    ("DeepSeek-V4.1-Flash", [
+        ("ds_v41f_ce_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
+        ("ds_v41f_ce_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
+    ]),
+    ("Doubao-Seed-2.0-Mini (轻量模型)", [
+        ("doubao_mini_ce_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
+        ("doubao_mini_ce_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
+        ("doubao_mini_ce_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
+        ("doubao_mini_ce_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
+        ("doubao_mini_ce_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
+    ]),
+]
+
+
+def plot_curves(summaries: dict[str, dict], groups=HE_GROUPS,
+                suptitle="不同反馈粒度下的多轮编译反馈修复曲线 (HumanEval-Cangjie, N=164)",
+                filename="fig1_rounds_curve.png", doubao_legend_loc="center right"):
+    fig, axes = plt.subplots(1, len(groups), figsize=(5.6 * len(groups), 4.6), sharey=True)
     xs = list(range(6))
     for ax, (title, items) in zip(axes, groups):
         for key, label, fmt, color in items:
@@ -54,11 +76,11 @@ def plot_curves(summaries: dict[str, dict]):
         ax.set_xticks(xs)
         ax.set_ylim(0, 105)
         ax.grid(True, linestyle="--", alpha=0.4)
-        ax.legend(loc="center right" if "Doubao" in title else "lower right", fontsize=9)
+        ax.legend(loc=doubao_legend_loc if "Doubao" in title else "lower right", fontsize=9)
     axes[0].set_ylabel("Pass@1 (%)")
-    fig.suptitle("不同反馈粒度下的多轮编译反馈修复曲线 (HumanEval-Cangjie, N=164)", fontsize=13)
+    fig.suptitle(suptitle, fontsize=13)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT_DIR, "fig1_rounds_curve.png"), dpi=200)
+    fig.savefig(os.path.join(OUT_DIR, filename), dpi=200)
     plt.close(fig)
 
 
@@ -74,6 +96,8 @@ def plot_pareto(summaries: dict[str, dict]):
         "doubao_mini_direct_hint_r5":  ("Doubao-Mini Direct+Hint",  "#17becf", "s"),
         "doubao_mini_direct_raw_r5":   ("Doubao-Mini Direct+Raw",   "#bcbd22", "^"),
         "doubao_mini_direct_blind_r5": ("Doubao-Mini Direct+Blind", "#8c564b", "x"),
+        "kimik31p_direct_hint_r5": ("Kimi-K3.1P Direct+Hint", "#d62728", "s"),
+        "kimik31p_direct_raw_r5":  ("Kimi-K3.1P Direct+Raw",  "#ff9896", "^"),
     }
     for key, (lbl, col, mk) in labels.items():
         if key not in summaries:
@@ -135,6 +159,9 @@ def main():
         summaries[s["name"]] = s
         data[s["name"]] = load_exp(p)
     plot_curves(summaries)
+    plot_curves(summaries, CE_GROUPS,
+                "不同反馈粒度下的多轮编译反馈修复曲线 (ClassEval-Cangjie, N=84)",
+                "fig4_rounds_curve_classeval.png", doubao_legend_loc="upper left")
     plot_pareto(summaries)
     plot_error_repair(data)
     print(f"Figures saved to {OUT_DIR}")
