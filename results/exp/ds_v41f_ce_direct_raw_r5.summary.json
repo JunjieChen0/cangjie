@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "results/exp/ds_v41f_ce_direct_raw_r5.jsonl"
+  },
+  "n": 84,
+  "pass@1_by_round": [
+    36.9,
+    76.19,
+    83.33,
+    90.48,
+    92.86,
+    92.86
+  ],
+  "round0_compile_rate": 45.24,
+  "total_prompt_tokens": 391685,
+  "total_completion_tokens": 1878247,
+  "errors": 0
+}

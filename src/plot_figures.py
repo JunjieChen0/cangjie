@@ -36,6 +36,7 @@ def plot_curves(summaries: dict[str, dict]):
         ]),
         ("Doubao-Seed-2.0-Mini (轻量模型)", [
             ("doubao_mini_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
+            ("doubao_mini_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
             ("doubao_mini_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
             ("doubao_mini_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
             ("doubao_mini_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
@@ -69,6 +70,7 @@ def plot_pareto(summaries: dict[str, dict]):
         "ds_v41f_direct_raw_r5":  ("DS-V4.1F Direct+Raw",  "#ff7f0e", "^"),
         "ds_v41f_direct_blind_r5":("DS-V4.1F Direct+Blind","#7f7f7f", "x"),
         "doubao_mini_syntax_hint_r5":  ("Doubao-Mini Syntax+Hint",  "#9467bd", "o"),
+        "doubao_mini_syntax_raw_r5":   ("Doubao-Mini Syntax+Raw",   "#e377c2", "d"),
         "doubao_mini_direct_hint_r5":  ("Doubao-Mini Direct+Hint",  "#17becf", "s"),
         "doubao_mini_direct_raw_r5":   ("Doubao-Mini Direct+Raw",   "#bcbd22", "^"),
         "doubao_mini_direct_blind_r5": ("Doubao-Mini Direct+Blind", "#8c564b", "x"),
