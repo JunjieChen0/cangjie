@@ -1,0 +1,23 @@
+{
+  "name": "ds_v41f_ce_direct_raw_r5",
+  "n": 84,
+  "curve_main": [
+    36.9,
+    76.19,
+    83.33,
+    90.48,
+    92.86,
+    92.86
+  ],
+  "curve_all": [
+    22.62,
+    48.81,
+    52.38,
+    57.14,
+    57.14,
+    57.14
+  ],
+  "final_main": 78,
+  "final_all": 48,
+  "main_rerun_unstable_ids": []
+}

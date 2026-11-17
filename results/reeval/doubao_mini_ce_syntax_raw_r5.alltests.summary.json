@@ -1,0 +1,23 @@
+{
+  "name": "doubao_mini_ce_syntax_raw_r5",
+  "n": 84,
+  "curve_main": [
+    10.71,
+    26.19,
+    30.95,
+    36.9,
+    40.48,
+    44.05
+  ],
+  "curve_all": [
+    5.95,
+    16.67,
+    19.05,
+    22.62,
+    26.19,
+    27.38
+  ],
+  "final_main": 37,
+  "final_all": 23,
+  "main_rerun_unstable_ids": []
+}

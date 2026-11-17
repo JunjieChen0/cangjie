@@ -1,0 +1,23 @@
+{
+  "name": "doubao_mini_ce_direct_blind_r5",
+  "n": 84,
+  "curve_main": [
+    2.38,
+    3.57,
+    3.57,
+    3.57,
+    3.57,
+    3.57
+  ],
+  "curve_all": [
+    1.19,
+    2.38,
+    2.38,
+    2.38,
+    2.38,
+    2.38
+  ],
+  "final_main": 3,
+  "final_all": 2,
+  "main_rerun_unstable_ids": []
+}

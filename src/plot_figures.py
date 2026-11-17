@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import glob
+import json
 import os
 import sys
 
@@ -159,8 +160,14 @@ def main():
         summaries[s["name"]] = s
         data[s["name"]] = load_exp(p)
     plot_curves(summaries)
-    plot_curves(summaries, CE_GROUPS,
-                "不同反馈粒度下的多轮编译反馈修复曲线 (ClassEval-Cangjie, N=84)",
+    # ClassEval 用全部测试口径（官方 pass_rate），数据来自 src/reeval_classeval.py
+    ce_summaries = {}
+    for p in glob.glob(os.path.join(ROOT, "results", "reeval", "*.alltests.summary.json")):
+        with open(p, encoding="utf-8") as f:
+            s = json.load(f)
+        ce_summaries[s["name"]] = {"curve": s["curve_all"]}
+    plot_curves(ce_summaries, CE_GROUPS,
+                "不同反馈粒度下的多轮编译反馈修复曲线 (ClassEval-Cangjie, N=84, 全部测试口径)",
                 "fig4_rounds_curve_classeval.png", doubao_legend_loc="upper left")
     plot_pareto(summaries)
     plot_error_repair(data)
