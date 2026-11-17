@@ -4,3 +4,6 @@ __pycache__/
 *.pyc
 *.zip
 .env
+results/exp/*_r5.jsonl
+results/ablation/*.jsonl
+results/reeval/*.jsonl
