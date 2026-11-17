@@ -1,51 +1,104 @@
 # 仓颉代码生成：低成本编译反馈修复研究
 
 > 工作题目：**《面向低资源语言仓颉的轻量级编译反馈修复：用几轮对话逼近 Agent 的效果？》**
+> 目标期刊：*Software: Practice and Experience*（SPE）
 
 ## 一句话
 CangjieBench（ESEM 2026）发现：语法约束提示一次生成能做到 40–64% 的通过率，GPT-5 + Codex Agent 能做到 85%，但 token 消耗极高；用便宜模型的 Agent 只有 25–39%。
 **本项目研究中间地带**：不使用 Agent 框架，只做"生成 → cjc 编译 → 把报错喂回去"的几轮循环，
-回答**哪种反馈最有用、几轮够用、花多少钱**这几个问题。
+在 HumanEval-Cangjie（164 题，函数级）和 ClassEval-Cangjie（84 题，类级）上回答**哪种反馈最有用、几轮够用、花多少钱**。
+
+## 主要结论
+完整数字、显著性检验与有效性威胁见 [docs/实验汇总报告.md](docs/实验汇总报告.md)。
+
+- **多轮修复收益大、收敛快**：强模型（DeepSeek-V4.1-Flash、Kimi-K3.1-Pro）在 HumanEval 上 1–3 轮即接近 100%。
+- **知识提示（hint）的优势有边界**：只在"轻量模型（Doubao-Seed-2.0-Mini）+ 函数级任务 + `direct` 起点"下显著优于原始报错（raw）。在共享第 0 轮的 3 次重复中，hint 为 55.69±1.41%，raw 为 41.05±1.76%，差值 +14.63 个百分点，95% CI [9.96, 19.72]。ClassEval 与强模型上两者无显著差异。
+- **不依赖测试信息**：只给编译错误、不给测试结果时，hint 仍为 50.00%，raw 为 32.93%。
+- **优于独立重采样**：同模型独立生成 6 次（pass@6）只有 17.07%。
+- **ClassEval 采用官方全部测试口径**：只看集成测试会高估，268 份通过集成测试的代码中有 107 份（39.9%）未通过方法级测试。
 
 ## 目录
 ```
 src/
-  runner.py        本地 cjc 编译运行 + 判定（与 CangjieBench 官方判定一致，已验证）
-  data.py          加载 CangjieBench HumanEval（164 题）
-  evaluate.py      评测 solutions jsonl
-  llm.py           OpenAI 兼容 API 调用（DeepSeek/Qwen/GLM/Kimi/Ollama 都行）
-  prompts.py       提示词：基线 + 三种修复反馈（blind / raw / hint）
-  repair_hints.py  "报错 → 仓颉知识"规则库（数据驱动，需要持续核对扩充）
-  repair.py        核心实验：生成 + 多轮修复
-  mine_errors.py   从公开失败样本中统计高频 cjc 报错（零成本）
-  postprocess.py   零成本后处理实验
-external/CangjieBench/   数据集与公开结果（MIT 许可，git clone 而来）
-results/                 实验输出
-docs/研究计划.md          研究问题、实验设计、分工、时间表
+  runner.py            本地 cjc 编译运行 + 判定（与 CangjieBench 官方判定一致，已验证）
+  data.py              加载 CangjieBench HumanEval / ClassEval
+  evaluate.py          评测 solutions jsonl
+  llm.py               OpenAI 兼容 API 调用（模型拒收 temperature=0 时自动回退到 1）
+  prompts.py           提示词：初始提示（direct / syntax）+ 三种修复反馈（blind / raw / hint）
+  repair_hints.py      "报错 → 仓颉知识"规则库
+  repair.py            核心实验：生成 + 多轮修复（含只给编译错误、共享第 0 轮等选项）
+  sample_passk.py      独立重采样基线（pass@k）
+  reeval_classeval.py  ClassEval 全部测试复评（官方 pass_rate 口径）
+  analyze.py           统计汇总、McNemar 检验、错误类别修复率
+  split_eval.py        5:5 题目划分一致性检查
+  plot_figures.py      生成论文插图
+  mine_errors.py       从公开失败样本中统计高频 cjc 报错（零成本）
+  postprocess.py       零成本后处理实验
+tests/                 单元测试（pytest）
+external/CangjieBench/ 数据集与公开结果（MIT 许可，git clone 而来，不进 git）
+results/
+  exp/                 18 组主实验（*.summary.json 进 git，原始 *.jsonl 不进 git）
+  ablation/            9 组补强实验
+  reeval/              ClassEval 全部测试复评结果
+  figures/             论文插图 fig1–fig4
+  repro/               官方结果复现
+  try/                 试跑与中止的实验（不进 git）
+docs/
+  实验汇总报告.md       全部实验结果与结论（写论文主要参考）
+  研究计划.md           研究问题、实验设计
+  项目计划书.md
 ```
 
 ## 快速开始
 ```powershell
-pip install -r requirements.txt
+pip install -r requirements.txt   # 作图另需 matplotlib，测试需 pytest
 
-# 1. 环境自检：官方参考答案应 164/164 通过（已验证 ✅）
+# 1. 环境自检：官方参考答案应 164/164 通过
 python src/evaluate.py --reference
 
-# 2. 复现论文数字：DeepSeek-V3 语法约束（论文 40.9%，本地 40.85% ✅）
+# 2. 复现论文数字：DeepSeek-V3 语法约束（论文 40.9%，本地 40.85%）
 python src/evaluate.py -i external/CangjieBench/Results/Text_to_Code/Syntax_Constrained/DeepSeek-V3_HumanEval.jsonl -o results/repro/ds_v3_syntax.records.jsonl
 
 # 3. 高频报错统计（零成本）
 python src/mine_errors.py
-
-# 4. 配置大模型 API（以 DeepSeek 为例；也可以用硅基流动等平台的免费模型，或本地 Ollama）
-$env:LLM_BASE_URL="https://api.deepseek.com/v1"
-$env:LLM_API_KEY="sk-..."
-$env:LLM_MODEL="deepseek-chat"
-
-# 5. 小规模试跑（10 题，3 轮 raw 反馈）
-python src/repair.py --prompt syntax --feedback raw --rounds 3 --limit 10 -o results/try/ds_syntax_raw.jsonl
-
-# 6. 省钱技巧：直接从 CangjieBench 公开的第 0 轮结果开始修复，第 0 轮不花钱
-python src/repair.py --init external/CangjieBench/Results/Text_to_Code/Syntax_Constrained/DeepSeek-V3_HumanEval.jsonl `
-    --prompt syntax --feedback hint --rounds 3 -o results/exp/ds_init_hint_r3.jsonl
 ```
+
+在项目根目录新建 `.env` 配置大模型 API（已在 `.gitignore` 中，**不要提交**），`llm.py` 会自动读取：
+```
+LLM_BASE_URL=https://...      # 任意 OpenAI 兼容接口
+LLM_API_KEY=...
+LLM_MODEL=...                 # 默认模型，可被 --model 覆盖
+```
+
+## 复现实验
+文件命名：`{模型}_[ce_]{初始提示}_{反馈}_r5.jsonl`，`ce_` 表示 ClassEval。支持断点续跑，中断后用同样的命令重跑即可。
+
+```powershell
+# 主实验（示例：Doubao，HumanEval，direct 起点，hint 反馈，最多 5 轮）
+python src/repair.py --dataset humaneval --model doubao-seed-2-0-mini-260428 --prompt direct --feedback hint --rounds 5 --strip-main -j 6 -o results/exp/doubao_mini_direct_hint_r5.jsonl
+
+# ClassEval：把 --dataset 换成 classeval，输出名加 ce_
+python src/repair.py --dataset classeval --model doubao-seed-2-0-mini-260428 --prompt syntax --feedback hint --rounds 5 --strip-main -j 6 -o results/exp/doubao_mini_ce_syntax_hint_r5.jsonl
+
+# 补强 1：只给编译错误（不拼接测试，编译通过即停）
+python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --feedback hint --rounds 5 --strip-main --compile-only-feedback -o results/ablation/doubao_mini_direct_hint_compileonly_r5.jsonl
+
+# 补强 2：共享第 0 轮（所有组从同一份第 0 轮代码出发），temperature 0.3，重复 3 次
+python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --feedback hint --rounds 5 --strip-main --init results/ablation/doubao_mini_r0_init.jsonl --temperature 0.3 -o results/ablation/doubao_mini_shared_hint_rep1.jsonl
+
+# 补强 3：独立重采样 pass@6
+python src/sample_passk.py --model doubao-seed-2-0-mini-260428 --prompt direct -k 6 --temp 0.8 -o results/ablation/doubao_mini_direct_pass6.jsonl
+
+# ClassEval 全部测试复评 → results/reeval/
+python src/reeval_classeval.py
+
+# 统计、检验、作图、测试
+python src/analyze.py
+python src/split_eval.py
+python src/plot_figures.py
+python -m pytest tests
+```
+
+## 数据说明
+- 原始实验输出（`results/exp`、`results/ablation`、`results/reeval` 下的 `*.jsonl`，约 26 MB）不进 git，随项目打包的 zip 一起分发；`*.summary.json` 在 git 中。
+- 模型版本：`deepseek-v4-1-flash-261017`、`doubao-seed-2-0-mini-260428`、`kimi-k3-1-pro-261024`。主实验 temperature 为 0；**Kimi-K3.1-Pro 的 API 只允许 1**，由 `llm.py` 自动回退。各组实际参数见汇总报告第二节。
