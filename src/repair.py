@@ -28,7 +28,7 @@ import prompts as P  # noqa: E402
 from data import load_classeval, load_humaneval, load_syntax_rule, read_jsonl, write_jsonl  # noqa: E402
 from llm import chat, extract_code, strip_main  # noqa: E402
 from repair_hints import match_hints  # noqa: E402
-from runner import compile_and_run  # noqa: E402
+from runner import compile_and_run, compile_only  # noqa: E402
 
 try:
     from tqdm import tqdm
@@ -67,20 +67,31 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         messages.append({"role": "assistant", "content": f"```cangjie\n{init_code}\n```"})
     else:
         messages.append({"role": "user", "content": first_prompt(item, args.prompt, syntax_rule)})
-        reply, u = chat(messages, model=args.model)
+        reply, u = chat(messages, model=args.model, temperature=args.temperature)
         messages.append({"role": "assistant", "content": reply})
         for k in usage_total:
             usage_total[k] += u[k]
         code = post(extract_code(reply))
 
     for rnd in range(args.rounds + 1):
-        res = compile_and_run(code + "\n" + item["test"])
-        history.append({"round": rnd, "failure_kind": res.failure_kind,
-                        "feedback": res.feedback[:1500], "code": code})
-        if res.passed or rnd == args.rounds:
-            break
+        if args.compile_only_feedback:
+            comp_res = compile_only(code)
+            if comp_res.passed or rnd == args.rounds:
+                res = compile_and_run(code + "\n" + item["test"])
+                history.append({"round": rnd, "failure_kind": res.failure_kind,
+                                "feedback": res.feedback[:1500], "code": code})
+                break
+            res = comp_res
+            history.append({"round": rnd, "failure_kind": res.failure_kind,
+                            "feedback": res.feedback[:1500], "code": code})
+        else:
+            res = compile_and_run(code + "\n" + item["test"])
+            history.append({"round": rnd, "failure_kind": res.failure_kind,
+                            "feedback": res.feedback[:1500], "code": code})
+            if res.passed or rnd == args.rounds:
+                break
         messages.append({"role": "user", "content": repair_prompt(res, args.feedback)})
-        reply, u = chat(messages, model=args.model)
+        reply, u = chat(messages, model=args.model, temperature=args.temperature)
         messages.append({"role": "assistant", "content": reply})
         for k in usage_total:
             usage_total[k] += u[k]
@@ -100,6 +111,9 @@ def main():
     ap.add_argument("--rounds", type=int, default=3, help="最多修复轮数（0 = 不修复，即单次生成基线）")
     ap.add_argument("--init", help="已有的第 0 轮 solutions jsonl（如 CangjieBench 公开结果）")
     ap.add_argument("--strip-main", action="store_true", help="自动删除模型生成的 main()")
+    ap.add_argument("--compile-only-feedback", action="store_true",
+                    help="零测试泄漏模式：修复阶段仅编译 solution，不接触任何 test 代码")
+    ap.add_argument("--temperature", type=float, default=0.0, help="采样温度（重复实验时可设为 0.3）")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--ids", help="只跑指定题号，逗号分隔")
     ap.add_argument("-j", "--workers", type=int, default=4)

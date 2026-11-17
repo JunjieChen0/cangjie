@@ -59,7 +59,8 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
         except Exception as e:  # 限流/网络抖动时退避重试
             if "temperature" in str(e) and temperature != 1.0:
                 temperature = 1.0
-                continue
+                if attempt < max_retries - 1:
+                    continue
             if attempt == max_retries - 1:
                 raise
             wait = 2 ** attempt

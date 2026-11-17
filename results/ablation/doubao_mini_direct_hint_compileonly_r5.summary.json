@@ -1,0 +1,30 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "direct",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "compile_only_feedback": true,
+    "temperature": 0.0,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "results/ablation/doubao_mini_direct_hint_compileonly_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    8.54,
+    18.29,
+    28.66,
+    41.46,
+    46.34,
+    50.0
+  ],
+  "round0_compile_rate": 10.37,
+  "total_prompt_tokens": 813783,
+  "total_completion_tokens": 954847,
+  "errors": 0
+}

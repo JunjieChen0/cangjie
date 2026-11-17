@@ -81,3 +81,26 @@ def compile_and_run(code: str, compile_timeout: int = 60, run_timeout: int = 10)
         return RunResult(kind == "passed", kind, cerr, out, err, r.returncode)
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def compile_only(code: str, compile_timeout: int = 60) -> RunResult:
+    """只编译 code 本身（不拼接任何 test 代码），用于零测试泄漏的纯编译反馈消融。"""
+    tmpdir = tempfile.mkdtemp(prefix="cj_co_")
+    try:
+        src = os.path.join(tmpdir, "main.cj")
+        with open(src, "w", encoding="utf-8") as f:
+            f.write(code)
+        try:
+            c = subprocess.run(
+                ["cjc", "main.cj", "--output-type=staticlib", "-o", "libm.a"],
+                cwd=tmpdir, capture_output=True, text=True,
+                encoding="utf-8", errors="replace", timeout=compile_timeout,
+            )
+        except subprocess.TimeoutExpired:
+            return RunResult(False, "timeout", compile_stderr="compile timeout")
+        cerr = clean(c.stderr) + clean(c.stdout)
+        if c.returncode != 0:
+            return RunResult(False, "compile_error", compile_stderr=cerr, return_code=c.returncode)
+        return RunResult(True, "compiled", compile_stderr=cerr, return_code=0)
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)

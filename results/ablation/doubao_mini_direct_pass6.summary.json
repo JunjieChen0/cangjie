@@ -1,0 +1,32 @@
+{
+  "config": {
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "direct",
+    "k": 6,
+    "temp": 0.8,
+    "strip_main": true,
+    "limit": 0,
+    "workers": 4,
+    "output": "results/ablation/doubao_mini_direct_pass6.jsonl"
+  },
+  "n": 164,
+  "pass@k_unbiased": [
+    6.81,
+    9.92,
+    12.2,
+    13.98,
+    15.55,
+    17.07
+  ],
+  "pass@k_sequential": [
+    6.1,
+    7.93,
+    9.76,
+    14.63,
+    15.24,
+    17.07
+  ],
+  "total_prompt_tokens": 261696,
+  "total_completion_tokens": 2389446,
+  "errors": 0
+}
