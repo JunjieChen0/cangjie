@@ -51,7 +51,7 @@ docs/
 
 ## 快速开始
 ```powershell
-pip install -r requirements.txt   # 作图另需 matplotlib，测试需 pytest
+pip install -r requirements.txt
 
 # 1. 环境自检：官方参考答案应 164/164 通过
 python src/evaluate.py --reference
