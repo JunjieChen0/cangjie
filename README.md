@@ -24,13 +24,15 @@ src/
   data.py              加载 CangjieBench HumanEval / ClassEval
   evaluate.py          评测 solutions jsonl
   llm.py               OpenAI 兼容 API 调用（模型拒收 temperature=0 时自动回退到 1）
-  prompts.py           提示词：初始提示（direct / syntax）+ 三种修复反馈（blind / raw / hint）
+  prompts.py           提示词：初始提示（direct / syntax）+ 四种修复反馈（blind / raw / hint / rag）
   repair_hints.py      "报错 → 仓颉知识"规则库
-  repair.py            核心实验：生成 + 多轮修复（含只给编译错误、共享第 0 轮等选项）
+  doc_retrieval.py     rag 反馈：用报错从官方文档（CangjieDocCorpus）BM25 检索片段
+  repair.py            核心实验：生成 + 多轮修复（含只给编译错误、共享第 0 轮、ClassEval 全部测试驱动等选项）
   sample_passk.py      独立重采样基线（pass@k）
   reeval_classeval.py  ClassEval 全部测试复评（官方 pass_rate 口径）
   analyze.py           统计汇总、McNemar 检验、错误类别修复率
   split_eval.py        5:5 题目划分一致性检查
+  extra_stats.py       零成本补充统计：Test 半区、Holm 校正、成本、截断率
   plot_figures.py      生成论文插图
   mine_errors.py       从公开失败样本中统计高频 cjc 报错（零成本）
   postprocess.py       零成本后处理实验
@@ -40,11 +42,13 @@ results/
   exp/                 18 组主实验（*.summary.json 进 git，原始 *.jsonl 不进 git）
   ablation/            9 组补强实验
   reeval/              ClassEval 全部测试复评结果
+  stats/               零成本补充统计（extra_stats.md）
   figures/             论文插图 fig1–fig4
   repro/               官方结果复现
   try/                 试跑与中止的实验（不进 git）
 docs/
   实验汇总报告.md       全部实验结果与结论（写论文主要参考）
+  RAG检索人工检查.md     rag 检索质量的人工抽查（实验前）
   研究计划.md           研究问题、实验设计
   项目计划书.md
 ```
@@ -92,6 +96,17 @@ python src/sample_passk.py --model doubao-seed-2-0-mini-260428 --prompt direct -
 # ClassEval 全部测试复评 → results/reeval/
 python src/reeval_classeval.py
 
+# 新协议（第 2 阶段起）：rag 反馈；ClassEval 用全部测试驱动修复（每轮跑全部测试，全部通过才停）
+python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --feedback rag --rounds 5 --strip-main -o results/exp/doubao_mini_direct_rag_r5.jsonl
+python src/repair.py --dataset classeval --all-tests --model doubao-seed-2-0-mini-260428 --prompt direct --feedback hint --rounds 5 --strip-main -o results/exp/doubao_mini_ce_direct_hint_alltests_r5.jsonl
+
+# 共享第 0 轮：先只生成第 0 轮，再让各反馈组用 --init 读入同一份代码
+python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --rounds 0 --strip-main --temperature 0.3 -o results/shared/doubao_mini_direct_r0.jsonl
+python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --feedback rag --rounds 5 --strip-main --temperature 0.3 --init results/shared/doubao_mini_direct_r0.jsonl -o results/shared/doubao_mini_direct_rag_rep1.jsonl
+
+# 不调用 API 的流程自检：用官方参考答案作为第 0 轮（ClassEval 全部测试应为 82/84，HumanEval 应为 164/164）
+python src/repair.py --dataset classeval --all-tests --init external/CangjieBench/CangjieBench/ClassEval_Cangjie.jsonl --rounds 0 -o results/try/ce_ref_alltests.jsonl
+
 # 统计、检验、作图、测试
 python src/analyze.py
 python src/split_eval.py
@@ -101,4 +116,5 @@ python -m pytest tests
 
 ## 数据说明
 - 原始实验输出（`results/exp`、`results/ablation`、`results/reeval` 下的 `*.jsonl`，约 26 MB）不进 git，随项目打包的 zip 一起分发；`*.summary.json` 在 git 中。
+- 第 2 阶段起，每条记录额外写入 `model`、`temperature_used`（实际温度），summary 写入 `prompt_version`（2 = blind 提示改为同时覆盖编译失败；此前实验为 1）。`LLM_TIMEOUT` 环境变量可调整单次请求超时（默认 240 秒）。
 - 模型版本：`deepseek-v4-1-flash-261017`、`doubao-seed-2-0-mini-260428`、`kimi-k3-1-pro-261024`。主实验 temperature 为 0；**Kimi-K3.1-Pro 的 API 只允许 1**，由 `llm.py` 自动回退。各组实际参数见汇总报告第二节。

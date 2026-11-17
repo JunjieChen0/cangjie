@@ -38,14 +38,14 @@ def get_client():
         _client = OpenAI(
             base_url=os.environ.get("LLM_BASE_URL", "https://api.deepseek.com/v1"),
             api_key=os.environ.get("LLM_API_KEY", "EMPTY"),
-            timeout=240.0,
+            timeout=float(os.environ.get("LLM_TIMEOUT", "240")),
         )
     return _client
 
 
 def chat(messages: list[dict], model: str | None = None, temperature: float = 0.0,
          max_retries: int = 5) -> tuple[str, dict]:
-    """返回 (回复文本, token 用量)。"""
+    """返回 (回复文本, token 用量)。usage 中额外带上本次实际使用的 temperature。"""
     model = model or os.environ.get("LLM_MODEL", "deepseek-chat")
     for attempt in range(max_retries):
         try:
@@ -54,10 +54,12 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
             )
             u = resp.usage
             usage = {"prompt_tokens": getattr(u, "prompt_tokens", 0) or 0,
-                     "completion_tokens": getattr(u, "completion_tokens", 0) or 0}
+                     "completion_tokens": getattr(u, "completion_tokens", 0) or 0,
+                     "temperature": temperature}
             return resp.choices[0].message.content or "", usage
         except Exception as e:  # 限流/网络抖动时退避重试
             if "temperature" in str(e) and temperature != 1.0:
+                print(f"[llm] {model} 拒绝 temperature={temperature}，回退到 1.0")
                 temperature = 1.0
                 if attempt < max_retries - 1:
                     continue

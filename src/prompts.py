@@ -33,8 +33,11 @@ Write the complete code and wrap it in ```cangjie```.
 
 # ---------- 修复提示：三种反馈粒度 ----------
 
+# 提示词版本：1 = 2026-11-17 之前的全部实验；2 = blind 措辞改为同时覆盖编译失败（纯编译反馈消融中并未运行测试）
+PROMPT_VERSION = 2
+
 # R0: 只告诉"错了"，不给任何信息（对照组，检验"多试几次"本身的效果）
-REPAIR_BLIND = """Your previous Cangjie code failed to pass the tests. Please fix it.
+REPAIR_BLIND = """Your previous Cangjie code did not compile or did not pass the tests. Please fix it.
 Return the complete corrected code in ```cangjie```. Do NOT write a main() function.
 """
 
@@ -57,6 +60,19 @@ REPAIR_HINT = """Your previous Cangjie code failed ({kind}). Here is the error o
 
 Hints about Cangjie that are likely relevant to this error:
 {hints}
+
+Please fix the code. Return the complete corrected code in ```cangjie```. Do NOT write a main() function.
+"""
+
+# R3: 原始报错 + 用报错文本从官方文档检索到的片段（doc_retrieval.py，BM25），与 hint 结构一致
+REPAIR_RAG = """Your previous Cangjie code failed ({kind}). Here is the error output:
+
+```
+{feedback}
+```
+
+Excerpts from the official Cangjie documentation that may be relevant to this error:
+{docs}
 
 Please fix the code. Return the complete corrected code in ```cangjie```. Do NOT write a main() function.
 """

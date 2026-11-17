@@ -38,16 +38,19 @@ def sample_one(item: dict, args, syntax_rule: str) -> dict:
     )
     msgs = [{"role": "system", "content": P.SYSTEM}, {"role": "user", "content": q}]
     samples, usage_total = [], {"prompt_tokens": 0, "completion_tokens": 0}
+    temps_used = set()
     for i in range(args.k):
         reply, u = chat(msgs, model=args.model, temperature=args.temp)
         for k in usage_total:
             usage_total[k] += u[k]
+        temps_used.add(u.get("temperature", args.temp))
         code = strip_main(extract_code(reply)) if args.strip_main else extract_code(reply)
         res = compile_and_run(code + "\n" + item["test"])
         samples.append({"sample_idx": i, "passed": res.passed, "failure_kind": res.failure_kind})
     c = sum(1 for s in samples if s["passed"])
     return {"id": item["id"], "n_samples": args.k, "n_passed": c,
-            "passed": c > 0, "usage": usage_total, "samples": samples}
+            "passed": c > 0, "usage": usage_total, "samples": samples,
+            "model": args.model, "temperature_used": sorted(temps_used)}
 
 
 def main():
