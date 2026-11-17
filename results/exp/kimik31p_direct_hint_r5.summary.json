@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "kimi-k3-1-pro-261024",
+    "prompt": "direct",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 1,
+    "output": "results/exp/kimik31p_direct_hint_r5.jsonl"
+  },
+  "n": 164,
+  "pass@1_by_round": [
+    81.1,
+    98.78,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 81.71,
+  "total_prompt_tokens": 84823,
+  "total_completion_tokens": 389463,
+  "errors": 0
+}

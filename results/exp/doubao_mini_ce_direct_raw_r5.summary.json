@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": null,
+    "strip_main": true,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "results/exp/doubao_mini_ce_direct_raw_r5.jsonl"
+  },
+  "n": 84,
+  "pass@1_by_round": [
+    3.57,
+    7.14,
+    10.71,
+    13.1,
+    14.29,
+    17.86
+  ],
+  "round0_compile_rate": 3.57,
+  "total_prompt_tokens": 1798413,
+  "total_completion_tokens": 1068796,
+  "errors": 0
+}
