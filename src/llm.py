@@ -57,6 +57,9 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
                      "completion_tokens": getattr(u, "completion_tokens", 0) or 0}
             return resp.choices[0].message.content or "", usage
         except Exception as e:  # 限流/网络抖动时退避重试
+            if "temperature" in str(e) and temperature != 1.0:
+                temperature = 1.0
+                continue
             if attempt == max_retries - 1:
                 raise
             wait = 2 ** attempt
