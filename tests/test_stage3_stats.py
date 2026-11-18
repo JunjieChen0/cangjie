@@ -1,0 +1,72 @@
+import json
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+import stage3_stats as S  # noqa: E402
+
+
+def _write_group(base, name, passed: dict, n=None, errors=0, curve=None, tokens=(1000, 2000)):
+    runs = os.path.join(base, "runs")
+    os.makedirs(runs, exist_ok=True)
+    with open(os.path.join(runs, name + ".jsonl"), "w", encoding="utf-8") as f:
+        for i, ok in passed.items():
+            f.write(json.dumps({"id": i, "passed": ok}) + "\n")
+    s = {"n": len(passed) if n is None else n, "errors": errors,
+         "pass@1_by_round": curve or [0.0, 100 * sum(passed.values()) / len(passed)],
+         "total_prompt_tokens": tokens[0], "total_completion_tokens": tokens[1]}
+    with open(os.path.join(runs, name + ".summary.json"), "w", encoding="utf-8") as f:
+        json.dump(s, f)
+
+
+def test_parse_name_handles_compile_only_and_reps():
+    assert S.parse_name("doubao_mini_he_direct_hint_co_rep2") == ("doubao_mini", "he", "direct", "hint_co", 2)
+    assert S.parse_name("ds_v41f_ce_syntax_rag_rep1") == ("ds_v41f", "ce", "syntax", "rag", 1)
+    assert S.parse_name("kimik31p_or_direct_raw_rep3") == ("kimik31p", "or", "direct", "raw", 3)
+    assert S.parse_name("not_a_group") is None
+
+
+def test_load_groups_skips_incomplete_or_errored(tmp_path):
+    ok = {i: True for i in range(4)}
+    _write_group(tmp_path, "doubao_mini_or_direct_raw_rep1", ok)
+    _write_group(tmp_path, "doubao_mini_or_direct_raw_rep2", ok, errors=1)
+    _write_group(tmp_path, "doubao_mini_or_direct_hint_rep1", {0: True, 1: False})   # n=2 ≠ 4
+    g = S.load_groups(str(tmp_path), {"or": 4})
+    assert list(g) == [("doubao_mini", "or", "direct", "raw")]
+    assert list(g[("doubao_mini", "or", "direct", "raw")]) == [1]
+
+
+def test_per_problem_diff_averages_over_reps():
+    a = {1: {"passed": {"0": True, "1": True}}, 2: {"passed": {"0": True, "1": False}}}
+    b = {1: {"passed": {"0": False, "1": True}}, 2: {"passed": {"0": False, "1": True}}}
+    assert sorted(S.per_problem_diff(a, b)) == [-0.5, 1.0]
+
+
+def test_sign_flip_p_extremes():
+    assert S.sign_flip_p([0.0] * 20) == 1.0
+    assert S.sign_flip_p([1.0] * 20) < 0.001
+    assert S.sign_flip_p([1.0, -1.0] * 10) > 0.9
+
+
+def test_compare_applies_holm_over_family(tmp_path):
+    n = 30
+    for r in (1, 2, 3):
+        _write_group(tmp_path, f"doubao_mini_or_direct_raw_rep{r}", {i: i < 5 for i in range(n)})
+        _write_group(tmp_path, f"doubao_mini_or_direct_hint_rep{r}", {i: i < 25 for i in range(n)})
+        _write_group(tmp_path, f"doubao_mini_or_direct_blind_rep{r}", {i: i < 4 for i in range(n)})
+    rows = S.compare(S.load_groups(str(tmp_path), {"or": n}))
+    by = {(r["a"], r["b"]): r for r in rows}
+    assert set(by) == {("hint", "raw"), ("raw", "blind")}
+    hr = by[("hint", "raw")]
+    assert abs(hr["diff"] - 66.67) < 0.01 and hr["ci_lo"] > 0 and hr["p"] < 0.001
+    assert hr["p_holm"] >= hr["p"] and by[("raw", "blind")]["p_holm"] >= by[("raw", "blind")]["p"]
+    assert len(hr["mcnemar_per_rep"]) == 3
+
+
+def test_summarize_reports_mean_sd_and_cost(tmp_path):
+    for r, k in ((1, 2), (2, 3), (3, 4)):
+        _write_group(tmp_path, f"doubao_mini_or_direct_raw_rep{r}", {i: i < k for i in range(10)},
+                     tokens=(1_000_000, 1_000_000))
+    row = S.summarize(S.load_groups(str(tmp_path), {"or": 10}))[0]
+    assert (row["r5_mean"], round(row["r5_sd"], 2), row["reps"]) == (30.0, 10.0, 3)
+    assert abs(row["yuan_per_pass"] - 3 * 2.2 / 9) < 1e-6          # doubao 0.2+2.0 元/百万，共 9 次通过

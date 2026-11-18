@@ -34,6 +34,7 @@ src/
   analyze.py           统计汇总、McNemar 检验、错误类别修复率
   split_eval.py        5:5 题目划分一致性检查
   extra_stats.py       零成本补充统计：Test 半区、Holm 校正、成本、截断率
+  stage3_stats.py      第 3 阶段 / 新题集统计：3 次重复均值±sd、按题置换检验与 bootstrap CI、Holm 校正、成本
   plot_figures.py      生成论文插图
   mine_errors.py       从公开失败样本中统计高频 cjc 报错（零成本）
   postprocess.py       零成本后处理实验
@@ -115,6 +116,10 @@ python src/repair.py --dataset classeval --all-tests --init external/CangjieBenc
 # 新题集 Original-30（30 道新写的题，格式同 HumanEval）：参考答案自检应为 30/30，再按矩阵运行
 python src/repair.py --dataset original --prompt direct --init data/original30/Original30_Cangjie.jsonl --rounds 0 -o results/try/or_ref.jsonl
 python src/run_matrix.py --matrix original --dry-run
+
+# 第 3 阶段 / 新题集统计 → results/stats/{stage3,original30}_stats.{md,json}
+python src/stage3_stats.py
+python src/stage3_stats.py --matrix original
 
 # 统计、检验、作图、测试
 python src/analyze.py

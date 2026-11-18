@@ -1,0 +1,180 @@
+"""第 3 阶段 / 新题集实验的统计（只读结果文件，不调用 API）。
+
+- 只统计完整的组：summary 中 n 等于题数且 errors = 0。
+- 每个配置（模型 × 数据集 × 起点 × 反馈）：R0、R5 的 3 次重复均值 ± 标准差，逐轮平均曲线，成本与每次通过的成本。
+- 两两比较（同一模型 × 数据集 × 起点内）：先按题求 3 次重复的平均通过率，再求两组之差。
+  差值的 95% CI 用按题 bootstrap（seed 0，10000 次）；p 值用按题的符号翻转置换检验（seed 0，10000 次），
+  每道题只算一次，不会因合并重复而高估显著性。全部比较一起做 Holm 校正；另附逐次重复的 McNemar p 值作稳健性参考。
+
+用法：
+  python src/stage3_stats.py                     # results/stage3/  → results/stats/stage3_stats.{md,json}
+  python src/stage3_stats.py --matrix original   # results/original30/ → results/stats/original30_stats.{md,json}
+"""
+from __future__ import annotations
+
+import argparse
+import glob
+import json
+import math
+import os
+import random
+import re
+import statistics as st
+import sys
+from collections import defaultdict
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from extra_stats import PRICE_DATE, bootstrap_ci, cost_yuan, fmt_p, holm, model_key  # noqa: E402
+from run_matrix import N_TASKS, OUT_SUBDIR  # noqa: E402
+
+from data import ROOT  # noqa: E402
+
+OUT = os.path.join(ROOT, "results", "stats")
+N_PERM = 10000
+PAIRS = (("hint", "raw"), ("rag", "raw"), ("rag", "hint"), ("raw", "blind"),
+         ("hint_co", "raw_co"), ("rag_co", "raw_co"))
+_NAME = re.compile(r"^(.+?)_(he|ce|or)_(direct|syntax)_([a-z]+(?:_co)?)_rep(\d+)$")
+
+
+def parse_name(name: str) -> tuple[str, str, str, str, int] | None:
+    m = _NAME.match(name)
+    if not m:
+        return None
+    return m.group(1), m.group(2), m.group(3), m.group(4), int(m.group(5))
+
+
+def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS) -> dict[tuple, dict[int, dict]]:
+    """{(模型, 数据集, 起点, 反馈): {重复: {"curve", "passed": {id: bool}, "tokens": (输入, 输出)}}}"""
+    groups: dict[tuple, dict[int, dict]] = defaultdict(dict)
+    for p in sorted(glob.glob(os.path.join(base, "runs", "*.summary.json"))):
+        parsed = parse_name(os.path.basename(p)[: -len(".summary.json")])
+        if parsed is None:
+            continue
+        model, ds, prompt, fb, rep = parsed
+        with open(p, encoding="utf-8") as f:
+            s = json.load(f)
+        if s.get("n") != n_tasks.get(ds) or s.get("errors") != 0:
+            continue
+        with open(p[: -len(".summary.json")] + ".jsonl", encoding="utf-8") as f:
+            passed = {str(r["id"]): bool(r["passed"]) for r in map(json.loads, f)}
+        groups[(model, ds, prompt, fb)][rep] = {
+            "curve": s["pass@1_by_round"], "passed": passed,
+            "tokens": (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0))}
+    return dict(groups)
+
+
+def per_problem_diff(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
+    """每道题：A 在各次重复中的平均通过率 − B 的平均通过率（只用两边都有的重复和题目）。"""
+    reps_a, reps_b = sorted(a), sorted(b)
+    ids = set.intersection(*(set(a[r]["passed"]) for r in reps_a), *(set(b[r]["passed"]) for r in reps_b))
+    return [st.mean(a[r]["passed"][i] for r in reps_a) - st.mean(b[r]["passed"][i] for r in reps_b)
+            for i in sorted(ids)]
+
+
+def sign_flip_p(diffs: list[float], n_perm: int = N_PERM, seed: int = 0) -> float:
+    """双侧符号翻转置换检验：在“两组无差异”下每道题差值的正负号可交换。"""
+    obs = abs(sum(diffs))
+    if obs == 0:
+        return 1.0
+    rng = random.Random(seed)
+    hits = sum(1 for _ in range(n_perm)
+               if abs(sum(d if rng.random() < 0.5 else -d for d in diffs)) >= obs - 1e-12)
+    return (hits + 1) / (n_perm + 1)
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    n = b + c
+    if n == 0:
+        return 1.0
+    return min(1.0, 2 * sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2 ** n)
+
+
+def _mcnemar_per_rep(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
+    out = []
+    for r in sorted(set(a) & set(b)):
+        x, y = a[r]["passed"], b[r]["passed"]
+        ids = set(x) & set(y)
+        out.append(mcnemar_exact(sum(x[i] and not y[i] for i in ids), sum(y[i] and not x[i] for i in ids)))
+    return out
+
+
+def compare(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
+    rows = []
+    for model, ds, prompt in sorted({k[:3] for k in groups}):
+        for fa, fb in PAIRS:
+            a, b = groups.get((model, ds, prompt, fa)), groups.get((model, ds, prompt, fb))
+            if not a or not b:
+                continue
+            diffs = per_problem_diff(a, b)
+            mean, lo, hi = bootstrap_ci(diffs)
+            rows.append({"model": model, "ds": ds, "prompt": prompt, "a": fa, "b": fb, "n": len(diffs),
+                         "reps": f"{len(a)}/{len(b)}", "diff": round(mean, 2), "ci_lo": round(lo, 2),
+                         "ci_hi": round(hi, 2), "p": sign_flip_p(diffs),
+                         "mcnemar_per_rep": [round(p, 4) for p in _mcnemar_per_rep(a, b)]})
+    for r, ph in zip(rows, holm([r["p"] for r in rows])):
+        r["p_holm"] = ph
+    return rows
+
+
+def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
+    rows = []
+    for key in sorted(groups):
+        reps = groups[key]
+        curves = [reps[r]["curve"] for r in sorted(reps)]
+        r5 = [c[-1] for c in curves]
+        pin = sum(reps[r]["tokens"][0] for r in reps)
+        pout = sum(reps[r]["tokens"][1] for r in reps)
+        n_pass = sum(sum(reps[r]["passed"].values()) for r in reps)
+        yuan = cost_yuan(pin, pout, model_key(key[0]))
+        rows.append({"model": key[0], "ds": key[1], "prompt": key[2], "feedback": key[3], "reps": len(reps),
+                     "r0": curves[0][0], "r5_mean": round(st.mean(r5), 2),
+                     "r5_sd": round(st.stdev(r5), 2) if len(r5) > 1 else 0.0,
+                     "curve_mean": [round(st.mean(c[k] for c in curves), 2) for k in range(len(curves[0]))],
+                     "tokens": (pin, pout), "yuan": yuan,
+                     "yuan_per_pass": max(yuan.values()) / n_pass if n_pass else None})
+    return rows
+
+
+def write_markdown(summary: list[dict], comps: list[dict], title: str) -> str:
+    L = [f"# {title}（自动生成）", "",
+         "只统计完整的组（n 等于题数且 errors = 0）。R5 为最多修复 5 轮后的通过率，3 次重复取均值 ± 标准差。",
+         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。", "",
+         "## 各配置通过率", "",
+         "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 元/次通过 |", "|---|---|---|---|---|---|---|---|---|"]
+    for r in summary:
+        ypp = f"{r['yuan_per_pass']:.4f}" if r["yuan_per_pass"] is not None else "—"
+        L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['feedback']} | {r['reps']} | {r['r0']:.2f} | "
+                 f"{r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | {' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | {ypp} |")
+    L += ["", "## 两两比较", "",
+          "差值 = A − B（百分点），按题平均 3 次重复后计算；95% CI 为按题 bootstrap；p 为按题符号翻转置换检验；"
+          f"p(Holm) 在下表全部 {len(comps)} 个比较上校正；最后一列为逐次重复 McNemar p 值（稳健性参考，未校正）。", "",
+          "| 模型 | 数据集 | 起点 | A vs B | 题数 | 差值 [95% CI] | p | p(Holm) | 逐次重复 McNemar |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for r in comps:
+        L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['a']} vs {r['b']} | {r['n']} | "
+                 f"{r['diff']:+.2f} [{r['ci_lo']:+.2f}, {r['ci_hi']:+.2f}] | {fmt_p(r['p'])} | {fmt_p(r['p_holm'])} | "
+                 f"{', '.join(fmt_p(p) for p in r['mcnemar_per_rep'])} |")
+    return "\n".join(L) + "\n"
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--matrix", choices=sorted(OUT_SUBDIR), default="stage3")
+    ap.add_argument("--base", help="结果目录（默认 results/<stage3|original30>）")
+    ap.add_argument("--out", default=OUT, help="输出目录（默认 results/stats）")
+    args = ap.parse_args()
+    base = args.base or os.path.join(ROOT, "results", OUT_SUBDIR[args.matrix])
+    groups = load_groups(base)
+    summary, comps = summarize(groups), compare(groups)
+    os.makedirs(args.out, exist_ok=True)
+    stem = os.path.join(args.out, f"{OUT_SUBDIR[args.matrix]}_stats")
+    with open(stem + ".json", "w", encoding="utf-8") as f:
+        json.dump({"summary": summary, "comparisons": comps}, f, ensure_ascii=False, indent=1)
+    title = "第 3 阶段实验统计" if args.matrix == "stage3" else "新题集 Original-30 实验统计"
+    with open(stem + ".md", "w", encoding="utf-8") as f:
+        f.write(write_markdown(summary, comps, title))
+    print(f"{len(groups)} 个配置，{len(comps)} 个比较 → {stem}.md")
+
+
+if __name__ == "__main__":
+    main()
