@@ -21,7 +21,7 @@ CangjieBench（ESEM 2026）发现：语法约束提示一次生成能做到 40�
 ```
 src/
   runner.py            本地 cjc 编译运行 + 判定（与 CangjieBench 官方判定一致，已验证）
-  data.py              加载 CangjieBench HumanEval / ClassEval
+  data.py              加载 CangjieBench HumanEval / ClassEval，以及新题集 Original-30
   evaluate.py          评测 solutions jsonl
   llm.py               OpenAI 兼容 API 调用（模型拒收 temperature=0 时自动回退到 1）
   prompts.py           提示词：初始提示（direct / syntax）+ 四种修复反馈（blind / raw / hint / rag）
@@ -29,7 +29,7 @@ src/
   doc_retrieval.py     rag 反馈：用报错从官方文档（CangjieDocCorpus）BM25 检索片段
   repair.py            核心实验：生成 + 多轮修复（含只给编译错误、共享第 0 轮、ClassEval 全部测试驱动等选项）
   sample_passk.py      独立重采样基线（pass@k）
-  run_matrix.py        第 3 阶段实验矩阵批量运行器（共享第 0 轮、3 次重复、断点续跑、自动检查）
+  run_matrix.py        实验矩阵批量运行器：第 3 阶段与新题集（共享第 0 轮、3 次重复、断点续跑、自动检查）
   reeval_classeval.py  ClassEval 全部测试复评（官方 pass_rate 口径）
   analyze.py           统计汇总、McNemar 检验、错误类别修复率
   split_eval.py        5:5 题目划分一致性检查
@@ -38,12 +38,15 @@ src/
   mine_errors.py       从公开失败样本中统计高频 cjc 报错（零成本）
   postprocess.py       零成本后处理实验
 tests/                 单元测试（pytest）
+data/original30/       新写的 30 道题（控制数据污染），含登记表与检查记录，见其中 README.md
 external/CangjieBench/ 数据集与公开结果（MIT 许可，git clone 而来，不进 git）
 results/
   exp/                 18 组主实验（*.summary.json 进 git，原始 *.jsonl 不进 git）
   ablation/            9 组补强实验
   reeval/              ClassEval 全部测试复评结果
   stats/               零成本补充统计（extra_stats.md）
+  stage3/              第 3 阶段实验（summary.json 进 git）
+  original30/          新题集实验（summary.json 进 git）
   figures/             论文插图 fig1–fig4
   repro/               官方结果复现
   try/                 试跑与中止的实验（不进 git）
@@ -108,6 +111,10 @@ python src/repair.py --model doubao-seed-2-0-mini-260428 --prompt direct --feedb
 
 # 不调用 API 的流程自检：用官方参考答案作为第 0 轮（ClassEval 全部测试应为 82/84，HumanEval 应为 164/164）
 python src/repair.py --dataset classeval --all-tests --init external/CangjieBench/CangjieBench/ClassEval_Cangjie.jsonl --rounds 0 -o results/try/ce_ref_alltests.jsonl
+
+# 新题集 Original-30（30 道新写的题，格式同 HumanEval）：参考答案自检应为 30/30，再按矩阵运行
+python src/repair.py --dataset original --prompt direct --init data/original30/Original30_Cangjie.jsonl --rounds 0 -o results/try/or_ref.jsonl
+python src/run_matrix.py --matrix original --dry-run
 
 # 统计、检验、作图、测试
 python src/analyze.py

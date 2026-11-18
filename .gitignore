@@ -10,3 +10,6 @@ results/reeval/*.jsonl
 results/stage3/pilot/
 results/stage3/logs/
 results/stage3/**/*.jsonl
+results/original30/pilot/
+results/original30/logs/
+results/original30/**/*.jsonl

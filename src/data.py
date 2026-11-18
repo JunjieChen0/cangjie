@@ -9,6 +9,7 @@ BENCH_DIR = os.path.join(ROOT, "external", "CangjieBench")
 HUMANEVAL = os.path.join(BENCH_DIR, "CangjieBench", "HumanEval_Cangjie.jsonl")
 CLASSEVAL = os.path.join(BENCH_DIR, "CangjieBench", "ClassEval_Cangjie.jsonl")
 SYNTAX_RULE = os.path.join(BENCH_DIR, "Prompts", "syntax_rule.md")
+ORIGINAL30 = os.path.join(ROOT, "data", "original30", "Original30_Cangjie.jsonl")
 
 
 def read_jsonl(path: str) -> list[dict]:
@@ -35,6 +36,11 @@ def load_classeval() -> dict[int, dict]:
         t = d["test"][-1] if isinstance(d["test"], list) else d["test"]
         out[d["id"]] = {"id": d["id"], "prompt": d["prompt"], "solution": d["solution"], "test": t}
     return out
+
+
+def load_original30() -> dict[int, dict]:
+    """返回新写的 30 道控制数据污染题（格式同 HumanEval，见 data/original30/README.md）。"""
+    return {d["id"]: d for d in read_jsonl(ORIGINAL30)}
 
 
 def load_syntax_rule() -> str:

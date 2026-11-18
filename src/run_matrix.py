@@ -28,7 +28,9 @@ MODELS = {
     "doubao_mini": "doubao-seed-2-0-mini-260428",
     "kimik31p": "kimi-k3-1-pro-261024",
 }
-N_TASKS = {"he": 164, "ce": 84}
+N_TASKS = {"he": 164, "ce": 84, "or": 30}
+DATASET_ARG = {"he": "humaneval", "ce": "classeval", "or": "original"}
+OUT_SUBDIR = {"stage3": "stage3", "original": "original30"}
 PILOT_LIMIT = 10
 TEMP = 0.3
 KIMI_TEMP = 1.0
@@ -59,9 +61,11 @@ def _repairs(model, ds, prompt, feedbacks, reps=REPS, temp=TEMP, compile_only=Fa
             for fb in feedbacks for r in reps]
 
 
-def expand_matrix() -> tuple[list[Job], list[Job]]:
-    """返回 (第 0 轮任务, 修复任务)。"""
-    four = ("blind", "raw", "hint", "rag")
+FOUR = ("blind", "raw", "hint", "rag")
+
+
+def _stage3_repairs() -> list[Job]:
+    four = FOUR
     rep = []
     for m in ("ds_v41f", "doubao_mini"):                               # A：HumanEval 主矩阵
         for p in ("direct", "syntax"):
@@ -74,6 +78,22 @@ def expand_matrix() -> tuple[list[Job], list[Job]]:
     rep += _repairs("kimik31p", "he", "direct", ("raw", "hint"), temp=KIMI_TEMP)            # D：Kimi
     rep += _repairs("kimik31p", "ce", "direct", ("raw", "hint"), reps=(1,), temp=KIMI_TEMP,
                     env={"LLM_TIMEOUT": "600"})
+    return rep
+
+
+def _original_repairs() -> list[Job]:
+    """新题集 Original-30：与第 3 阶段相同协议，用来检验结论在未见过的题目上是否成立。"""
+    rep = []
+    for m in ("ds_v41f", "doubao_mini"):                               # E1
+        for p in ("direct", "syntax"):
+            rep += _repairs(m, "or", p, FOUR)
+    rep += _repairs("kimik31p", "or", "direct", ("raw", "hint"), temp=KIMI_TEMP)            # E2
+    return rep
+
+
+def expand_matrix(matrix: str = "stage3") -> tuple[list[Job], list[Job]]:
+    """返回 (第 0 轮任务, 修复任务)。matrix 为 stage3（默认）或 original。"""
+    rep = {"stage3": _stage3_repairs, "original": _original_repairs}[matrix]()
     r0, seen = [], set()
     for j in rep:
         if j.r0_name not in seen:
@@ -82,8 +102,8 @@ def expand_matrix() -> tuple[list[Job], list[Job]]:
     return r0, rep
 
 
-def out_dir(pilot: bool) -> str:
-    return os.path.join(ROOT, "results", "stage3", "pilot" if pilot else "")
+def out_dir(pilot: bool, matrix: str = "stage3") -> str:
+    return os.path.join(ROOT, "results", OUT_SUBDIR[matrix], "pilot" if pilot else "")
 
 
 def output_path(job: Job, base: str) -> str:
@@ -93,7 +113,7 @@ def output_path(job: Job, base: str) -> str:
 
 def build_cmd(job: Job, base: str, pilot: bool, workers: int) -> list[str]:
     cmd = [sys.executable, os.path.join(ROOT, "src", "repair.py"),
-           "--dataset", "humaneval" if job.ds == "he" else "classeval",
+           "--dataset", DATASET_ARG[job.ds],
            "--model", MODELS[job.model], "--prompt", job.prompt, "--strip-main",
            "--temperature", str(job.temp), "-j", str(workers), "-o", output_path(job, base)]
     if job.ds == "ce":
@@ -198,7 +218,9 @@ def select(r0_jobs: list[Job], rep_jobs: list[Job], pattern: str | None) -> tupl
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--pilot", action="store_true", help=f"每组只跑 {PILOT_LIMIT} 题，输出到 results/stage3/pilot/")
+    ap.add_argument("--matrix", choices=sorted(OUT_SUBDIR), default="stage3",
+                    help="stage3 = 第 3 阶段矩阵（results/stage3/）；original = 新题集（results/original30/）")
+    ap.add_argument("--pilot", action="store_true", help=f"每组只跑 {PILOT_LIMIT} 题，输出到 <结果目录>/pilot/")
     ap.add_argument("--only", help="只运行名称匹配该正则的组（所需的第 0 轮自动包含）")
     ap.add_argument("-p", "--parallel", type=int, default=1, help="同时运行的组数")
     ap.add_argument("-j", "--workers", type=int, default=4, help="每组内部的并发题数（传给 repair.py）")
@@ -206,8 +228,8 @@ def main():
     ap.add_argument("--check", action="store_true", help="只检查，不运行")
     args = ap.parse_args()
 
-    r0_jobs, rep_jobs = select(*expand_matrix(), args.only)
-    base = out_dir(args.pilot)
+    r0_jobs, rep_jobs = select(*expand_matrix(args.matrix), args.only)
+    base = out_dir(args.pilot, args.matrix)
     print(f"矩阵：第 0 轮 {len(r0_jobs)} 组，修复 {len(rep_jobs)} 组；输出目录 {base}")
 
     if args.dry_run:

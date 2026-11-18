@@ -26,7 +26,7 @@ from dataclasses import dataclass
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prompts as P  # noqa: E402
-from data import load_classeval, load_humaneval, load_syntax_rule, read_jsonl, write_jsonl  # noqa: E402
+from data import load_classeval, load_humaneval, load_original30, load_syntax_rule, read_jsonl, write_jsonl  # noqa: E402
 from doc_retrieval import format_docs, retrieve_for_feedback  # noqa: E402
 from llm import chat, extract_code, strip_main  # noqa: E402
 from reeval_classeval import load_classeval_tests  # noqa: E402
@@ -161,7 +161,8 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dataset", choices=["humaneval", "classeval"], default="humaneval")
+    ap.add_argument("--dataset", choices=["humaneval", "classeval", "original"], default="humaneval",
+                    help="original = data/original30 新写的 30 道题")
     ap.add_argument("--model", default=None, help="模型名（默认读取 LLM_MODEL）")
     ap.add_argument("--prompt", choices=["direct", "syntax"], default="syntax")
     ap.add_argument("--feedback", choices=["blind", "raw", "hint", "rag"], default="raw")
@@ -181,7 +182,7 @@ def main():
 
     if args.all_tests and args.dataset != "classeval":
         ap.error("--all-tests 只适用于 --dataset classeval")
-    ds = load_humaneval() if args.dataset == "humaneval" else load_classeval()
+    ds = {"humaneval": load_humaneval, "classeval": load_classeval, "original": load_original30}[args.dataset]()
     if args.all_tests:
         tests = load_classeval_tests()
         ds = {k: dict(v, tests=tests[str(k)]["tests"]) for k, v in ds.items()}
