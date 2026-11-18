@@ -5,7 +5,7 @@
 - 两两比较（同一模型 × 数据集 × 起点内）：先按题求 3 次重复的平均通过率，再求两组之差。
   差值的 95% CI 用按题 bootstrap（seed 0，10000 次）；p 值用按题的符号翻转置换检验（seed 0，10000 次），
   每道题只算一次，不会因合并重复而高估显著性。全部比较一起做 Holm 校正；另附逐次重复的 McNemar p 值作稳健性参考。
-- 敏感性分析：去掉判定不稳定的题（FLAKY）后重算全部比较，检查结论是否不变。
+- 敏感性分析：去掉判定不稳定的题（FLAKY），以及每个比较中两组任一组超时的题，重算全部比较，检查结论是否不变。
 
 用法：
   python src/stage3_stats.py                     # results/stage3/  → results/stats/stage3_stats.{md,json}
@@ -82,7 +82,8 @@ def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS,
         groups[(model, ds, prompt, fb)][rep] = {
             "curve": s["pass@1_by_round"], "passed": {i: bool(r["passed"]) for i, r in by_id.items()},
             "tokens": (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0)),
-            "timeouts": len(errs)}
+            "timeouts": len(errs),
+            "timeout_ids": frozenset(i for i, r in by_id.items() if "error" in r)}
     return dict(groups)
 
 
@@ -121,15 +122,19 @@ def _mcnemar_per_rep(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
     return out
 
 
-def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] | None = None) -> list[dict]:
-    """exclude：{数据集: 要去掉的题号}，用于敏感性分析；默认不去掉。"""
+def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] | None = None,
+            drop_timeouts: bool = False) -> list[dict]:
+    """敏感性分析用：exclude={数据集: 要去掉的题号}；drop_timeouts=True 时，两组任一次重复中超时的题从两组同时去掉。"""
     rows = []
     for model, ds, prompt in sorted({k[:3] for k in groups}):
         for fa, fb in PAIRS:
             a, b = groups.get((model, ds, prompt, fa)), groups.get((model, ds, prompt, fb))
             if not a or not b:
                 continue
-            diffs = per_problem_diff(a, b, (exclude or {}).get(ds, frozenset()))
+            ex = set((exclude or {}).get(ds, frozenset()))
+            if drop_timeouts:
+                ex |= {i for g in (a, b) for rep in g.values() for i in rep.get("timeout_ids", ())}
+            diffs = per_problem_diff(a, b, frozenset(ex))
             mean, lo, hi = bootstrap_ci(diffs)
             rows.append({"model": model, "ds": ds, "prompt": prompt, "a": fa, "b": fb, "n": len(diffs),
                          "reps": f"{len(a)}/{len(b)}", "diff": round(mean, 2), "ci_lo": round(lo, 2),
@@ -185,9 +190,11 @@ def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: lis
                  f"{r['diff']:+.2f} [{r['ci_lo']:+.2f}, {r['ci_hi']:+.2f}] | {fmt_p(r['p'])} | {fmt_p(r['p_holm'])} | "
                  f"{', '.join(fmt_p(p) for p in r['mcnemar_per_rep'])} |")
     if sens:
-        L += ["", "## 敏感性分析：去掉判定不稳定的题", "",
+        L += ["", "## 敏感性分析：去掉判定不稳定的题和超时的题", "",
               "去掉 " + "、".join(f"{ds} 第 {', '.join(sorted(ids))} 题" for ds, ids in sorted(FLAKY.items()))
-              + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释），重新计算两两比较与 Holm 校正。", "",
+              + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释）；"
+              "并且每个比较中，两组任一次重复里 API 超时的题从两组同时去掉（只有 "
+              + "、".join(sorted(TIMEOUT_AS_FAIL)) + " 有超时）。然后重新计算两两比较与 Holm 校正。", "",
               "| 模型 | 数据集 | 起点 | A vs B | 差值（全部题） | p(Holm)（全部题） | 题数 | 差值（去掉后） | p(Holm)（去掉后） |",
               "|---|---|---|---|---|---|---|---|---|"]
         for r, s in zip(comps, sens):
@@ -204,7 +211,7 @@ def main():
     args = ap.parse_args()
     base = args.base or os.path.join(ROOT, "results", OUT_SUBDIR[args.matrix])
     groups = load_groups(base)
-    summary, comps, sens = summarize(groups), compare(groups), compare(groups, FLAKY)
+    summary, comps, sens = summarize(groups), compare(groups), compare(groups, FLAKY, drop_timeouts=True)
     os.makedirs(args.out, exist_ok=True)
     stem = os.path.join(args.out, f"{OUT_SUBDIR[args.matrix]}_stats")
     with open(stem + ".json", "w", encoding="utf-8") as f:

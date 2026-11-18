@@ -56,6 +56,18 @@ def test_kimi_timeouts_count_as_fail_other_models_stay_strict(tmp_path):
     assert S.load_groups(str(tmp_path), {"ce": 4}, timeout_as_fail=frozenset()) == {}   # 全部严格
 
 
+def test_sensitivity_drops_problems_timed_out_in_either_arm(tmp_path):
+    timeout = "APITimeoutError('Request timed out.')"
+    ok = {i: True for i in range(4)}
+    _write_group(tmp_path, "kimik31p_ce_direct_raw_rep1", ok, err={1: timeout, 2: timeout})
+    _write_group(tmp_path, "kimik31p_ce_direct_hint_rep1", ok, err={3: timeout})
+    groups = S.load_groups(str(tmp_path), {"ce": 4})
+    main, = S.compare(groups)
+    sens, = S.compare(groups, drop_timeouts=True)
+    assert (main["n"], main["diff"]) == (4, 25.0)       # hint − raw 按题：0, +1, +1, −1 → 平均 +25
+    assert (sens["n"], sens["diff"]) == (1, 0.0)        # 去掉 1、2、3 后只剩第 0 题
+
+
 def test_kimi_timeout_group_skipped_while_rerun_in_progress(tmp_path):
     _write_group(tmp_path, "kimik31p_ce_direct_raw_rep1", {i: True for i in range(4)},
                  err={1: "APITimeoutError('Request timed out.')"})
