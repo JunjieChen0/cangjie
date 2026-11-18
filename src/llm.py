@@ -39,6 +39,7 @@ def get_client():
             base_url=os.environ.get("LLM_BASE_URL", "https://api.deepseek.com/v1"),
             api_key=os.environ.get("LLM_API_KEY", "EMPTY"),
             timeout=float(os.environ.get("LLM_TIMEOUT", "240")),
+            max_retries=0,  # 只用 chat() 自己的重试；SDK 默认再重试 2 次，会让一次卡住的调用耗时变成 15 倍超时
         )
     return _client
 

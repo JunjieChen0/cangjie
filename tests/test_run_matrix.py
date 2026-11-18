@@ -43,6 +43,13 @@ def test_kimi_uses_temperature_one_and_long_timeout_for_classeval():
     assert ce and all(j.env == {"LLM_TIMEOUT": "600"} for j in ce)
 
 
+def test_deepseek_classeval_uses_long_timeout():
+    r0, rep = M.expand_matrix()
+    ds_ce = [j for j in r0 + rep if j.model == "ds_v41f" and j.ds == "ce"]
+    assert len(ds_ce) == 13 and all(j.env == {"LLM_TIMEOUT": "600"} for j in ds_ce)
+    assert all(j.env == {} for j in r0 + rep if j.model == "doubao_mini")
+
+
 def test_compile_only_flag_and_pilot_limit():
     _, rep = M.expand_matrix()
     job = next(j for j in rep if j.compile_only)

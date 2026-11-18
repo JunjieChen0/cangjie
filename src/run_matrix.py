@@ -67,7 +67,7 @@ def expand_matrix() -> tuple[list[Job], list[Job]]:
         for p in ("direct", "syntax"):
             rep += _repairs(m, "he", p, four)
     for m in ("ds_v41f", "doubao_mini"):                               # B：ClassEval 全部测试驱动
-        rep += _repairs(m, "ce", "direct", four)
+        rep += _repairs(m, "ce", "direct", four, env={"LLM_TIMEOUT": "600"} if m == "ds_v41f" else None)
     rep += _repairs("doubao_mini", "ce", "syntax", ("raw", "hint", "rag"))
     for m in ("ds_v41f", "doubao_mini"):                               # C：只给编译错误
         rep += _repairs(m, "he", "direct", ("raw", "hint", "rag"), compile_only=True)
