@@ -63,6 +63,18 @@ def test_compare_applies_holm_over_family(tmp_path):
     assert len(hr["mcnemar_per_rep"]) == 3
 
 
+def test_compare_excludes_flaky_problems_in_sensitivity(tmp_path):
+    for r in (1, 2, 3):
+        _write_group(tmp_path, f"doubao_mini_he_direct_raw_rep{r}", {i: False for i in range(4)})
+        _write_group(tmp_path, f"doubao_mini_he_direct_hint_rep{r}", {i: i == 0 for i in range(4)})
+    groups = S.load_groups(str(tmp_path), {"he": 4})
+    full, = S.compare(groups)
+    excl, = S.compare(groups, {"he": frozenset({"0"})})
+    assert (full["n"], full["diff"]) == (4, 25.0)
+    assert (excl["n"], excl["diff"]) == (3, 0.0)
+    assert S.FLAKY == {"he": frozenset({"20"}), "ce": frozenset({"58"})}
+
+
 def test_summarize_reports_mean_sd_and_cost(tmp_path):
     for r, k in ((1, 2), (2, 3), (3, 4)):
         _write_group(tmp_path, f"doubao_mini_or_direct_raw_rep{r}", {i: i < k for i in range(10)},

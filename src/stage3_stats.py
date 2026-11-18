@@ -5,6 +5,7 @@
 - 两两比较（同一模型 × 数据集 × 起点内）：先按题求 3 次重复的平均通过率，再求两组之差。
   差值的 95% CI 用按题 bootstrap（seed 0，10000 次）；p 值用按题的符号翻转置换检验（seed 0，10000 次），
   每道题只算一次，不会因合并重复而高估显著性。全部比较一起做 Holm 校正；另附逐次重复的 McNemar p 值作稳健性参考。
+- 敏感性分析：去掉判定不稳定的题（FLAKY）后重算全部比较，检查结论是否不变。
 
 用法：
   python src/stage3_stats.py                     # results/stage3/  → results/stats/stage3_stats.{md,json}
@@ -33,6 +34,10 @@ OUT = os.path.join(ROOT, "results", "stats")
 N_PERM = 10000
 PAIRS = (("hint", "raw"), ("rag", "raw"), ("rag", "hint"), ("raw", "blind"),
          ("hint_co", "raw_co"), ("rag_co", "raw_co"))
+# 判定不稳定的题（参考答案重复运行时时过时不过），只在敏感性分析中去掉：
+#   HumanEval 20：测试用 != 比较 (Float64, Float64) 元组，cjc 时而接受、时而报“不支持”（约 50%）
+#   ClassEval 58：扫雷参考答案随机布雷、可能重叠，方法级测试 0 检查雷数，约 1/10 不通过
+FLAKY = {"he": frozenset({"20"}), "ce": frozenset({"58"})}
 _NAME = re.compile(r"^(.+?)_(he|ce|or)_(direct|syntax)_([a-z]+(?:_co)?)_rep(\d+)$")
 
 
@@ -63,10 +68,10 @@ def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS) -> dict[tuple, dic
     return dict(groups)
 
 
-def per_problem_diff(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
-    """每道题：A 在各次重复中的平均通过率 − B 的平均通过率（只用两边都有的重复和题目）。"""
+def per_problem_diff(a: dict[int, dict], b: dict[int, dict], exclude: frozenset = frozenset()) -> list[float]:
+    """每道题：A 在各次重复中的平均通过率 − B 的平均通过率（只用两边都有的重复和题目，去掉 exclude 中的题）。"""
     reps_a, reps_b = sorted(a), sorted(b)
-    ids = set.intersection(*(set(a[r]["passed"]) for r in reps_a), *(set(b[r]["passed"]) for r in reps_b))
+    ids = set.intersection(*(set(a[r]["passed"]) for r in reps_a), *(set(b[r]["passed"]) for r in reps_b)) - exclude
     return [st.mean(a[r]["passed"][i] for r in reps_a) - st.mean(b[r]["passed"][i] for r in reps_b)
             for i in sorted(ids)]
 
@@ -98,14 +103,15 @@ def _mcnemar_per_rep(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
     return out
 
 
-def compare(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
+def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] | None = None) -> list[dict]:
+    """exclude：{数据集: 要去掉的题号}，用于敏感性分析；默认不去掉。"""
     rows = []
     for model, ds, prompt in sorted({k[:3] for k in groups}):
         for fa, fb in PAIRS:
             a, b = groups.get((model, ds, prompt, fa)), groups.get((model, ds, prompt, fb))
             if not a or not b:
                 continue
-            diffs = per_problem_diff(a, b)
+            diffs = per_problem_diff(a, b, (exclude or {}).get(ds, frozenset()))
             mean, lo, hi = bootstrap_ci(diffs)
             rows.append({"model": model, "ds": ds, "prompt": prompt, "a": fa, "b": fb, "n": len(diffs),
                          "reps": f"{len(a)}/{len(b)}", "diff": round(mean, 2), "ci_lo": round(lo, 2),
@@ -135,7 +141,7 @@ def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
     return rows
 
 
-def write_markdown(summary: list[dict], comps: list[dict], title: str) -> str:
+def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: list[dict] | None = None) -> str:
     L = [f"# {title}（自动生成）", "",
          "只统计完整的组（n 等于题数且 errors = 0）。R5 为最多修复 5 轮后的通过率，3 次重复取均值 ± 标准差。",
          f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。", "",
@@ -154,6 +160,15 @@ def write_markdown(summary: list[dict], comps: list[dict], title: str) -> str:
         L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['a']} vs {r['b']} | {r['n']} | "
                  f"{r['diff']:+.2f} [{r['ci_lo']:+.2f}, {r['ci_hi']:+.2f}] | {fmt_p(r['p'])} | {fmt_p(r['p_holm'])} | "
                  f"{', '.join(fmt_p(p) for p in r['mcnemar_per_rep'])} |")
+    if sens:
+        L += ["", "## 敏感性分析：去掉判定不稳定的题", "",
+              "去掉 " + "、".join(f"{ds} 第 {', '.join(sorted(ids))} 题" for ds, ids in sorted(FLAKY.items()))
+              + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释），重新计算两两比较与 Holm 校正。", "",
+              "| 模型 | 数据集 | 起点 | A vs B | 差值（全部题） | p(Holm)（全部题） | 题数 | 差值（去掉后） | p(Holm)（去掉后） |",
+              "|---|---|---|---|---|---|---|---|---|"]
+        for r, s in zip(comps, sens):
+            L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['a']} vs {r['b']} | {r['diff']:+.2f} | "
+                     f"{fmt_p(r['p_holm'])} | {s['n']} | {s['diff']:+.2f} | {fmt_p(s['p_holm'])} |")
     return "\n".join(L) + "\n"
 
 
@@ -165,14 +180,15 @@ def main():
     args = ap.parse_args()
     base = args.base or os.path.join(ROOT, "results", OUT_SUBDIR[args.matrix])
     groups = load_groups(base)
-    summary, comps = summarize(groups), compare(groups)
+    summary, comps, sens = summarize(groups), compare(groups), compare(groups, FLAKY)
     os.makedirs(args.out, exist_ok=True)
     stem = os.path.join(args.out, f"{OUT_SUBDIR[args.matrix]}_stats")
     with open(stem + ".json", "w", encoding="utf-8") as f:
-        json.dump({"summary": summary, "comparisons": comps}, f, ensure_ascii=False, indent=1)
+        json.dump({"summary": summary, "comparisons": comps, "sensitivity_excl_flaky": sens},
+                  f, ensure_ascii=False, indent=1)
     title = "第 3 阶段实验统计" if args.matrix == "stage3" else "新题集 Original-30 实验统计"
     with open(stem + ".md", "w", encoding="utf-8") as f:
-        f.write(write_markdown(summary, comps, title))
+        f.write(write_markdown(summary, comps, title, sens))
     print(f"{len(groups)} 个配置，{len(comps)} 个比较 → {stem}.md")
 
 
