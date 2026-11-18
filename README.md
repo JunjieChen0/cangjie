@@ -34,7 +34,7 @@ src/
   analyze.py           统计汇总、McNemar 检验、错误类别修复率
   split_eval.py        5:5 题目划分一致性检查
   extra_stats.py       零成本补充统计：Test 半区、Holm 校正、成本、截断率
-  stage3_stats.py      第 3 阶段 / 新题集统计：3 次重复均值±sd、按题置换检验与 bootstrap CI、Holm 校正、成本、去掉判定不稳定题的敏感性分析
+  stage3_stats.py      第 3 阶段 / 新题集统计：3 次重复均值±sd、按题置换检验与 bootstrap CI、Holm 校正、成本、去掉判定不稳定题的敏感性分析；Kimi 的 API 超时按未通过计
   plot_figures.py      生成论文插图
   mine_errors.py       从公开失败样本中统计高频 cjc 报错（零成本）
   postprocess.py       零成本后处理实验

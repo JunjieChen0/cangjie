@@ -6,12 +6,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import stage3_stats as S  # noqa: E402
 
 
-def _write_group(base, name, passed: dict, n=None, errors=0, curve=None, tokens=(1000, 2000)):
+def _write_group(base, name, passed: dict, n=None, errors=0, curve=None, tokens=(1000, 2000), err=None):
+    """err: {题号: 报错文本}，这些题写成出错行（passed=False）。"""
     runs = os.path.join(base, "runs")
     os.makedirs(runs, exist_ok=True)
+    err = err or {}
+    errors = errors or len(err)
     with open(os.path.join(runs, name + ".jsonl"), "w", encoding="utf-8") as f:
         for i, ok in passed.items():
-            f.write(json.dumps({"id": i, "passed": ok}) + "\n")
+            row = {"id": i, "passed": ok} if i not in err else {"id": i, "passed": False, "error": err[i]}
+            f.write(json.dumps(row) + "\n")
     s = {"n": len(passed) if n is None else n, "errors": errors,
          "pass@1_by_round": curve or [0.0, 100 * sum(passed.values()) / len(passed)],
          "total_prompt_tokens": tokens[0], "total_completion_tokens": tokens[1]}
@@ -34,6 +38,30 @@ def test_load_groups_skips_incomplete_or_errored(tmp_path):
     g = S.load_groups(str(tmp_path), {"or": 4})
     assert list(g) == [("doubao_mini", "or", "direct", "raw")]
     assert list(g[("doubao_mini", "or", "direct", "raw")]) == [1]
+
+
+def test_kimi_timeouts_count_as_fail_other_models_stay_strict(tmp_path):
+    ok = {i: True for i in range(4)}
+    timeout = "APITimeoutError('Request timed out.')"
+    _write_group(tmp_path, "kimik31p_ce_direct_raw_rep1", ok, err={1: timeout})
+    _write_group(tmp_path, "kimik31p_ce_direct_hint_rep1", ok, err={2: "RuntimeError('boom')"})
+    _write_group(tmp_path, "ds_v41f_ce_direct_raw_rep1", ok, err={1: timeout})
+    g = S.load_groups(str(tmp_path), {"ce": 4})
+    assert list(g) == [("kimik31p", "ce", "direct", "raw")]     # Kimi 非超时错误、DeepSeek 超时都跳过
+    rep = g[("kimik31p", "ce", "direct", "raw")][1]
+    assert rep["timeouts"] == 1 and rep["passed"]["1"] is False and sum(rep["passed"].values()) == 3
+    row, = S.summarize(g)
+    assert row["timeouts"] == 1
+    assert "API 超时按未通过计入分母" in S.write_markdown([row], [], "t")
+    assert S.load_groups(str(tmp_path), {"ce": 4}, timeout_as_fail=frozenset()) == {}   # 全部严格
+
+
+def test_kimi_timeout_group_skipped_while_rerun_in_progress(tmp_path):
+    _write_group(tmp_path, "kimik31p_ce_direct_raw_rep1", {i: True for i in range(4)},
+                 err={1: "APITimeoutError('Request timed out.')"})
+    with open(tmp_path / "runs" / "kimik31p_ce_direct_raw_rep1.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps({"id": 1, "passed": True}) + "\n")               # 补跑追加的行，summary 仍是旧的
+    assert S.load_groups(str(tmp_path), {"ce": 4}) == {}
 
 
 def test_per_problem_diff_averages_over_reps():

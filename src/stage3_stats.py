@@ -1,6 +1,6 @@
 """第 3 阶段 / 新题集实验的统计（只读结果文件，不调用 API）。
 
-- 只统计完整的组：summary 中 n 等于题数且 errors = 0。
+- 只统计完整的组：summary 中 n 等于题数且 errors = 0；Kimi 例外，API 超时的题按未通过计入（TIMEOUT_AS_FAIL）。
 - 每个配置（模型 × 数据集 × 起点 × 反馈）：R0、R5 的 3 次重复均值 ± 标准差，逐轮平均曲线，成本与每次通过的成本。
 - 两两比较（同一模型 × 数据集 × 起点内）：先按题求 3 次重复的平均通过率，再求两组之差。
   差值的 95% CI 用按题 bootstrap（seed 0，10000 次）；p 值用按题的符号翻转置换检验（seed 0，10000 次），
@@ -38,6 +38,9 @@ PAIRS = (("hint", "raw"), ("rag", "raw"), ("rag", "hint"), ("raw", "blind"),
 #   HumanEval 20：测试用 != 比较 (Float64, Float64) 元组，cjc 时而接受、时而报“不支持”（约 50%）
 #   ClassEval 58：扫雷参考答案随机布雷、可能重叠，方法级测试 0 检查雷数，约 1/10 不通过
 FLAKY = {"he": frozenset({"20"}), "ce": frozenset({"58"})}
+# Kimi-K3.1-Pro 生成慢，个别题 API 超时（HumanEval 240 秒、ClassEval 600 秒，每次调用重试 5 次）后不再补跑，
+# 按未通过计入分母；其他模型仍要求 errors = 0。
+TIMEOUT_AS_FAIL = frozenset({"kimik31p"})
 _NAME = re.compile(r"^(.+?)_(he|ce|or)_(direct|syntax)_([a-z]+(?:_co)?)_rep(\d+)$")
 
 
@@ -48,8 +51,14 @@ def parse_name(name: str) -> tuple[str, str, str, str, int] | None:
     return m.group(1), m.group(2), m.group(3), m.group(4), int(m.group(5))
 
 
-def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS) -> dict[tuple, dict[int, dict]]:
-    """{(模型, 数据集, 起点, 反馈): {重复: {"curve", "passed": {id: bool}, "tokens": (输入, 输出)}}}"""
+def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS,
+                timeout_as_fail: frozenset = None) -> dict[tuple, dict[int, dict]]:
+    """{(模型, 数据集, 起点, 反馈): {重复: {"curve", "passed": {id: bool}, "tokens": (输入, 输出), "timeouts"}}}
+
+    只收 errors = 0 的组；例外是 timeout_as_fail 中的模型（默认 TIMEOUT_AS_FAIL）：出错的题若全部是 API 超时，
+    就按失败计入分母。repair.py 已把这些题记为未通过且每一轮都算失败，曲线无需调整（其 token 未记录，成本略偏低）。
+    """
+    timeout_as_fail = TIMEOUT_AS_FAIL if timeout_as_fail is None else timeout_as_fail
     groups: dict[tuple, dict[int, dict]] = defaultdict(dict)
     for p in sorted(glob.glob(os.path.join(base, "runs", "*.summary.json"))):
         parsed = parse_name(os.path.basename(p)[: -len(".summary.json")])
@@ -58,13 +67,22 @@ def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS) -> dict[tuple, dic
         model, ds, prompt, fb, rep = parsed
         with open(p, encoding="utf-8") as f:
             s = json.load(f)
-        if s.get("n") != n_tasks.get(ds) or s.get("errors") != 0:
+        if s.get("n") != n_tasks.get(ds):
             continue
+        if s.get("errors") != 0 and model not in timeout_as_fail:
+            continue
+        by_id: dict[str, dict] = {}
         with open(p[: -len(".summary.json")] + ".jsonl", encoding="utf-8") as f:
-            passed = {str(r["id"]): bool(r["passed"]) for r in map(json.loads, f)}
+            for r in (json.loads(line) for line in f if line.strip()):
+                if "error" not in r or str(r["id"]) not in by_id:   # 同 repair.py 续跑：无错误的行优先
+                    by_id[str(r["id"])] = r
+        errs = [str(r["error"]) for r in by_id.values() if "error" in r]
+        if len(errs) != s.get("errors") or not all("Timeout" in e for e in errs):
+            continue                                                  # 正在补跑，或有非超时错误
         groups[(model, ds, prompt, fb)][rep] = {
-            "curve": s["pass@1_by_round"], "passed": passed,
-            "tokens": (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0))}
+            "curve": s["pass@1_by_round"], "passed": {i: bool(r["passed"]) for i, r in by_id.items()},
+            "tokens": (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0)),
+            "timeouts": len(errs)}
     return dict(groups)
 
 
@@ -133,6 +151,7 @@ def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
         n_pass = sum(sum(reps[r]["passed"].values()) for r in reps)
         yuan = cost_yuan(pin, pout, model_key(key[0]))
         rows.append({"model": key[0], "ds": key[1], "prompt": key[2], "feedback": key[3], "reps": len(reps),
+                     "timeouts": sum(reps[r].get("timeouts", 0) for r in reps),
                      "r0": curves[0][0], "r5_mean": round(st.mean(r5), 2),
                      "r5_sd": round(st.stdev(r5), 2) if len(r5) > 1 else 0.0,
                      "curve_mean": [round(st.mean(c[k] for c in curves), 2) for k in range(len(curves[0]))],
@@ -144,7 +163,12 @@ def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
 def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: list[dict] | None = None) -> str:
     L = [f"# {title}（自动生成）", "",
          "只统计完整的组（n 等于题数且 errors = 0）。R5 为最多修复 5 轮后的通过率，3 次重复取均值 ± 标准差。",
-         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。", "",
+         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。", ""]
+    timed_out = [r for r in summary if r.get("timeouts")]
+    if timed_out:
+        L += ["API 超时按未通过计入分母（只对 " + "、".join(sorted(TIMEOUT_AS_FAIL)) + "，不补跑）：" + "；".join(
+            f"{r['model']} {r['ds']} {r['prompt']} {r['feedback']} {r['timeouts']} 题次" for r in timed_out) + "。", ""]
+    L += [
          "## 各配置通过率", "",
          "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 元/次通过 |", "|---|---|---|---|---|---|---|---|---|"]
     for r in summary:
