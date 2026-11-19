@@ -120,13 +120,13 @@ def _review_repairs() -> list[Job]:
         rep += _full(m, env={"LLM_TIMEOUT": "600"})
     rep += _full("kimik31p", temp=KIMI_TEMP, env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT})
     rep += _repairs("ds_v41f", "ce", "syntax", FOUR, env={"LLM_TIMEOUT": "600"})
-    return rep + _agent_jobs()
+    return rep + _arm_jobs(tuple(AGENT_ARMS)) + _arm_jobs(("rag2",))
 
 
-def _agent_jobs() -> list[Job]:
-    """Agent 基线（5 步与 15 步）。新模型与 Kimi 用 review 自己的第 0 轮；DeepSeek / Doubao 复用第 3 阶段与
-    Original-30 的共享第 0 轮，以便与原有修复组逐题配对。"""
-    arms, env, rep = tuple(AGENT_ARMS), {"LLM_TIMEOUT": "600"}, []
+def _arm_jobs(arms: tuple[str, ...]) -> list[Job]:
+    """在全部 6 个模型上补跑新增的反馈组（agent / agent15 / rag2）。新模型与 Kimi 用 review 自己的第 0 轮；
+    DeepSeek / Doubao 复用第 3 阶段与 Original-30 的共享第 0 轮，以便与原有修复组逐题配对。"""
+    env, rep = {"LLM_TIMEOUT": "600"}, []
     for m in NEW_MODELS + ("kimik31p",):
         temp = KIMI_TEMP if m == "kimik31p" else TEMP
         menv = {"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT} if m == "kimik31p" else env

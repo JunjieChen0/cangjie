@@ -1,0 +1,150 @@
+{"qid": "0474d6714a5c", "query": "Cangjie if condition parentheses"}
+{"qid": "f95ca5c1a518", "query": "Cangjie for loop pattern syntax"}
+{"qid": "b1f1dc739690", "query": "Cangjie string filter lambda syntax"}
+{"qid": "f0a1245ea6da", "query": "Cangjie lambda syntax for map function"}
+{"qid": "002522ece99b", "query": "Cangjie for loop parentheses required"}
+{"qid": "ca83e72f13c7", "query": "Cangjie for-in expression"}
+{"qid": "739b16f0b0d7", "query": "Cangjie for loop range syntax"}
+{"qid": "812f34a51bf8", "query": "Cangjie array type syntax"}
+{"qid": "16bbcf1904fb", "query": "Cangjie lambda expression syntax"}
+{"qid": "35938a03bf3b", "query": "Cangjie lambda expression syntax"}
+{"qid": "bbe4768f8cad", "query": "Cangjie for loop in pattern"}
+{"qid": "0b517b252198", "query": "Cangjie lambda expression syntax"}
+{"qid": "ca066a328ab2", "query": "Cangjie for loop syntax"}
+{"qid": "c0021f109a2a", "query": "Cangjie match case arm curly braces"}
+{"qid": "c3647919fe83", "query": "Cangjie if and for loop syntax"}
+{"qid": "c7f4580778e2", "query": "Cangjie match lambda format syntax"}
+{"qid": "1f531782fe5a", "query": "Cangjie if expression syntax"}
+{"qid": "e5e33cf0a1a2", "query": "Cangjie val variable declaration syntax"}
+{"qid": "e1d8048704bb", "query": "Cangjie mutable variable declaration"}
+{"qid": "10032099a0eb", "query": "Cangjie for loop variable pattern"}
+{"qid": "93d940d9786d", "query": "Cangjie for loop syntax"}
+{"qid": "97b5c570fd77", "query": "Cangjie lambda expression syntax"}
+{"qid": "c83291ccecb2", "query": "Cangjie val declaration semicolon"}
+{"qid": "ee7f2cd28256", "query": "Cangjie function default parameters if let syntax"}
+{"qid": "3ae239bd0ce0", "query": "Cangjie half-open range syntax"}
+{"qid": "2edde6305b4b", "query": "Cangjie lambda expression syntax"}
+{"qid": "1595051af60a", "query": "Cangjie for loop range syntax"}
+{"qid": "d2e2516127d8", "query": "Cangjie lambda expression syntax"}
+{"qid": "14fcd87b3404", "query": "Cangjie val statement semicolon"}
+{"qid": "7da46075f6d7", "query": "Cangjie half-open range syntax"}
+{"qid": "aba159f01440", "query": "Cangjie Option operator ArrayList set conversion"}
+{"qid": "dd9f0a7daedd", "query": "Cangjie std.sort ArrayList append Iterator"}
+{"qid": "450e04035381", "query": "Cangjie standard library ArrayList VectorUtil abs"}
+{"qid": "fc1cd90b42b6", "query": "Cangjie char toUpper toLower method"}
+{"qid": "0178ccc56206", "query": "Cangjie char case checking functions"}
+{"qid": "b0a5c0117223", "query": "Cangjie Option enum pattern matching"}
+{"qid": "2cf51f47fca5", "query": "Cangjie HashMap containsKey put getOrDefault entries"}
+{"qid": "3ef77a38690e", "query": "Cangjie Char type String chars method"}
+{"qid": "6b3fa7117283", "query": "Cangjie ArrayList Random encode_cyclic"}
+{"qid": "154bf621fce0", "query": "Cangjie Option getOrElse equivalent method"}
+{"qid": "c9dde9cf0a9b", "query": "Cangjie ArrayList add method toFloat64"}
+{"qid": "26140c35b38d", "query": "Cangjie abs method standard library"}
+{"qid": "a29dcaa77573", "query": "Cangjie String reversed toLowerCase methods"}
+{"qid": "29d42f1c05fa", "query": "Cangjie Float64 parse abs function"}
+{"qid": "a9692027c654", "query": "Cangjie ArrayList map method"}
+{"qid": "c4cfc7d18f19", "query": "Cangjie std.convert toInt64 function"}
+{"qid": "66d7948a633b", "query": "Cangjie Char toInt method"}
+{"qid": "38a39a997a96", "query": "Cangjie convert to Float64"}
+{"qid": "4b6375a6ce20", "query": "Cangjie UInt8 String equality ArrayList add method"}
+{"qid": "9ca27e1c3370", "query": "Cangjie ArrayList sum_squares"}
+{"qid": "c40e4c8da96d", "query": "Cangjie number to Int64 method"}
+{"qid": "7c0ad1a16a48", "query": "Cangjie toVector EquatableCollection isLetter isLower isUpper"}
+{"qid": "62183075d3ec", "query": "Cangjie isWhitespace Array filter Rune operator"}
+{"qid": "c78820092c20", "query": "Cangjie IPAddress standard library methods"}
+{"qid": "0692200ae34d", "query": "Cangjie Option type coalescing operator"}
+{"qid": "d094a9594a37", "query": "Cangjie Random type"}
+{"qid": "dc0d1916fdc6", "query": "Cangjie String zip method Char type"}
+{"qid": "6e474867cc6c", "query": "Cangjie Random nextInt method"}
+{"qid": "5b4402a09088", "query": "Cangjie Option enum methods"}
+{"qid": "b8aa9e5be540", "query": "Cangjie ArrayList append join methods"}
+{"qid": "fbfbbe717991", "query": "Cangjie Option type documentation"}
+{"qid": "b40bf6ffba35", "query": "Cangjie mutable vs immutable variables"}
+{"qid": "ce5106c9c13d", "query": "Cangjie ArrayList constructors"}
+{"qid": "fbe22278160e", "query": "Cangjie split removeEmpty named parameter"}
+{"qid": "e223ac8e5edc", "query": "Cangjie convert UInt8 to String"}
+{"qid": "efe5d2e1b548", "query": "Cangjie UInt8 String equality comparison"}
+{"qid": "54b40120f8b1", "query": "Cangjie Rune String == operator"}
+{"qid": "31f0e5a3e67e", "query": "Cangjie String length sqrt Double"}
+{"qid": "4394d23f6a6e", "query": "Cangjie Enum Option type"}
+{"qid": "87d980075053", "query": "Cangjie convert UInt8 to Rune"}
+{"qid": "6b76e474f0e4", "query": "Cangjie convert UInt8 to Rune"}
+{"qid": "f8278f9b817e", "query": "Cangjie compare UInt8 and Rune"}
+{"qid": "b9ccea0c1003", "query": "Cangjie Rune to integer conversion"}
+{"qid": "48afcda7270f", "query": "Cangjie Array sort function"}
+{"qid": "2b60c6a52b34", "query": "Cangjie how to get collection size"}
+{"qid": "c0f36c0229d2", "query": "Cangjie operator == UInt8 Rune"}
+{"qid": "103791c59093", "query": "Cangjie operator == UInt8 String"}
+{"qid": "b5a2bfb4ce20", "query": "Cangjie String contains Rune"}
+{"qid": "2ecbd96a9bbf", "query": "Cangjie == operator for UInt8 and String"}
+{"qid": "4faad44c0b14", "query": "Cangjie lambda parameter type annotations"}
+{"qid": "0712491ab312", "query": "Cangjie compare Rune and UInt8"}
+{"qid": "c552326db417", "query": "Cangjie String slice operator"}
+{"qid": "c183f6f66221", "query": "Cangjie range for loop syntax"}
+{"qid": "05b1885daab2", "query": "Cangjie char to UInt8 conversion"}
+{"qid": "ea542d986219", "query": "Cangjie standard type size property"}
+{"qid": "cac9fb30b642", "query": "Cangjie string length method"}
+{"qid": "bd7910aee847", "query": "Cangjie UInt8 Rune equality operator"}
+{"qid": "b6a7502e5632", "query": "Cangjie Int.from conversion method"}
+{"qid": "dbe0fc92ee7b", "query": "Cangjie range with step operator"}
+{"qid": "6d81e807e755", "query": "Cangjie string length property"}
+{"qid": "38d567ee1b7c", "query": "Cangjie string interpolation syntax"}
+{"qid": "2511f7735313", "query": "Cangjie standard library sort function"}
+{"qid": "567212bf9cc7", "query": "Cangjie lambda type annotation named arguments"}
+{"qid": "7701504d6655", "query": "Cangjie Rune numeric type conversion"}
+{"qid": "6111dc72a1f8", "query": "Cangjie char to UInt8 conversion"}
+{"qid": "7adb58012c9d", "query": "Cangjie parse string to Int64"}
+{"qid": "97c9b4cb094c", "query": "Cangjie lambda parameter type annotation"}
+{"qid": "4edab7733218", "query": "Cangjie List fold trailing closure"}
+{"qid": "d04ea66ee7fe", "query": "Cangjie random nextBits method"}
+{"qid": "144199519ed6", "query": "Cangjie String length method"}
+{"qid": "9a6c1add5aaf", "query": "Cangjie standard library sort function"}
+{"qid": "3f1ae78a7d17", "query": "Cangjie HashSet standard library"}
+{"qid": "238ab9f7028b", "query": "Cangjie String length instance method"}
+{"qid": "2bb74231eff1", "query": "Cangjie sort function generic Comparable"}
+{"qid": "15babd998b41", "query": "Cangjie tuple equality operator"}
+{"qid": "4c3d0f9a0656", "query": "Cangjie convert function usage"}
+{"qid": "f3211cf83cfb", "query": "Cangjie std.sort generic Comparable"}
+{"qid": "06ed88e72ec8", "query": "Cangjie standard library Option"}
+{"qid": "0a740043d203", "query": "Cangjie Rune standard library type"}
+{"qid": "708059b12b1f", "query": "Cangjie for loop range step"}
+{"qid": "5ce98003522c", "query": "Cangjie std sort function key parameter"}
+{"qid": "2869535c3e99", "query": "Cangjie lambda syntax"}
+{"qid": "8fae1f46b2fb", "query": "Cangjie String split method"}
+{"qid": "7a07bfc3f87c", "query": "Cangjie string interpolation syntax"}
+{"qid": "94d2382320ad", "query": "Cangjie string interpolation syntax"}
+{"qid": "2fd31b74bc44", "query": "Cangjie function body syntax"}
+{"qid": "534fd1354a62", "query": "Cangjie function body syntax"}
+{"qid": "2ba84396ff74", "query": "Cangjie named arguments function parameters"}
+{"qid": "02c55a6b5dd3", "query": "Cangjie standard library sort function"}
+{"qid": "df9dcd43a86a", "query": "Cangjie Md5 reset method constructor access"}
+{"qid": "beb624b20653", "query": "Cangjie DateTime parse time format"}
+{"qid": "5a997d46272c", "query": "Cangjie Array slice IndexOutOfBounds"}
+{"qid": "1ee1d1c63d32", "query": "Cangjie truncate_number Float64 NoneValueException"}
+{"qid": "9fba056f47bf", "query": "Cangjie NoneValueException"}
+{"qid": "aed21c105c52", "query": "Cangjie memory management"}
+{"qid": "15e4e05b221e", "query": "Cangjie Array slice method"}
+{"qid": "10f68fd5e371", "query": "Cangjie OverflowException String sub"}
+{"qid": "9bb3a4e1505f", "query": "Cangjie DateTime parse time format"}
+{"qid": "cdaab3a8c1cc", "query": "Cangjie OverflowException"}
+{"qid": "e6b6802ce23a", "query": "Cangjie String digitSum NoneValueException"}
+{"qid": "92833c88c168", "query": "Cangjie NoneValueException ArrayList"}
+{"qid": "6c358ce980c9", "query": "Cangjie Array slice negative length"}
+{"qid": "e390aee8a21e", "query": "Cangjie DateTime parse method"}
+{"qid": "f7e4b8b019ae", "query": "Cangjie ArrayList IndexOutOfBoundsException"}
+{"qid": "1c3deb52bc40", "query": "Cangjie DateTime parse format"}
+{"qid": "6fa6d420042c", "query": "Cangjie DateTime parse format"}
+{"qid": "c3a556fbc270", "query": "Cangjie DateTime parse format"}
+{"qid": "f50f5e4adc10", "query": "Cangjie NaN Infinite to integer cast"}
+{"qid": "d67f70e012f1", "query": "Cangjie String substring IndexOutOfBoundsException"}
+{"qid": "a8b838864624", "query": "Cangjie String substring IndexOutOfBounds"}
+{"qid": "9b1789f36643", "query": "Cangjie Array IndexOutOfBoundsException"}
+{"qid": "1e6930818868", "query": "Cangjie String decode_shift OverflowException"}
+{"qid": "0ea96471bbbe", "query": "Cangjie DateTime parse format"}
+{"qid": "dadaeea0cbf7", "query": "Cangjie String sub method OverflowException"}
+{"qid": "dc1dc8a96258", "query": "Cangjie std.time.DateTime.parse"}
+{"qid": "be8b7be21721", "query": "Cangjie DateTime parse time format"}
+{"qid": "f4b665ac4ada", "query": "Cangjie countSetBits overflow"}
+{"qid": "0317c4804298", "query": "Cangjie NoneValueException String encrypt"}
+{"qid": "0b93e0a0348a", "query": "Cangjie DateTime parse format string"}
+{"qid": "a88fc2e7c41c", "query": "Cangjie ArrayList None handling"}

@@ -17,3 +17,6 @@ results/rounds10/logs/
 results/rounds10/**/*.jsonl
 .venv-retrieval/
 results/retrieval_eval/cache/
+results/review/pilot/
+results/review/logs/
+results/review/**/*.jsonl

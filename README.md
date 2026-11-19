@@ -124,10 +124,19 @@ python src/stage3_stats.py --matrix original
 python src/residual_failures.py --recheck -j 6
 # 延长修复轮数补充实验（Doubao HumanEval direct，最多 10 轮）→ results/stats/rounds10_stats.{md,json}、results/figures/fig5_rounds10_curve.png
 python src/rounds10_stats.py
-# 全部实验 token 消耗与美元成本（国际站官网标价，DeepSeek 高峰价）→ results/stats/token_cost_stats.{md,json}
+# 全部实验 token 消耗与美元成本（国内牌价按 6.67 元/美元折算，DeepSeek 高峰价，见 src/pricing.py）→ results/stats/token_cost_stats.{md,json}
 python src/token_cost.py
-# 英文补充材料（Table S1–S15）→ results/supporting_information/，并打包 supporting_information.zip（投稿上传用，不进 git）
+# 英文补充材料（Table S1–S16）→ results/supporting_information/，并打包 supporting_information.zip（投稿上传用，不进 git）
 python src/make_supporting_info.py
+
+# 审稿意见后的补充实验（新模型、Kimi 重跑、Agent 基线、rag2），步骤见 docs/补充实验清单.md → results/review/
+python src/run_matrix.py --matrix review --dry-run
+# 检索方案离线评估与 rag2 检索服务（需在 .venv-retrieval 中运行：torch + sentence-transformers + bge-m3 / bge-reranker-v2-m3）
+.venv-retrieval/Scripts/python.exe src/retrieval_eval.py            # → results/retrieval_eval/report.md
+python src/retrieval_eval.py --export-check                          # 导出判定盲评表 manual_check.csv（各分数档 10 条）
+.venv-retrieval/Scripts/python.exe src/retrieval_server.py          # rag2 运行期间保持开启
+# 典型修复案例素材（按固定规则自动挑选）→ results/case_examples.md
+python src/case_examples.py
 
 # 统计、检验、作图、测试
 python src/analyze.py

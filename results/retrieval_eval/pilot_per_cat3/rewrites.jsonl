@@ -1,0 +1,15 @@
+{"qid": 0, "query": "Cangjie if statement parentheses"}
+{"qid": 1, "query": "Cangjie for loop iteration syntax"}
+{"qid": 2, "query": "Cangjie filter closure syntax"}
+{"qid": 3, "query": "Cangjie ArrayList and compound assignment"}
+{"qid": 4, "query": "Cangjie Regex String methods"}
+{"qid": 5, "query": "Cangjie import std.collection HashMap ArrayList"}
+{"qid": 6, "query": "Cangjie String length property"}
+{"qid": 7, "query": "Cangjie Option extract inner value"}
+{"qid": 8, "query": "Cangjie operator functions String Rune UInt8"}
+{"qid": 9, "query": "Cangjie String to Float64 conversion"}
+{"qid": 10, "query": "Cangjie string interpolation syntax"}
+{"qid": 11, "query": "Cangjie Char ascii value"}
+{"qid": 12, "query": "Cangjie OverflowException"}
+{"qid": 13, "query": "Cangjie std.time parseTime function"}
+{"qid": 14, "query": "Cangjie NoneValueException"}

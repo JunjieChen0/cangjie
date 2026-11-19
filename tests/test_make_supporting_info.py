@@ -27,3 +27,10 @@ def test_comparison_rows_are_english_and_pass_check_numbers():
     assert "<0.0001" in lines[2]
     known = C.known_values([{"comparisons": [CMP]}])
     assert C.check_text("\n".join(lines), known) == []
+
+
+def test_hint_rules_table_lists_every_rule_and_escapes_pipes():
+    lines = S.hint_rules_section([("a", r"x|y", "use `if (x) {}`"), ("b", "z", "h|i")])
+    rows = [line for line in lines if line.startswith(("| 1 ", "| 2 "))]
+    assert len(rows) == 2 and r"x\|y" in rows[0] and r"h\|i" in rows[1]
+    assert "The 2 hand-curated rules" in lines[2]

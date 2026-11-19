@@ -1,0 +1,211 @@
+{
+ "config": {
+  "per_cat": 3,
+  "seed": 7,
+  "k": 3,
+  "rewriter": "doubao-seed-2-0-mini-260428",
+  "judge": "deepseek-v4-pro-ga-260813",
+  "embed": "BAAI/bge-m3",
+  "rerank": "BAAI/bge-reranker-v2-m3"
+ },
+ "summary": {
+  "all": {
+   "n": 15,
+   "bm25": {
+    "hit": 73.3,
+    "any": 100.0,
+    "ndcg": 64.8
+   },
+   "rewrite_bm25": {
+    "hit": 26.7,
+    "any": 60.0,
+    "ndcg": 42.6
+   },
+   "dense": {
+    "hit": 20.0,
+    "any": 73.3,
+    "ndcg": 43.5
+   },
+   "hybrid": {
+    "hit": 53.3,
+    "any": 86.7,
+    "ndcg": 56.2
+   },
+   "hybrid_rerank": {
+    "hit": 26.7,
+    "any": 86.7,
+    "ndcg": 47.9
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 46.7,
+    "any": 80.0,
+    "ndcg": 63.2
+   }
+  },
+  "foreign_syntax": {
+   "n": 3,
+   "bm25": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 63.4
+   },
+   "rewrite_bm25": {
+    "hit": 33.3,
+    "any": 33.3,
+    "ndcg": 14.5
+   },
+   "dense": {
+    "hit": 0.0,
+    "any": 66.7,
+    "ndcg": 16.7
+   },
+   "hybrid": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 32.3
+   },
+   "hybrid_rerank": {
+    "hit": 0.0,
+    "any": 66.7,
+    "ndcg": 23.8
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 66.7,
+    "any": 66.7,
+    "ndcg": 57.7
+   }
+  },
+  "api_or_undeclared": {
+   "n": 3,
+   "bm25": {
+    "hit": 100.0,
+    "any": 100.0,
+    "ndcg": 85.2
+   },
+   "rewrite_bm25": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 75.5
+   },
+   "dense": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 70.6
+   },
+   "hybrid": {
+    "hit": 100.0,
+    "any": 100.0,
+    "ndcg": 87.2
+   },
+   "hybrid_rerank": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 50.0
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 71.6
+   }
+  },
+  "type_or_mutability": {
+   "n": 3,
+   "bm25": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 44.0
+   },
+   "rewrite_bm25": {
+    "hit": 0.0,
+    "any": 0.0,
+    "ndcg": 0.0
+   },
+   "dense": {
+    "hit": 0.0,
+    "any": 33.3,
+    "ndcg": 8.8
+   },
+   "hybrid": {
+    "hit": 33.3,
+    "any": 66.7,
+    "ndcg": 49.0
+   },
+   "hybrid_rerank": {
+    "hit": 0.0,
+    "any": 66.7,
+    "ndcg": 13.8
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 33.3,
+    "any": 100.0,
+    "ndcg": 59.2
+   }
+  },
+  "other_compile": {
+   "n": 3,
+   "bm25": {
+    "hit": 100.0,
+    "any": 100.0,
+    "ndcg": 76.5
+   },
+   "rewrite_bm25": {
+    "hit": 33.3,
+    "any": 66.7,
+    "ndcg": 39.5
+   },
+   "dense": {
+    "hit": 33.3,
+    "any": 66.7,
+    "ndcg": 46.0
+   },
+   "hybrid": {
+    "hit": 33.3,
+    "any": 66.7,
+    "ndcg": 35.1
+   },
+   "hybrid_rerank": {
+    "hit": 66.7,
+    "any": 100.0,
+    "ndcg": 68.5
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 33.3,
+    "any": 33.3,
+    "ndcg": 27.7
+   }
+  },
+  "runtime_exception": {
+   "n": 3,
+   "bm25": {
+    "hit": 33.3,
+    "any": 100.0,
+    "ndcg": 54.7
+   },
+   "rewrite_bm25": {
+    "hit": 0.0,
+    "any": 100.0,
+    "ndcg": 83.3
+   },
+   "dense": {
+    "hit": 0.0,
+    "any": 100.0,
+    "ndcg": 75.5
+   },
+   "hybrid": {
+    "hit": 33.3,
+    "any": 100.0,
+    "ndcg": 77.4
+   },
+   "hybrid_rerank": {
+    "hit": 0.0,
+    "any": 100.0,
+    "ndcg": 83.3
+   },
+   "rewrite_hybrid_rerank": {
+    "hit": 33.3,
+    "any": 100.0,
+    "ndcg": 100.0
+   }
+  }
+ }
+}

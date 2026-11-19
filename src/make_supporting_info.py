@@ -1,4 +1,4 @@
-"""Generate the English Supporting Information (Tables S1–S15) and pack supporting_information.zip.
+"""Generate the English Supporting Information (Tables S1–S16) and pack supporting_information.zip.
 
 Usage:
   python src/make_supporting_info.py      # → results/supporting_information/{supporting_information,README}.md
@@ -17,6 +17,7 @@ from collections import Counter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from extra_stats import fmt_p  # noqa: E402
 from pricing import CNY_PRICE_DATE, FX_DATE, FX_RATE  # noqa: E402
+from repair_hints import RULES  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATS = os.path.join(ROOT, "results", "stats")
@@ -227,14 +228,27 @@ def build_document() -> str:
     L += rounds10_section(_load("rounds10_stats.json"))
     L += residual_section(_load("residual_failures.json"), coding)
     L += cost_section(_load("token_cost_stats.json"))
+    L += hint_rules_section(RULES)
     return "\n".join(L)
+
+
+def hint_rules_section(rules: list[tuple[str, str, str]]) -> list[str]:
+    """Table S16：hint 反馈的全部规则（名称、匹配编译器报错的正则、给模型的提示），直接取自 repair_hints.RULES。"""
+    def cell(text: str) -> str:
+        return text.replace("|", "\\|").replace("\n", " ")
+    L = ["## Table S16. Rule base of the `hint` feedback", "",
+         f"The {len(rules)} hand-curated rules, frozen before the formal experiments. A rule fires when its regular "
+         "expression matches the compiler output; at most three matching hints are appended to the raw error.", "",
+         "| # | Rule | Error pattern (regular expression) | Hint shown to the model |", "|---|---|---|---|"]
+    L += [f"| {i} | `{name}` | `{cell(pattern)}` | {cell(hint)} |" for i, (name, pattern, hint) in enumerate(rules, 1)]
+    return L + [""]
 
 
 README = """# Supporting Information: file index
 
 | File | Content | Tables |
 |---|---|---|
-| `supporting_information.md` | All supporting tables in readable form | S1–S15 |
+| `supporting_information.md` | All supporting tables in readable form | S1–S16 |
 | `data/stage3_stats.json` | Stage 3: per-configuration results (`summary`), all 33 comparisons (`comparisons`), sensitivity analysis (`sensitivity_excl_flaky`), alternative Holm families (`holm_variants`) | S1–S4 |
 | `data/original30_stats.json` | Same layout for Original-30 (17 comparisons) | S5–S8 |
 | `data/rounds10_stats.json` | 10-round extension: per-arm curves and gains (`feedback`), round-10 comparisons (`comparisons_r10`) | S9–S10 |

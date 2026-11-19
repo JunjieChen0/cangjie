@@ -2,7 +2,7 @@
 
 | File | Content | Tables |
 |---|---|---|
-| `supporting_information.md` | All supporting tables in readable form | S1–S15 |
+| `supporting_information.md` | All supporting tables in readable form | S1–S16 |
 | `data/stage3_stats.json` | Stage 3: per-configuration results (`summary`), all 33 comparisons (`comparisons`), sensitivity analysis (`sensitivity_excl_flaky`), alternative Holm families (`holm_variants`) | S1–S4 |
 | `data/original30_stats.json` | Same layout for Original-30 (17 comparisons) | S5–S8 |
 | `data/rounds10_stats.json` | 10-round extension: per-arm curves and gains (`feedback`), round-10 comparisons (`comparisons_r10`) | S9–S10 |

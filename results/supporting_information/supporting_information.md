@@ -427,3 +427,26 @@ Costs are in USD: the vendors' official domestic pay-as-you-go list prices in CN
 | **All runs** | Kimi-K3.1-Pro | 37 | 1,397,184 | 4,339,184 | $46.96 |
 | **All runs** | GLM-5.3-Flash | 1 | 2,274 | 13,134 | $0.01 |
 | **All runs** | all | 373 | 169,400,630 | 152,729,287 | $162.05 |
+
+## Table S16. Rule base of the `hint` feedback
+
+The 16 hand-curated rules, frozen before the formal experiments. A rule fires when its regular expression matches the compiler output; at most three matching hints are appended to the raw error.
+
+| # | Rule | Error pattern (regular expression) | Hint shown to the model |
+|---|---|---|---|
+| 1 | `if_while_parens` | `expected '\(' after '(if\|while)'\|expected '\(', found` | Conditions MUST be in parentheses: `if (x > 0) { ... }`, `while (i < n) { ... }`. `if` is an expression; braces are always required. |
+| 2 | `for_in` | `for-in expression\|expected '\(', found\|expected pattern, found keyword '(var\|let)'` | Loop syntax is `for (x in xs) { ... }`, `for (i in 0..n) { ... }`, `for ((i, x) in enumerate(...))` is NOT available; do not write `for var`/`for let`, no C-style `for (;;)`. |
+| 3 | `range` | `expected expression after '\.\.'\|\.\.<` | Ranges: `0..n` is exclusive, `0..=n` is inclusive, step with `0..n : 2`. There is no `..<` operator. |
+| 4 | `let_mut` | `after 'let', found keyword 'mut'\|cannot assign to immutable` | Use `var` for mutable variables and `let` for immutable ones; there is no `let mut`. Function parameters are immutable — copy into a `var` before modifying. |
+| 5 | `lambda` | `lambda expression\|trailing closure\|expected ';' or '<NL>', found '=>'` | Lambda syntax: `{ a: Int64, b: Int64 => a + b }` or `{ x => x * 2 }` when the type is inferable. Trailing closure: `list.forEach { x => println(x) }` only after a named function/method call. |
+| 6 | `else_return_braces` | `found keyword 'else'\|expected '\{', found keyword '(return\|if)'` | Every `if`/`else` branch needs braces: `if (c) { return 1 } else { return 2 }`. `else if` is fine. |
+| 7 | `ternary_question` | `after '\?'\|found '\?'` | Cangjie has NO `a ? b : c` ternary. Use `if (cond) { a } else { b }` as an expression. `?` is only for Option types (e.g. `Option<Int64>` / `?Int64`). |
+| 8 | `not_operator` | `found '!'` | Logical not is `!cond`, and it must be inside parentheses of `if`: `if (!found) { ... }`. |
+| 9 | `type_annotation_brackets` | `expected type name after ':', found '\['` | Array types are written `Array<Int64>` / `ArrayList<Int64>`, not `[Int64]` or `Int64[]`. |
+| 10 | `number_suffix` | `unknown suffix .* for number literal` | Numeric literal suffixes are like `1i64`, `2u8`, `3.0f64`; `1L`, `2f`, `3.0d` are invalid. |
+| 11 | `duplicate_main` | `multiple 'main's\|function 'main' has overload conflicts` | Do NOT define `main()`. The test harness already provides it. |
+| 12 | `string_char_compare` | `on type '(UInt8\|Rune)' and 'Struct-String'` | Character literals are written `r'a'` (type Rune); `'a'` and "a" are both String. `s[i]` returns a UInt8 byte; compare with `b'a'`. Iterate chars with `for (c in s.runes())` or `s.toRuneArray()`. |
+| 13 | `string_member` | `is not a member of struct 'String'` | String has no Python/Java-style helpers like `substring`, `charAt`, `length`. Use `s.size`, slicing `s[a..b]`, `s.split(",")`, `s.contains(...)`, `s.startsWith(...)`, `s.toRuneArray()`, `s.toAsciiUpper()`/`s.toAsciiLower()`, `s.trimAscii()`. |
+| 14 | `arraylist_member` | `is not a member of class 'ArrayList` | ArrayList API (Cangjie 1.0): `list.size`, `list.add(x)`, `list.add(x, at: i)`, `list.remove(at: i)`, `list[i]`, `list.clear()`, `list.toArray()`; there is no `append`, `insert`, `push`, `length`, `len()`. Sorting: `import std.sort.*` then `sort(arr)` (sorts an Array in place). |
+| 15 | `undeclared` | `undeclared (identifier\|type name)\|can not find package` | This identifier/package does not exist in Cangjie. Do not invent APIs from other languages. Common imports: `import std.collection.*`, `import std.math.*`, `import std.sort.*`, `import std.convert.*`. |
+| 16 | `type_mismatch` | `mismatched types\|type incompatible\|no matching function for operator` | No implicit numeric conversion: use `Float64(x)`, `Int64(y)`. Integer literals are Int64 by default. Calling an object like a function `x()` is invalid unless it is a function type. |

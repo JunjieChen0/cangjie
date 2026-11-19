@@ -208,12 +208,41 @@ def _parallel_append(fn, items, path: str, workers: int) -> list[dict]:
     return out
 
 
+def export_manual_check(per_score: int = 10, seed: int = SEED) -> str:
+    """从 LLM 判定中按分数 2 / 1 / 0 各抽 per_score 条，导出供作者人工复核的 CSV（human_score 列留空）。"""
+    import csv
+    chunks, _ = get_index()
+    queries = _cached_jsonl(os.path.join(OUT, "queries.jsonl"), lambda r: r["qid"])
+    judged = list(_cached_jsonl(os.path.join(OUT, "judgments.jsonl"), lambda r: (r["qid"], r["chunk"])).values())
+    rng = random.Random(seed)
+    picked = []
+    for s in (2, 1, 0):
+        pool = [r for r in judged if r["score"] == s and r["qid"] in queries]
+        picked += rng.sample(pool, min(per_score, len(pool)))
+    rng.shuffle(picked)                       # 打乱顺序，复核时看不出 LLM 给的分数档
+    path = os.path.join(OUT, "manual_check.csv")            # 给复核人：不含 LLM 分数（盲评）
+    with open(path, "w", encoding="utf-8-sig", newline="") as f, \
+            open(os.path.join(OUT, "manual_check_key.csv"), "w", encoding="utf-8-sig", newline="") as fk:
+        w, wk = csv.writer(f), csv.writer(fk)
+        w.writerow(["no", "category", "error_feedback", "doc_title", "doc_text", "human_score (0/1/2)"])
+        wk.writerow(["no", "qid", "chunk", "llm_score"])
+        for n, r in enumerate(picked, 1):
+            q = queries[r["qid"]]
+            w.writerow([n, q["category"], q["feedback"][:1500], r["title"], chunks[r["chunk"]]["text"][:1500], ""])
+            wk.writerow([n, r["qid"], r["chunk"], r["score"]])
+    return path
+
+
 def main():
     from llm import chat
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-cat", type=int, default=30)
     ap.add_argument("-j", type=int, default=8)
+    ap.add_argument("--export-check", action="store_true", help="只导出人工复核表 manual_check.csv（各分数档 10 条）")
     args = ap.parse_args()
+    if args.export_check:
+        print(f"→ {export_manual_check()}")
+        return
     os.makedirs(OUT, exist_ok=True)
     queries = sample_queries(load_pool(), args.per_cat)
     by_qid = {q["qid"]: q for q in queries}

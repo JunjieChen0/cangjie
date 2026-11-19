@@ -1,0 +1,1448 @@
+﻿no,category,error_feedback,doc_title,doc_text,human_score (0/1/2)
+1,foreign_syntax,"error: expected expression after ',', found '|'
+ ==> main.cj:8:37:
+  | 
+8 |     let sum = numbers.foldLeft(0.0, |acc, x| => acc + x)
+  |                                     ^ expected expression here
+  | 
+
+error: expected expression after '|', found '=>'
+ ==> main.cj:8:46:
+  | 
+8 |     let sum = numbers.foldLeft(0.0, |acc, x| => acc + x)
+  |                                              ^^ expected expression here
+  | 
+
+error: expected expression after ',', found '|'
+  ==> main.cj:10:44:
+   | 
+10 |     let sumAbsDiff = numbers.foldLeft(0.0, |acc, x| => acc + abs(x - mean))
+   |                                            ^ expected expression here
+   | 
+
+error: expected expression after '|', found '=>'
+  ==> main.cj:10:53:
+   | 
+10 |     let sumAbsDiff = numbers.foldLeft(0.0, |acc, x| => acc + abs(x - mean))
+   |                                                     ^^ expected expression here
+   | 
+
+4 errors generated, 4 errors printed.
+",manual/source_zh_cn/Macro/pratical_case.md > 实用案例 > 一个简单的 DSL,"这个案例展示了如何使用宏实现一个简单的 DSL（Domain Specific Language，领域特定语言）。LINQ（Language Integrated Query，语言集成查询）是微软 .NET 框架的一个组成部分，它提供了一种统一的数据查询语法，允许开发者使用类似 SQL 的查询语句来操作各种数据源。在这里，仅展示一个最简单的 LINQ 语法的支持。
+
+希望支持的语法为：
+
+```text
+from <variable> in <list> where <condition> select <expression>
+```
+
+其中，`variable` 是一个标识符，`list`、`condition` 和 `expression` 都是表达式。因此，实现宏的策略是先后提取标识符和表达式，同时检查中间的关键字是正确的。最后，生成由提取部分组成的查询结果。
+
+宏的实现如下：
+
+<!-- compile -macro_def-->
+
+```cangjie
+public macro linq(input: Tokens) {
+    let syntaxMsg = ""Syntax is \""from <attrib> in <table> where <cond> select <expr>\""""
+    if (input.size == 0 || input[0].value != ""from"") {
+        diagReport(DiagReportLevel.ERROR, input[0..1], syntaxMsg,
+                   ""Expected keyword \""from\"" here."")
+    }
+    if (input.size <= 1 || input[1].kind != TokenKind.IDENTIFIER) {
+        diagReport(DiagReportLevel.ERROR, input[1..2], syntaxMsg,
+                   ""Expected identifier here."")
+    }
+    let attribute = input[1]
+    if (input.size <= 2 || input[2].value != ""in"") {
+        diagReport(DiagReportLevel.ERROR, input[2..3], syntaxMsg,
+                   ""Expected keyword \""in\"" here."")
+    }
+    var index: Int64 = 3
+    let (table, nextIndex) = parseExprFragment(input, startFrom: index)
+    if (nextIndex == input.size || input[nextIndex].value != ""where"") {
+        diagReport(DiagReportLevel.ERROR, input[nextIndex..nextIndex+1], syntaxMsg,
+                   ""Expected keyword \""where\"" here."")
+    }
+    index = nextIndex + 1  // 跳过where
+    let (co",
+2,runtime_exception,"An exception has occurred:
+OverflowException: sub
+	 at default.decode_shift(std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_5xa5vgf5\main.cj:20)
+	 at default.main()(C:\Users\Junjie\AppData\Local\Temp\cj_5xa5vgf5\main.cj:34)",libs/std/overflow/overflow_samples/throwing.md > 抛出异常策略的示例,"下面是抛出异常策略的示例，示例中尝试运算 Int64.Max + 1，发生溢出，抛出 OverflowException。
+
+<!-- run.error -->
+
+```cangjie
+import std.overflow.*
+import std.math.*
+
+main() {
+    let a: Int64 = Int64.Max
+    println(a.throwingAdd(1))
+}
+```
+
+运行结果：
+
+```text
+An exception has occurred:
+OverflowException: add
+```",
+3,type_or_mutability,"error: no matching function for operator '()' function call
+ ==> main.cj:5:18:
+  | 
+5 |     for (i in 1..lst.size() : 2) {
+  |                  ^ 
+  | 
+
+1 error generated, 1 error printed.
+",libs/std/collection/collection_package_api/collection_package_class.md > 类 > class ArrayList\<T> > operator func []\(Range\<Int64>),"```cangjie
+public operator func [](range: Range<Int64>): ArrayList<T>
+```
+
+功能：运算符重载 - 切片。
+
+> **注意：**
+>
+> - 如果参数 range 是使用 [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet) 构造函数构造的 [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet) 实例，有如下行为：
+>     - start 的值就是构造函数传入的值本身，不受构造时传入的 hasStart 的值的影响。
+>     - hasEnd 为 false 时，end 值不生效，且不受构造时传入的 isClosed 的值的影响，数组切片取到原数组最后一个元素。
+>
+> - 切片操作返回的 [ArrayList](collection_package_class.md#class-arraylistt) 为全新的对象，与原 [ArrayList](collection_package_class.md#class-arraylistt) 无引用关系。
+
+参数：
+
+- range: [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet)\<[Int64](../../core/core_package_api/core_package_intrinsics.md#int64)> - 传递切片的范围。
+
+返回值：
+
+- [ArrayList](collection_package_class.md#class-arraylistt)\<T> - 切片所得的数组。
+
+异常：
+
+- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 range.[step](collection_package_function.md#func-steptint64) 不等于 1 时，抛出异常。
+- [IndexOutOfBoundsException](../../core/core_package_api/core_package_exceptions.md#class-indexoutofboundsexception) - 当 range 无效时，抛出异常。",
+4,type_or_mutability,"error: cannot assign to immutable value
+   ==> main.cj:128:21:
+    | 
+128 |                     isPresent = true
+    |                     ^^^^^^^^^^^^^^^^ 
+    | 
+note: variable 'isPresent' is immutable
+   ==> main.cj:125:17:
+    | 
+125 |             let isPresent = false
+    |                 ^^^^^^^^^ 
+    | 
+
+1 error generated, 1 error printed.
+",libs/std/unittest/unittest_package_api/unittest_package_structs.md > 结构体 > struct ImmutableInputProvider\<T> > ImmutableInputProvider(T),"```cangjie
+public ImmutableInputProvider(let data: T)
+```
+
+功能：ImmutableInputProvider构造函数。
+
+参数：
+
+- data: T - 基准测试的输入。",
+5,type_or_mutability,"error: mismatched types
+  ==> main.cj:25:30:
+   | 
+25 |     return ArrayList<String>(sortedArray)
+   |                              ^^^^^^^^^^^ expected 'Int64', found 'Unit'
+   | 
+
+1 error generated, 1 error printed.
+","libs/std/sort/sort_package_api/sort_package_funcs.md > 函数 > func sort\<T>(ArrayList\<T>, Bool, Bool) where T <: Comparable\<T>","```cangjie
+public func sort<T>(data: ArrayList<T>, stable!: Bool = false, descending!: Bool = false): Unit where T <: Comparable<T>
+```
+
+功能：对 `ArrayList` 进行排序。可根据入参指定是否要进行稳定排序，是升序还是降序。
+
+参数：
+
+- data: [ArrayList](../../collection/collection_package_api/collection_package_class.md#class-arraylistt)\<T> - 需要排序的 `ArrayList`。
+- stable!: [Bool](../../core/core_package_api/core_package_intrinsics.md#bool) - 是否使用稳定排序，默认为否。
+- descending!: [Bool](../../core/core_package_api/core_package_intrinsics.md#bool) - 是否使用降序排序，默认为否。
+
+示例：
+
+<!-- verify -->
+```cangjie
+import std.sort.*
+
+import std.collection.*
+
+class Rectangle <: Comparable<Rectangle> & ToString {
+    var width: Int64
+    var height: Int64
+
+    public init(width: Int64, height: Int64) {
+        this.width = width
+        this.height = height
+    }
+
+    public func compare(r: Rectangle) {
+        let tValue: Int64 = this.width * this.height
+        let rValue: Int64 = r.width * r.height
+        if (tValue > rValue) {
+            return Ordering.GT
+        } else if (tValue == rValue) {
+            return Ordering.EQ
+        } else {
+            return Ordering.LT
+        }
+    }
+
+    public func toString(): String {
+        return ""#width: ${this.width}, height: ${this.height}""
+    }
+}
+
+main() {
+    /* 按照面积降序排序 */
+    var arr = ArrayList<Rectangle>([Rectangle(4, 8), Rectangle(6, 7), Rectangle(2, 6)])
+    sort<Rectangle>(arr, stable: true, descending: true)
+    println(arr)
+    return 0
+}
+```
+
+运行结果：
+
+```text
+[#width: 6, height: 7, #wi",
+6,type_or_mutability,"error: no matching function for operator '()' function call
+ ==> main.cj:5:18:
+  | 
+5 |     for (i in 0..lst.size()) {
+  |                  ^ 
+  | 
+
+1 error generated, 1 error printed.
+",manual/source_zh_cn/generic/typealias.md > 类型别名,"当某个类型的名字比较复杂或者在特定场景中不够直观时，可以选择使用类型别名的方式为此类型设置一个别名。
+
+```cangjie
+type I64 = Int64
+```
+
+类型别名的定义以关键字 `type` 开头，接着是类型的别名（如上例中的 `I64`），然后是等号 `=`，最后是原类型（即被取别名的类型，如上例中的 `Int64`）。
+
+只能在源文件顶层定义类型别名，并且原类型必须在别名定义处可见。例如，下例中 `Int64` 的别名定义在 `main` 中将报错，`LongNameClassB` 类型在为其定义别名时不可见，同样报错。
+<!-- compile.error  -->
+
+```cangjie
+main() {
+    type I64 = Int64 // Error, type aliases can only be defined at the top level of the source file
+}
+
+class LongNameClassA { }
+type B = LongNameClassB // Error, type 'LongNameClassB' is not defined
+```
+
+一个（或多个）类型别名定义中禁止出现（直接或间接的）循环引用。
+<!-- compile.error  -->
+
+```cangjie
+type A = (Int64, A) // Error, 'A' refered itself
+type B = (Int64, C) // Error, 'B' and 'C' are circularly refered
+type C = (B, Int64)
+```
+
+类型别名并不会定义一个新的类型，它仅仅是为原类型定义了另外一个名字，它有如下几种使用场景：
+
+1. 作为类型使用，例如：
+
+    <!-- compile -->
+
+    ```cangjie
+    type A = B
+    class B {}
+    var a: A = B() // Use typealias A as type B
+    ```
+
+2. 当类型别名实际指向的类型为 class、struct 时，可以作为构造器名称使用：
+
+    <!-- compile -->
+
+    ```cangjie
+    type A = B
+    class B {}
+    func foo() { A() }  // Use type alias A as constructor of B
+    ```
+
+3. 当类型别名实际指向的类型为 class、interface、struct 时，可以作为访问内部静态成员变量或函数的类型名：
+
+    <!-- compile -->
+
+    ```cangjie
+    type A = B
+    class B {
+        static var b : Int32 = 0;
+        static func foo() {}
+    }
+    func foo() {
+        A.foo() // Use A to access static method in class B
+        A.b
+    }
+    ```
+
+4. 当类型别名实际指向的类型为 enum 时，可以作为 enum 声明的构造器的类型名：
+
+    <!-- compile -->
+
+    ```cangjie
+    enum ",
+7,other_compile,"error: unrecognized escape '\(' in string literal
+  ==> main.cj:75:31:
+   | 
+75 |                 parts.append(""\(name) - $\(priceStr) [\(product.quantity)]"")
+   |                              ~^^ unrecognized escape
+   |                              |
+   |                              because it is in string literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+1 error generated, 1 error printed.
+",manual/source_zh_cn/function/first_class_citizen.md > 函数类型 > 函数类型的类型参数,"可以为函数类型标记显式的类型参数名，下面例子中的 `name` 和 `price` 就是 `类型参数名`。
+
+<!-- run -->
+
+```cangjie
+func showFruitPrice(name: String, price: Int64) {
+    println(""fruit: ${name} price: ${price} yuan"")
+}
+
+main() {
+    let fruitPriceHandler: (name: String, price: Int64) -> Unit
+    fruitPriceHandler = showFruitPrice
+    fruitPriceHandler(""banana"", 10)
+}
+```
+
+另外对于一个函数类型，只允许统一写类型参数名，或者统一不写类型参数名，不能交替存在。
+
+```cangjie
+let handler: (name: String, Int64) -> Int64   // Error
+```",
+8,other_compile,"error: 'length' is non-static member, cannot access by type name
+ ==> main.cj:2:18:
+  | 
+2 |     return Int64(String.length(string))
+  |                  ^ 
+  | 
+
+1 error generated, 1 error printed.
+",manual/source_zh_cn/struct/define_struct.md > 定义 struct 类型 > struct 成员函数,"`struct` 成员函数分为实例成员函数和静态成员函数（使用 `static` 修饰符修饰），二者的区别在于：实例成员函数只能通过 `struct` 实例访问，静态成员函数只能通过 `struct` 类型名访问；静态成员函数中不能访问实例成员变量，也不能调用实例成员函数，但在实例成员函数中可以访问静态成员变量以及静态成员函数。
+
+下例中，`area` 是实例成员函数，`typeName` 是静态成员函数。
+
+<!-- compile -->
+
+```cangjie
+struct Rectangle {
+    let width: Int64 = 10
+    let height: Int64 = 20
+
+    public func area() {
+        this.width * this.height
+    }
+
+    public static func typeName(): String {
+        ""Rectangle""
+    }
+}
+```
+
+实例成员函数中可以通过 `this` 访问实例成员变量，例如：
+
+<!-- compile -->
+
+```cangjie
+struct Rectangle {
+    let width: Int64 = 1
+    let height: Int64 = 1
+
+    public func area() {
+        this.width * this.height
+    }
+}
+```",
+9,foreign_syntax,"error: expected '{', found keyword 'return'
+  ==> main.cj:37:61:
+   | 
+37 |                 case Some(num) => if (num < 0 || num > 255) return false
+   |                                                             ^^^^^^ expected '{' here
+   | 
+
+1 error generated, 1 error printed.
+",manual/source_zh_cn/enum_and_pattern_match/pattern_overview.md > 模式概述 > 常量模式,"常量模式可以是整数字面量、浮点数字面量、字符字面量、布尔字面量、字符串字面量（不支持字符串插值）、Unit 字面量。
+
+在包含匹配值的 `match` 表达式（参见[match 表达式](./match.md)）中使用常量模式时，要求常量模式表示的值的类型与待匹配值的类型相同，匹配成功的条件是待匹配的值与常量模式表示的值相等。
+
+下面的例子中，根据 `score` 的值（假设 `score` 只能取 `0` 到 `100` 间被 `10` 整除的值），输出考试成绩的等级：
+
+<!-- verify -->
+
+```cangjie
+main() {
+    let score = 90
+    let level = match (score) {
+        case 0 | 10 | 20 | 30 | 40 | 50 => ""D""
+        case 60 => ""C""
+        case 70 | 80 => ""B""
+        case 90 | 100 => ""A"" // Matched.
+        case _ => ""Not a valid score""
+    }
+    println(level)
+}
+```
+
+编译执行上述代码，输出结果为：
+
+```text
+A
+```
+
+- 在模式匹配的目标是静态类型为 `Rune` 的值时，`Rune` 字面量和单字符字符串字面量都可用于表示 `Rune` 类型字面量的常量 pattern。
+
+  <!-- verify -->
+
+  ```cangjie
+  func translate(n: Rune) {
+      match (n) {
+          case ""A"" => 1
+          case ""B"" => 2
+          case ""C"" => 3
+          case _ => -1
+      }
+  }
+
+  main() {
+      println(translate(r""C""))
+  }
+  ```
+
+  编译执行上述代码，输出结果为：
+
+  ```text
+  3
+  ```
+
+- 在模式匹配的目标是静态类型为 `Byte` 的值时，一个表示 ASCII 字符的字符串字面量可用于表示 `Byte` 类型字面量的常量 pattern。
+
+  <!-- verify -->
+
+  ```cangjie
+  func translate(n: Byte) {
+      match (n) {
+          case ""1"" => 1
+          case ""2"" => 2
+          case ""3"" => 3
+          case _ => -1
+      }
+  }
+
+  main() {
+      println(translate(51)) // UInt32(r'3') == 51
+  }
+  ```
+
+  编译执行上述代码，输出结果为：
+
+  ```text
+  3
+  ```",
+10,api_or_undeclared,"error: undeclared identifier 'toInt64'
+ ==> main.cj:5:28:
+  | 
+5 |     let truncated = number.toInt64()
+  |                            ^^^^^^^ 
+  | 
+
+1 error generated, 1 error printed.
+",libs/std/core/core_package_api/core_package_classes.md > 类 > class StackTraceElement,"```cangjie
+public open class StackTraceElement {
+    public let declaringClass: String
+    public let methodName: String
+    public let fileName: String
+    public let lineNumber: Int64
+    public init(declaringClass: String, methodName: String, fileName: String, lineNumber: Int64)
+}
+```
+
+功能：表示一个异常堆栈的具体信息，包括异常发生的类名、函数名、文件名、行号。",
+11,foreign_syntax,"error: expected pattern, found keyword 'let'
+  ==> main.cj:24:18:
+   | 
+24 |             for (let i in 0 until result.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+error: expected pattern, found keyword 'let'
+  ==> main.cj:57:18:
+   | 
+57 |             for (let i in 0 until result.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+error: expected pattern, found keyword 'let'
+  ==> main.cj:66:18:
+   | 
+66 |             for (let j in 0 until relevantIndices.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+3 errors generated, 3 errors printed.
+",libs/std/ast/ast_package_api/ast_package_funcs.md > 函数 > func parsePattern(Tokens),"```cangjie
+public func parsePattern(input: Tokens): Pattern
+```
+
+功能：用于解析一组词法单元，获取一个 [Pattern](ast_package_classes.md#class-pattern) 类型的节点。
+
+参数：
+
+- input: [Tokens](ast_package_classes.md#class-tokens) - 待解析源码的词法单元。
+
+返回值：
+
+- [Pattern](ast_package_classes.md#class-pattern) - 一个 [Pattern](ast_package_classes.md#class-pattern) 类型的节点。
+
+异常：
+
+- [ParseASTException](ast_package_exceptions.md#class-parseastexception) - 当输入的 [Tokens](ast_package_classes.md#class-tokens) 类型无法构造为 [Pattern](ast_package_classes.md#class-pattern) 节点时，抛出异常，异常中包含报错提示信息。",
+12,api_or_undeclared,"error: undeclared identifier 'sum_squares'
+ ==> main.cj:4:9:
+  | 
+4 |     if (sum_squares(ArrayList<Int64>([1, 2, 3])) != 6) {
+  |         ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:4:21:
+  | 
+4 |     if (sum_squares(ArrayList<Int64>([1, 2, 3])) != 6) {
+  |                     ^ 
+  | 
+
+error: undeclared identifier 'sum_squares'
+ ==> main.cj:7:9:
+  | 
+7 |     if (sum_squares(ArrayList<Int64>([1, 4, 9])) != 14) {
+  |         ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:7:21:
+  | 
+7 |     if (sum_squares(ArrayList<Int64>([1, 4, 9])) != 14) {
+  |                     ^ 
+  | 
+
+error: undeclared identifier 'sum_squares'
+  ==> main.cj:10:9:
+   | 
+10 |     if (sum_squares(ArrayList<Int64>([])) != 0) {
+   |         ^ 
+   | 
+
+error: undeclared identifier 'ArrayList'
+  ==> main.cj:10:21:
+   | 
+10 |     if (sum_squares(ArrayList<Int64>([])) != 0) {
+   |                     ^ 
+   | 
+
+error: undeclared identifier 'sum_squares'
+  ==> main.cj:13:9:
+   | 
+13 |     if (sum_squares(ArrayList<Int64>([1, 1, 1, 1, 1, 1, 1, 1, 1])) != 9) {
+   |         ^ 
+   | 
+
+error: undeclared identifier 'ArrayList'
+  ==> main.cj:13:21:
+   | 
+13 |     if (sum_squares(ArrayList<Int64>([1, 1, 1, 1, 1, 1, 1, 1, 1])) != 9) {
+   |                     ^ 
+   | 
+
+22 errors generated, 8 errors printed.
+",libs/std/collection/collection_package_samples/sample_arraylist_add.md > ArrayList 的 add 函数,"ArrayList 中添加元素的方法如下：
+
+<!-- verify -->
+
+```cangjie
+import std.collection.*
+
+main() {
+    var list: ArrayList<Int64> = ArrayList<Int64>(10) // 创建一个容量为 10 的 ArrayList
+    var arr: Array<Int64> = [1, 2, 3]
+    list.add(all: arr) // list: [1, 2, 3]
+    list[1] = 120 // list: [1, 120, 3]
+    var b = list.get(2)
+    print(""b=${b.getOrThrow()},"")
+    list.add(12, at: 1) // list: [1, 12, 120, 3]
+    var c = list.get(2)
+    print(""c=${c.getOrThrow()},"")
+    var arr1: Array<Int64> = [1,2,3]
+    list.add(all: arr1, at: 1) // list: [1, 1, 2, 3, 12, 120, 3]
+    var d = list.get(2)
+    print(""d=${d.getOrThrow()}"")
+    return 0
+}
+```
+
+运行结果：
+
+```text
+b=3,c=120,d=2
+```",
+13,runtime_exception,"An exception has occurred:
+OverflowException: sub
+	 at default.decode_shift(std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_bei_vbn0\main.cj:20)
+	 at default.main()(C:\Users\Junjie\AppData\Local\Temp\cj_bei_vbn0\main.cj:34)",libs/std/core/core_package_api/core_package_exceptions.md > 异常类 > class OverflowException > init(),"```cangjie
+public init()
+```
+
+功能：构造一个默认的 [OverflowException](core_package_exceptions.md#class-overflowexception) 实例，默认异常信息为空。",
+14,runtime_exception,"An exception has occurred:
+NoneValueException
+	 at default.truncate_number(Float64)(C:\Users\Junjie\AppData\Local\Temp\cj_cbsuse4p\main.cj:3)
+	 at default.main()(C:\Users\Junjie\AppData\Local\Temp\cj_cbsuse4p\main.cj:10)",libs/std/math_numeric/math_numeric_package_api/math_numeric_package_structs.md > 结构体 > struct BigInt > init(Float64),"```cangjie
+public init(n: Float64)
+```
+
+功能：通过双精度浮点数构建一个 [BigInt](math_numeric_package_structs.md#struct-bigint) 结构体。
+
+将丢弃浮点数的小数部分，即向零取整。
+
+参数：
+
+- n: [Float64](../../core/core_package_api/core_package_intrinsics.md#float64) - 单精度浮点数。
+
+异常：
+
+- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 如果 n 为 `Inf` 或 `NaN`，则抛此异常。
+
+示例：
+
+<!-- verify -->
+```cangjie
+import std.math.numeric.BigInt
+
+main() {
+    let float64: Float64 = 24.8
+    let bigInt = BigInt(float64)
+    println(bigInt)
+}
+```
+
+运行结果：
+
+```text
+24
+```",
+15,foreign_syntax,"error: unclosed delimiter: '('
+  ==> main.cj:22:40:
+   | 
+22 |     let digitCount = file_name.filter(c => c.isDigit()).size()
+   |                                      ~ ^ expected ')' here
+   |                                      |
+   |                                      to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found '=>'
+  ==> main.cj:22:41:
+   | 
+22 |     let digitCount = file_name.filter(c => c.isDigit()).size()
+   |                                         ^^ expected ';' or '<NL>' here
+   | 
+
+2 errors generated, 2 errors printed.
+",manual/source_zh_cn/function/function_call_desugar.md > 函数调用语法糖 > 尾随 lambda,"尾随 lambda 可以使函数的调用看起来像是语言内置的语法一样，增加语言的可扩展性。
+
+当函数最后一个形参是函数类型，并且函数调用对应的实参是 lambda 时，可以使用尾随 lambda 语法，将 lambda 放在函数调用的尾部，圆括号外面。
+
+例如，下例中定义了一个 `myIf` 函数，它的第一个参数是 `Bool` 类型，第二个参数是函数类型。当第一个参数的值为 `true` 时，返回第二个参数调用后的值，否则返回 `0`。调用 `myIf` 时可以像普通函数一样调用，也可以使用尾随 lambda 的方式调用。
+
+<!-- compile -->
+
+```cangjie
+func myIf(a: Bool, fn: () -> Int64) {
+    if(a) {
+        fn()
+    } else {
+        0
+    }
+}
+
+func test() {
+    myIf(true, { => 100 }) // General function call
+
+    myIf(true) {        // Trailing closure call
+        100
+    }
+}
+```
+
+当函数调用有且只有一个 lambda 实参时，还可以省略 `()`，只写 lambda。
+
+示例：
+
+<!-- compile -->
+
+```cangjie
+func f(fn: (Int64) -> Int64) { fn(1) }
+
+func test() {
+    f { i => i * i }
+}
+```",
+16,runtime_exception,"An exception has occurred:
+    Out of memory","libs/std/sync/sync_package_api/sync_package_classes.md > 类 > class AtomicUInt64 > func store(UInt64, MemoryOrder) <sup>(deprecated)</sup>","```cangjie
+public func store(val: UInt64, memoryOrder!: MemoryOrder): Unit
+```
+
+功能：写入操作，采用参数 `memoryOrder` 指定的内存排序方式，将参数 `val` 指定的值写入原子类型。
+
+> **注意：**
+>
+> 未来版本即将废弃，使用 [store(UInt64)](#func-storeuint64) 替代。
+
+参数：
+
+- val: [UInt64](../../core/core_package_api/core_package_intrinsics.md#uint64) - 写入原子类型的值。
+- memoryOrder!: [MemoryOrder <sup>(deprecated)</sup>](sync_package_enums.md#enum-memoryorder-deprecated) - 当前操作的内存排序方式。",
+17,foreign_syntax,"error: expected pattern, found keyword 'let'
+  ==> main.cj:24:18:
+   | 
+24 |             for (let i in 0 until result.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+error: expected pattern, found keyword 'let'
+  ==> main.cj:57:18:
+   | 
+57 |             for (let i in 0 until result.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+error: expected pattern, found keyword 'let'
+  ==> main.cj:66:18:
+   | 
+66 |             for (let j in 0 until relevantIndices.size) {
+   |                  ^^^ expected pattern here
+   | 
+
+3 errors generated, 3 errors printed.
+",manual/source_zh_cn/function/function_call_desugar.md > 函数调用语法糖 > Flow 表达式 > Pipeline 表达式,"当需要对输入数据做一系列的处理时，可以使用 `pipeline` 表达式来简化描述。`pipeline` 表达式的语法形式如下：`e1 |> e2`。等价于如下形式的语法糖：`let v = e1; e2(v)` 。
+
+其中 `e2` 是函数类型的表达式，`e1` 的类型是 `e2` 的参数类型的子类型。
+
+示例：
+
+<!-- compile -->
+
+```cangjie
+func inc(x: Array<Int64>): Array<Int64> { // Increasing the value of each element in the array by '1'
+    let s = x.size
+    var i = 0
+    for (e in x where i < s) {
+        x[i] = e + 1
+        i++
+    }
+    x
+}
+
+func sum(y: Array<Int64>): Int64 { // Get the sum of elements in the array
+    var s = 0
+    for (j in y) {
+        s += j
+    }
+    s
+}
+
+let arr: Array<Int64> = [1, 3, 5]
+let res = arr |> inc |> sum // res = 12
+```",
+18,foreign_syntax,"error: unclosed delimiter: '('
+  ==> main.cj:62:64:
+   | 
+62 |         let nonEmptyParts = path.split('/' as Char).filter(part => !part.isEmpty())
+   |                                                           ~    ^ expected ')' here
+   |                                                           |
+   |                                                           to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found '=>'
+  ==> main.cj:62:65:
+   | 
+62 |         let nonEmptyParts = path.split('/' as Char).filter(part => !part.isEmpty())
+   |                                                                 ^^ expected ';' or '<NL>' here
+   | 
+
+2 errors generated, 2 errors printed.
+",libs/std/fs/fs_package_api/fs_package_structs.md > 结构体 > struct Path > static const Separator,"```cangjie
+public static const Separator: String = PATH_SEPARATOR
+```
+
+功能：获取路径分隔符，用于分隔多级目录。
+
+Windows 系统中分隔符为 ""\\""，非 Windows 系统中为 ""/""。
+
+类型：[String](../../core/core_package_api/core_package_structs.md#struct-string)",
+19,foreign_syntax,"error: unclosed delimiter: '('
+  ==> main.cj:11:16:
+   | 
+11 |     for (i in 0 to (n - 3)) {
+   |         ~      ^ expected ')' here
+   |         |
+   |         to match this opening '('
+   | 
+
+1 error generated, 1 error printed.
+",libs/std/collection/collection_package_api/collection_package_interface.md > 接口 > interface List\<T> > func remove(Range\<Int64>),"```cangjie
+func remove(range: Range<Int64>): Unit
+```
+
+功能：删除此列表中 [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet) 范围所包含的所有元素。
+
+参数：
+
+- range: [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet)\<[Int64](../../core/core_package_api/core_package_intrinsics.md#int64)> - 需要被删除的元素的范围。",
+20,other_compile,"error: 'Rune' is not accessible in package 'std.convert'
+ ==> main.cj:2:8:
+  | 
+2 | import std.convert.`Rune`
+  |        ^^^^^^^^^^^^^^^^^ 
+  | 
+
+1 error generated, 1 error printed.
+",libs/std/unittest_prop_test/unittest_prop_test_package_api/unittest_prop_test_package_interfaces.md > 接口 > interface Arbitrary\<T> > extend Rune <: Arbitrary\<Rune>,"```cangjie
+extend Rune <: Arbitrary<Rune>
+```
+
+功能：为 [Rune](../../core/core_package_api/core_package_intrinsics.md#rune) 实现了 [Arbitrary](#interface-arbitraryt)\<T> 接口。
+
+父类型：
+
+- [Arbitrary](#interface-arbitraryt)\<[Rune](../../core/core_package_api/core_package_intrinsics.md#rune)>
+
+#### static func arbitrary(RandomSource)
+
+```cangjie
+static func arbitrary(random: RandomSource): Generator<Rune>
+```
+
+功能：获取生成 Rune 类型随机值生成器。
+
+参数：
+
+- random: [RandomSource](../../unittest_prop_test/unittest_prop_test_package_api/unittest_prop_test_package_interfaces.md#interface-randomsource) - 随机数。
+
+返回值：
+
+- [Generator](../../unittest/unittest_package_api/unittest_package_interfaces.md#interface-generatort)\<Rune> - 生成 Rune 类型随机值生成器。",
+21,type_or_mutability,"error: invalid binary operator '!=' on type 'UInt8' and 'Struct-String'
+ ==> main.cj:7:15:
+  | 
+7 |         if (c != ' ') {
+  |               ^^ 
+  | 
+  # note: you may want to implement 'operator func !=(right: Struct-String)' for type 'UInt8'
+
+error: mismatched types
+ ==> main.cj:8:40:
+  | 
+8 |             cleaned = cleaned + String(c)
+  |                                        ^ expected 'Struct-Array<Rune>', found 'UInt8'
+  | 
+
+error: mismatched types
+  ==> main.cj:18:46:
+   | 
+18 |         currentGroup = currentGroup + String(c)
+   |                                              ^ expected 'Struct-Array<Rune>', found 'UInt8'
+   | 
+
+error: invalid binary operator '==' on type 'UInt8' and 'Struct-String'
+  ==> main.cj:20:15:
+   | 
+20 |         if (c == '(') {
+   |               ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Struct-String)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Struct-String'
+  ==> main.cj:22:22:
+   | 
+22 |         } else if (c == ')') {
+   |                      ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Struct-String)' for type 'UInt8'
+
+5 errors generated, 5 errors printed.
+",libs/std/convert/convert_package_api/convert_package_interfaces.md > 接口 > interface Formattable > extend UInt8 <: Formattable,"```cangjie
+extend UInt8 <: Formattable
+```
+
+功能：为 [UInt8](../../core/core_package_api/core_package_intrinsics.md#uint8) 扩展 [Formattable](convert_package_interfaces.md#interface-formattable) 接口，以实现将 [UInt8](../../core/core_package_api/core_package_intrinsics.md#uint8) 实例转换为格式化字符串。
+
+父类型：
+
+- [Formattable](#interface-formattable)
+
+#### func format(String)
+
+```cangjie
+public func format(fmt: String): String
+```
+
+功能：根据格式化参数将当前 [UInt8](../../core/core_package_api/core_package_intrinsics.md#uint8) 类型实例格式化为对应格式的字符串。
+
+参数：
+
+- fmt: [String](../../core/core_package_api/core_package_structs.md#struct-string) - 格式化参数。
+
+返回值：
+
+- [String](../../core/core_package_api/core_package_structs.md#struct-string) - 将当前 [UInt8](../../core/core_package_api/core_package_intrinsics.md#uint8) 类型实例格式化后得到的字符串。
+
+异常：
+
+- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 fmt 不合法时抛出异常。",
+22,foreign_syntax,"error: unclosed delimiter: '('
+  ==> main.cj:62:64:
+   | 
+62 |         let nonEmptyParts = path.split('/' as Char).filter(part => !part.isEmpty())
+   |                                                           ~    ^ expected ')' here
+   |                                                           |
+   |                                                           to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found '=>'
+  ==> main.cj:62:65:
+   | 
+62 |         let nonEmptyParts = path.split('/' as Char).filter(part => !part.isEmpty())
+   |                                                                 ^^ expected ';' or '<NL>' here
+   | 
+
+2 errors generated, 2 errors printed.
+",libs/std/collection/collection_package_samples/sample_iterator.md > 迭代器操作函数,"此用例展示了迭代器操作函数结合 `pipeline` 表达式的使用方法。
+
+代码如下：
+
+<!-- verify -->
+
+```cangjie
+import std.collection.*
+
+main() {
+    let arr = [-1, 2, 3, 4, 5, 6, 7, 8, 9]
+    arr |> filter{a: Int64 => a > 0} |> // filter -1
+        step<Int64>(2) |> // [2, 4, 6, 8]
+        skip<Int64>(2) |> // [6, 8]
+        forEach<Int64>(println)
+
+    let str = arr |> filter{a: Int64 => a % 2 == 1} |> collectString<Int64>(delimiter: "">"")
+    println(str)
+    println(arr |> contains(6_i64))
+    return 0
+}
+```
+
+运行结果：
+
+```text
+6
+8
+3>5>7>9
+true
+```",
+23,runtime_exception,"An exception has occurred:
+IndexOutOfBoundsException: The size of Array is 8, start is 3, length is -1.
+	 at default.bf(std.core::String, std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_rejea4ar\main.cj:17)
+	 at default.main()(C:\Users\Junjie\AppData\Local\Temp\cj_rejea4ar\main.cj:34)",libs/std/collection/collection_package_api/collection_package_class.md > 类 > class ArrayList\<T> > func slice(Range\<Int64>),"```cangjie
+public func slice(range: Range<Int64>): ArrayList<T>
+```
+
+功能：以传入参数 range 作为索引，返回索引对应的 [ArrayList](collection_package_class.md#class-arraylistt)\<T>。
+
+> **注意：**
+>
+> 如果参数 range 是使用 [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet) 构造函数构造的 [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet) 实例，有如下行为：
+>
+> 1. start 的值就是构造函数传入的值本身，不受构造时传入的 hasStart 的值的影响。
+> 2. hasEnd 为 false 时，end 值不生效，且不受构造时传入的 isClosed 的值的影响，该数组切片取到原数组最后一个元素。
+
+参数：
+
+- range: [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet)\<[Int64](../../core/core_package_api/core_package_intrinsics.md#int64)> - 传递切片的范围。
+
+返回值：
+
+- [ArrayList](collection_package_class.md#class-arraylistt)\<T> - 切片所得的数组。
+
+异常：
+
+- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 range.[step](collection_package_function.md#func-steptint64) 不等于 1 时，抛出异常。
+- [IndexOutOfBoundsException](../../core/core_package_api/core_package_exceptions.md#class-indexoutofboundsexception) - 当 range 无效时，抛出异常。
+
+示例：
+
+使用示例见 [ArrayList 的 remove/clear/slice 函数](../collection_package_samples/sample_arraylist_remove_clear_slice.md)。",
+24,foreign_syntax,"error: expected ';' or '<NL>', found 'target'
+  ==> main.cj:19:13:
+   | 
+19 |         val target = char[0]
+   |             ^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:20:31:
+   | 
+20 |         for (i in (patLen - 1) to 0 by -1) {
+   |             ~                 ^ expected ')' here
+   |             |
+   |             to match this opening '('
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:29:31:
+   | 
+29 |         for (i in (patLen - 1) to 0 by -1) {
+   |             ~                 ^ expected ')' here
+   |             |
+   |             to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found 'result'
+  ==> main.cj:42:13:
+   | 
+42 |         val result = ArrayList<Int64>()
+   |             ^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'n'
+  ==> main.cj:43:13:
+   | 
+43 |         val n = textLen
+   |             ^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'm'
+  ==> main.cj:44:13:
+   | 
+44 |         val m = patLen
+   |             ^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'mismatchIdx'
+  ==> main.cj:47:17:
+   | 
+47 |             val mismatchIdx = mismatch_in_text(currentPos)
+   |                 ^^^^^^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'nextPos'
+  ==> main.cj:51:21:
+   | 
+51 |                 val nextPos = currentPos + m
+   |                     ^^^^^^^ expected ';' or '<NL>' he",libs/std/database_sql/database_sql_package_api/database_sql_package_classes.md > 类 > class SqlNullableChar <sup>(deprecated)</sup> > init(?String),"```cangjie
+public init(v: ?String)
+```
+
+功能：根据传入参数 v 构造一个 [SqlNullableChar <sup>(deprecated)</sup>](database_sql_package_classes.md#class-sqlnullablechar-deprecated) 实例。
+
+参数：
+
+- v: ?[String](../../core/core_package_api/core_package_structs.md#struct-string) - 传入的数据。",
+25,foreign_syntax,"error: expected ';' or '<NL>', found 'target'
+  ==> main.cj:19:13:
+   | 
+19 |         val target = char[0]
+   |             ^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:20:31:
+   | 
+20 |         for (i in (patLen - 1) to 0 by -1) {
+   |             ~                 ^ expected ')' here
+   |             |
+   |             to match this opening '('
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:29:31:
+   | 
+29 |         for (i in (patLen - 1) to 0 by -1) {
+   |             ~                 ^ expected ')' here
+   |             |
+   |             to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found 'result'
+  ==> main.cj:42:13:
+   | 
+42 |         val result = ArrayList<Int64>()
+   |             ^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'n'
+  ==> main.cj:43:13:
+   | 
+43 |         val n = textLen
+   |             ^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'm'
+  ==> main.cj:44:13:
+   | 
+44 |         val m = patLen
+   |             ^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'mismatchIdx'
+  ==> main.cj:47:17:
+   | 
+47 |             val mismatchIdx = mismatch_in_text(currentPos)
+   |                 ^^^^^^^^^^^ expected ';' or '<NL>' here
+   | 
+
+error: expected ';' or '<NL>', found 'nextPos'
+  ==> main.cj:51:21:
+   | 
+51 |                 val nextPos = currentPos + m
+   |                     ^^^^^^^ expected ';' or '<NL>' he",manual/source_zh_cn/collections/collection_iterable_collections.md > Iterable 和 Collections,"前面已经了解过 Range、Array、ArrayList，它们都可以使用 for-in 进行遍历操作。对于开发者自定义的类型，也能实现类似的遍历操作。
+
+Range、Array、ArrayList 都是通过 Iterable 来支持 for-in 语法的。
+
+Iterable 是如下形式（只展示了核心代码）的一个内置 interface。
+
+```cangjie
+interface Iterable<T> {
+    func iterator(): Iterator<T>
+    ...
+}
+```
+
+iterator 函数要求返回的 Iterator 类型是如下形式（只展示了核心代码）的另一个内置 interface。
+
+```cangjie
+interface Iterator<T> <: Iterable<T> {
+    mut func next(): Option<T>
+    ...
+}
+```
+
+可以使用 for-in 语法来遍历任何一个实现了 Iterable 接口类型的实例。
+
+假设有这样一段 for-in 代码，如下所示。
+
+<!-- run -->
+
+```cangjie
+let list = [1, 2, 3]
+for (i in list) {
+    println(i)
+}
+```
+
+它等价于如下形式的 while 代码。
+
+<!-- run -->
+
+```cangjie
+let list = [1, 2, 3]
+var it = list.iterator()
+while (true) {
+    match (it.next()) {
+        case Some(i) => println(i)
+        case None => break
+    }
+}
+```
+
+另外一种常见的遍历 Iterable 类型的方法是在 while 表达式的条件中使用模式匹配，比如上面 while 代码的另一种等价写法是：
+
+<!-- run -->
+
+```cangjie
+let list = [1, 2, 3]
+var it = list.iterator()
+while (let Some(i) <- it.next()) {
+    println(i)
+}
+```
+
+Array、ArrayList、HashSet、HashMap 类型都实现了 Iterable，因此可以将其用在 for-in 或者 while 中。",
+26,type_or_mutability,"error: no matching function for operator '()' function call
+ ==> main.cj:6:17:
+  | 
+6 |         sum1 += Int(s.length())
+  |                 ^ 
+  | 
+
+error: no matching function for operator '()' function call
+  ==> main.cj:10:17:
+   | 
+10 |         sum2 += Int(s.length())
+   |                 ^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",libs/std/core/core_package_api/core_package_intrinsics.md > 内置类型 > Float64 > extend Float64,"```cangjie
+extend Float64
+```
+
+功能：支持与 [UInt64](core_package_intrinsics.md#uint64) 互相转换。
+
+#### static func fromBits(UInt64)
+
+```cangjie
+public static func fromBits(bits: UInt64): Float64
+```
+
+功能：将指定的 [UInt64](core_package_intrinsics.md#uint64) 数转换为 [Float64](core_package_intrinsics.md#float64) 数。
+
+参数：
+
+- bits: [UInt64](core_package_intrinsics.md#uint64) - 要转换的数字。
+
+返回值：
+
+- [Float64](core_package_intrinsics.md#float64) - 转换结果，其位与参数 bits 值相同。
+
+示例：
+
+<!-- verify -->
+```cangjie
+main() {
+    let v = Float64.fromBits(0x402BC28F5C28F5C3)
+    println(v)
+}
+```
+
+运行结果：
+
+```text
+13.880000
+```
+
+#### func toBits()
+
+```cangjie
+public func toBits(): UInt64
+```
+
+功能：将指定的 Float64 数转换为以位表示的对应 [UInt64](core_package_intrinsics.md#uint64) 数。
+
+返回值：
+
+- [UInt64](core_package_intrinsics.md#uint64) - 转换结果，其值与 [Float64](core_package_intrinsics.md#float64) 的位表示相同。
+
+示例：
+
+<!-- verify -->
+```cangjie
+main() {
+    println(13.88f64.toBits()) // 0x402BC28F5C28F5C3 4624003363408246211
+}
+```
+
+运行结果：
+
+```text
+4624003363408246211
+```",
+27,other_compile,"error: unable to infer generic argument of this function
+  ==> main.cj:24:5:
+   | 
+24 |     sort(resultArray, key: sortKey)
+   |     ^^^^ 
+   | 
+note: following constraints for type variable 'Generics-K' cannot be solved:
+      'Tuple<Int64, Int64> <: Generics-K'
+      'Generics-K <: Interface-Comparable<Generics-K>'
+  ==> (package std.sort)sort.cj:97:21:
+note: constraint 'Tuple<Int64, Int64> <: Generics-K' may come from:
+  ==> main.cj:24:23:
+   | 
+24 |     sort(resultArray, key: sortKey)
+   |                       ^^^^^^^^^^^^ of type '(Tuple<Int64, Int64>) -> Tuple<Int64, Int64>', should match parameter type '(Generics-T) -> Generics-K'
+   | 
+
+1 error generated, 1 error printed.
+",libs/std/sort/sort_package_api/sort_package_interfaces.md > 接口 > interface SortByExtension\<T> <sup>(deprecated)</sup> > extend\<T> Array\<T> <: SortByExtension\<T> <sup>(deprecated)</sup>,"```cangjie
+extend<T> Array<T> <: SortByExtension<T>
+```
+
+功能：此扩展用于实现 [Array](../../core/core_package_api/core_package_structs.md#struct-arrayt) 的 `sortBy` 函数。
+
+> **注意：**
+>
+> 未来版本即将废弃。
+
+父类型：
+
+- [SortByExtension](sort_package_interfaces.md#interface-sortbyextensiont-deprecated)
+
+#### func sortBy((T, T) -> Ordering) <sup>(deprecated)</sup>
+
+```cangjie
+public func sortBy(comparator!: (T, T) -> Ordering): Unit
+```
+
+功能：通过传入的比较函数，根据其返回值 [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering) 类型的结果，可对数组进行自定义排序。
+
+> **注意：**
+>
+> 未来版本即将废弃，使用 [sort](sort_package_funcs.md#func-sorttarrayt-t-t---ordering-bool-bool) 替代。
+
+参数：
+
+- comparator!: (T, T) ->[Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering) - 用户传入的比较函数，如，comparator: (t1: T, t2: T) -> [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering)，如果 `comparator` 的返回值为 [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering).GT，排序后 `t1` 在 `t2` 后；如果 `comparator` 的返回值为 [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering).LT，排序后 `t1` 在 `t2` 前；如果 `comparator` 的返回值为 [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering).EQ，且为稳定排序那么 `t1` 与 `t2` 的位置较排序前保持不变； 如果 `comparator` 的返回值为 [Ordering](../../core/core_package_api/core_package_enums.md#enum-ordering).EQ，且为不稳定排序，那么 `t1`，`t2` 顺序不确定。
+
+#### func sortBy(Bool, (T, T) -> Ordering) <sup>(deprecated)</sup>
+
+```cangjie
+public func sortBy(stable!: Bool, comparator!: (T, T) -> Orde",
+28,type_or_mutability,"error: no matching function for operator '()' function call
+ ==> main.cj:5:18:
+  | 
+5 |     for (i in 0..lst.size()) {
+  |                  ^ 
+  | 
+
+1 error generated, 1 error printed.
+",manual/source_zh_cn/FFI/cangjie-c.md > 仓颉-C 互操作 > 类型映射 > sizeOf/alignOf,"仓颉还提供了 `sizeOf` 和 `alignOf` 两个函数，用于获取上述 C 互操作类型的内存占用和内存对齐数值（单位：字节），函数声明如下：
+
+```cangjie
+public func sizeOf<T>(): UIntNative where T <: CType
+public func alignOf<T>(): UIntNative where T <: CType
+```
+
+使用示例：
+
+<!-- run -->
+
+```cangjie
+@C
+struct Data {
+    var a: Int64 = 0
+    var b: Float32 = 0.0
+}
+
+main() {
+    println(sizeOf<Data>())
+    println(alignOf<Data>())
+}
+```
+
+在 64 位机器上运行，将输出：
+
+```text
+16
+8
+```",
+29,runtime_exception,"An exception has occurred:
+IndexOutOfBoundsException: The size of Array is 8, start is 3, length is -1.
+	 at default.bf(std.core::String, std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_97gyzba8\main.cj:18)
+	 at default.main()(C:\Users\Junjie\AppData\Local\Temp\cj_97gyzba8\main.cj:35)",libs/std/core/core_package_api/core_package_exceptions.md > 异常类 > class IndexOutOfBoundsException > init(String),"```cangjie
+public init(message: String)
+```
+
+功能：根据异常信息构造一个 [IndexOutOfBoundsException](core_package_exceptions.md#class-indexoutofboundsexception) 实例。
+
+参数：
+
+- message: [String](core_package_structs.md#struct-string) - 异常提示信息。",
+30,other_compile,"error: unknown start of token: \
+ ==> main.cj:4:17:
+  | 
+4 |     if (txt.any(\c => c.isWhitespace())) {
+  |                 ^ unknown start of token: \
+  | 
+
+error: unknown start of token: \
+ ==> main.cj:5:26:
+  | 
+5 |         return txt.split(\c => c.isWhitespace())
+  |                          ^ unknown start of token: \
+  | 
+
+error: unknown start of token: \
+ ==> main.cj:7:26:
+  | 
+7 |         return txt.split(\c => c == ',')
+  |                          ^ unknown start of token: \
+  | 
+
+3 errors generated, 3 errors printed.
+",manual/source_zh_cn/function/lambda.md > Lambda 表达式 > Lambda 表达式定义,"Lambda 表达式的语法为如下形式： `{ p1: T1, ..., pn: Tn => expressions | declarations }`。
+
+其中，`=>` 之前为参数列表，多个参数之间使用 `,` 分隔，每个参数名和参数类型之间使用 `:` 分隔。`=>` 之前也可以没有参数。`=>` 之后为 Lambda 表达式体，是一组表达式或声明序列。Lambda 表达式的参数名的作用域与函数的相同，为 Lambda 表达式的函数体部分，其作用域级别可视为与 Lambda 表达式的函数体内定义的变量等同。
+
+<!-- run -->
+
+```cangjie
+let f1 = { a: Int64, b: Int64 => a + b }
+
+var display = { =>   // Parameterless lambda expression.
+    println(""Hello"")
+    println(""World"")
+}
+```
+
+Lambda 表达式不管有没有参数，都不可以省略 `=>`，除非其作为[尾随 lambda](./function_call_desugar.md#尾随-lambda)。例如：
+
+<!-- run -->
+
+```cangjie
+var display = { => println(""Hello"") }
+
+func f2(lam: () -> Unit) {}
+let f2Res = f2 { println(""World"") } // OK to omit the =>
+```
+
+Lambda 表达式中参数的类型标注可缺省。以下情形中，若参数类型省略，编译器会尝试进行类型推断，当编译器无法推断出类型时会编译报错：
+
+- Lambda 表达式赋值给变量时，其参数类型根据变量类型推断；
+- Lambda 表达式作为函数调用表达式的实参使用时，其参数类型根据函数的形参类型推断。
+
+<!-- run -->
+
+```cangjie
+// The parameter types are inferred from the type of the variable sum1
+var sum1: (Int64, Int64) -> Int64 = { a, b => a + b }
+
+var sum2: (Int64, Int64) -> Int64 = { a: Int64, b => a + b }
+
+func f(a1: (Int64) -> Int64): Int64 {
+    a1(1)
+}
+
+main(): Int64 {
+    // The parameter type of lambda is inferred from the type of function f
+    f({ a2 => a2 + 10 })
+}
+```
+
+Lambda 表达式中不支持声明返回类型，其返回类型总是从上下文中推断出来，若无法推断则报错。
+
+- 若上下文明确指定了 Lambda 表达式的返回类型，则其返回类型为上下文指定的类型。
+
+    - Lambda 表达式赋值给变量时，其返回类型根据变量类型推断返回类型：
+
+      ```cangjie
+      let f: () -> Unit = { ... }
+      ```
+
+    - Lambda 表达式作为参数使用时，其返回类型根据使用处所在的函数调用的形参类型推断：
+
+      <!-- run -->
+
+      ```cangj",

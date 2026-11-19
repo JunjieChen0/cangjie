@@ -43,3 +43,15 @@ def test_load_and_aggregate_skip_empty_and_selftest(tmp_path):
     assert lines[("formal", "all")]["cny"] == 0.2 and lines[("formal", "all")]["runs"] == 1
     assert lines[("total", "all")]["cny"] == 8.2 and lines[("total", "all")]["usd"] == round(8.2 / 6.67, 2)
     assert lines[("pilot", DS)]["completion_tokens"] == 1_000_000
+
+
+def test_rag2_rewrite_tokens_are_costed_at_rewriter_price(tmp_path):
+    p = tmp_path / "results/review/runs/x.summary.json"
+    os.makedirs(p.parent)
+    p.write_text(json.dumps({"model_resolved": DS, "total_prompt_tokens": 1_000_000, "total_completion_tokens": 0,
+                             "rewrite_model": DB, "total_rewrite_prompt_tokens": 0,
+                             "total_rewrite_completion_tokens": 1_000_000}), encoding="utf-8")
+    rows = T.load_usage(str(tmp_path))
+    assert [(r["model"], r["category"]) for r in rows] == [(DS, "review"), (DB, "review")]
+    lines = {(x["category"], x["model"]): x for x in T.aggregate(rows)}
+    assert lines[("review", "all")]["cny"] == 2.0 + 2.0          # DeepSeek 输入 1M×2 元 + 改写输出 1M×2 元

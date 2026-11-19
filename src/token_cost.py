@@ -53,9 +53,12 @@ def load_usage(root: str = ROOT) -> list[dict]:
         model = s.get("model_resolved") or s.get("config", {}).get("model")
         if model not in CNY_PRICES:
             raise SystemExit(f"{p}：模型 {model} 没有单价，请先补进 pricing.CNY_PRICES")
-        rows.append({"path": os.path.relpath(p, root).replace(os.sep, "/"), "model": model,
-                     "category": category(os.path.relpath(os.path.dirname(p), root)),
-                     "prompt_tokens": pin, "completion_tokens": pout})
+        rel, cat = os.path.relpath(p, root).replace(os.sep, "/"), category(os.path.relpath(os.path.dirname(p), root))
+        rows.append({"path": rel, "model": model, "category": cat, "prompt_tokens": pin, "completion_tokens": pout})
+        rw_in, rw_out = s.get("total_rewrite_prompt_tokens") or 0, s.get("total_rewrite_completion_tokens") or 0
+        if rw_in + rw_out:            # rag2 的查询改写由固定的改写模型完成，按改写模型单价另计一行
+            rows.append({"path": rel + "#rewrite", "model": s["rewrite_model"], "category": cat,
+                         "prompt_tokens": rw_in, "completion_tokens": rw_out})
     return rows
 
 

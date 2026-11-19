@@ -22,16 +22,18 @@ import os
 import re
 import sys
 import threading
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prompts as P  # noqa: E402
 from data import load_classeval, load_humaneval, load_original30, load_syntax_rule, read_jsonl, write_jsonl  # noqa: E402
-from doc_retrieval import format_docs, retrieve, retrieve_for_feedback  # noqa: E402
+from doc_retrieval import build_query, format_docs, retrieve, retrieve_for_feedback  # noqa: E402
 from llm import chat, extract_code, strip_main  # noqa: E402
 from reeval_classeval import load_classeval_tests  # noqa: E402
 from repair_hints import match_hints  # noqa: E402
+from retrieval_eval import REWRITE_PROMPT, REWRITER  # noqa: E402
 from runner import compile_and_run, compile_only  # noqa: E402
 
 try:
@@ -91,6 +93,25 @@ def evaluate(code: str, item: dict, all_tests: bool):
     return compile_and_run(code + "\n" + item["test"])
 
 
+RAG2_URL = os.environ.get("RAG2_URL", "http://127.0.0.1:8765/search")
+
+
+def rewrite_query(feedback: str) -> tuple[str, dict]:
+    """rag2 第一步：固定由 REWRITER 把报错改写成文档检索词（与离线评估相同的提示与温度）。"""
+    text, u = chat([{"role": "user", "content": REWRITE_PROMPT.format(feedback=feedback[:1500])}],
+                   model=REWRITER, temperature=0.0)
+    lines = [s for s in text.strip().splitlines() if s.strip()]
+    return (lines[0][:200] if lines else build_query(feedback)), u
+
+
+def remote_search(query: str) -> list[dict]:
+    """rag2 第二步：调用本地检索服务（retrieval_server.py：BM25 + bge-m3 混合，bge-reranker 重排，top-3）。"""
+    req = urllib.request.Request(RAG2_URL, data=json.dumps({"query": query}).encode("utf-8"),
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=300) as r:
+        return json.load(r)["chunks"]
+
+
 def repair_prompt(res, mode: str) -> tuple[str, dict]:
     """返回 (修复提示, 需记入 history 的附加信息)。"""
     if mode == "blind":
@@ -104,6 +125,12 @@ def repair_prompt(res, mode: str) -> tuple[str, dict]:
         chunks = retrieve_for_feedback(res.feedback)
         return (P.REPAIR_RAG.format(kind=res.failure_kind, feedback=res.feedback, docs=format_docs(chunks)),
                 {"retrieved": [c["title"] for c in chunks]})
+    if mode == "rag2":
+        query, u = rewrite_query(res.feedback)
+        chunks = remote_search(query)
+        return (P.REPAIR_RAG.format(kind=res.failure_kind, feedback=res.feedback, docs=format_docs(chunks)),
+                {"rewritten": query, "retrieved": [c["title"] for c in chunks],
+                 "rewrite_usage": {k: u[k] for k in ("prompt_tokens", "completion_tokens")}})
     raise ValueError(mode)
 
 
@@ -154,6 +181,7 @@ def agent_steps(item: dict, args, res, code: str, ask_raw, post, record) -> tupl
 def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
     messages = [{"role": "system", "content": P.SYSTEM}]
     history, usage_total = [], {"prompt_tokens": 0, "completion_tokens": 0}
+    rewrite_total = {"prompt_tokens": 0, "completion_tokens": 0}     # rag2 查询改写（REWRITER）的用量，单独记账
     temps_used: set[float] = set()
 
     def post(code: str) -> str:
@@ -207,14 +235,19 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
             if res.passed or rnd == args.rounds:
                 break
         prompt, meta = repair_prompt(res, args.feedback)
+        for k, v in meta.pop("rewrite_usage", {}).items():
+            rewrite_total[k] += v
         history[-1].update(meta)
         messages.append({"role": "user", "content": prompt})
         code = ask()
 
-    return {"id": item["id"], "passed": history[-1]["failure_kind"] == "passed",
-            "rounds_used": len(history) - 1, "usage": usage_total, "history": history,
-            "solution": code, "model": args.model or os.environ.get("LLM_MODEL"),
-            "temperature_used": sorted(temps_used)}
+    row = {"id": item["id"], "passed": history[-1]["failure_kind"] == "passed",
+           "rounds_used": len(history) - 1, "usage": usage_total, "history": history,
+           "solution": code, "model": args.model or os.environ.get("LLM_MODEL"),
+           "temperature_used": sorted(temps_used)}
+    if args.feedback == "rag2":
+        row["rewrite_usage"] = rewrite_total
+    return row
 
 
 def main():
@@ -223,8 +256,9 @@ def main():
                     help="original = data/original30 新写的 30 道题")
     ap.add_argument("--model", default=None, help="模型名（默认读取 LLM_MODEL）")
     ap.add_argument("--prompt", choices=["direct", "syntax"], default="syntax")
-    ap.add_argument("--feedback", choices=["blind", "raw", "hint", "rag", "agent"], default="raw",
-                    help="agent = Agent 基线：每步由模型选择检索文档或运行测试，--rounds 为步数上限")
+    ap.add_argument("--feedback", choices=["blind", "raw", "hint", "rag", "rag2", "agent"], default="raw",
+                    help="rag2 = 改写查询 + 混合检索 + 重排（需先启动 retrieval_server.py）；"
+                         "agent = Agent 基线：每步由模型选择检索文档或运行测试，--rounds 为步数上限")
     ap.add_argument("--rounds", type=int, default=3, help="最多修复轮数（0 = 不修复，即单次生成基线）")
     ap.add_argument("--init", help="已有的第 0 轮 solutions jsonl（如 CangjieBench 公开结果）")
     ap.add_argument("--strip-main", action="store_true", help="自动删除模型生成的 main()")
@@ -307,6 +341,11 @@ def main():
         "total_completion_tokens": sum(r.get("usage", {}).get("completion_tokens", 0) for r in rows),
         "errors": sum(1 for r in rows if "error" in r),
     }
+    if args.feedback == "rag2":     # 改写模型的用量单独记，成本按改写模型单价另算
+        summary.update({"rewrite_model": REWRITER,
+                        "total_rewrite_prompt_tokens": sum(r.get("rewrite_usage", {}).get("prompt_tokens", 0) for r in rows),
+                        "total_rewrite_completion_tokens": sum(r.get("rewrite_usage", {}).get("completion_tokens", 0)
+                                                               for r in rows)})
     with open(args.output.replace(".jsonl", "") + ".summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
