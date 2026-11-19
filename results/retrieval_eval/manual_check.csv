@@ -65,7 +65,7 @@ public macro linq(input: Tokens) {
                    ""Expected keyword \""where\"" here."")
     }
     index = nextIndex + 1  // 跳过where
-    let (co",
+    let (co",0
 2,runtime_exception,"An exception has occurred:
 OverflowException: sub
 	 at default.decode_shift(std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_5xa5vgf5\main.cj:20)
@@ -88,7 +88,7 @@ main() {
 ```text
 An exception has occurred:
 OverflowException: add
-```",
+```",1
 3,type_or_mutability,"error: no matching function for operator '()' function call
  ==> main.cj:5:18:
   | 
@@ -122,7 +122,7 @@ public operator func [](range: Range<Int64>): ArrayList<T>
 异常：
 
 - [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 range.[step](collection_package_function.md#func-steptint64) 不等于 1 时，抛出异常。
-- [IndexOutOfBoundsException](../../core/core_package_api/core_package_exceptions.md#class-indexoutofboundsexception) - 当 range 无效时，抛出异常。",
+- [IndexOutOfBoundsException](../../core/core_package_api/core_package_exceptions.md#class-indexoutofboundsexception) - 当 range 无效时，抛出异常。",1
 4,type_or_mutability,"error: cannot assign to immutable value
    ==> main.cj:128:21:
     | 
@@ -145,7 +145,7 @@ public ImmutableInputProvider(let data: T)
 
 参数：
 
-- data: T - 基准测试的输入。",
+- data: T - 基准测试的输入。",0
 5,type_or_mutability,"error: mismatched types
   ==> main.cj:25:30:
    | 
@@ -212,7 +212,7 @@ main() {
 运行结果：
 
 ```text
-[#width: 6, height: 7, #wi",
+[#width: 6, height: 7, #wi",2
 6,type_or_mutability,"error: no matching function for operator '()' function call
  ==> main.cj:5:18:
   | 
@@ -293,7 +293,7 @@ type C = (B, Int64)
     <!-- compile -->
 
     ```cangjie
-    enum ",
+    enum ",0
 7,other_compile,"error: unrecognized escape '\(' in string literal
   ==> main.cj:75:31:
    | 
@@ -325,7 +325,7 @@ main() {
 
 ```cangjie
 let handler: (name: String, Int64) -> Int64   // Error
-```",
+```",1
 8,other_compile,"error: 'length' is non-static member, cannot access by type name
  ==> main.cj:2:18:
   | 
@@ -368,7 +368,7 @@ struct Rectangle {
         this.width * this.height
     }
 }
-```",
+```",1
 9,foreign_syntax,"error: expected '{', found keyword 'return'
   ==> main.cj:37:61:
    | 
@@ -453,7 +453,7 @@ A
 
   ```text
   3
-  ```",
+  ```",1
 10,api_or_undeclared,"error: undeclared identifier 'toInt64'
  ==> main.cj:5:28:
   | 
@@ -472,7 +472,7 @@ public open class StackTraceElement {
 }
 ```
 
-功能：表示一个异常堆栈的具体信息，包括异常发生的类名、函数名、文件名、行号。",
+功能：表示一个异常堆栈的具体信息，包括异常发生的类名、函数名、文件名、行号。",0
 11,foreign_syntax,"error: expected pattern, found keyword 'let'
   ==> main.cj:24:18:
    | 
@@ -511,7 +511,7 @@ public func parsePattern(input: Tokens): Pattern
 
 异常：
 
-- [ParseASTException](ast_package_exceptions.md#class-parseastexception) - 当输入的 [Tokens](ast_package_classes.md#class-tokens) 类型无法构造为 [Pattern](ast_package_classes.md#class-pattern) 节点时，抛出异常，异常中包含报错提示信息。",
+- [ParseASTException](ast_package_exceptions.md#class-parseastexception) - 当输入的 [Tokens](ast_package_classes.md#class-tokens) 类型无法构造为 [Pattern](ast_package_classes.md#class-pattern) 节点时，抛出异常，异常中包含报错提示信息。",0
 12,api_or_undeclared,"error: undeclared identifier 'sum_squares'
  ==> main.cj:4:9:
   | 
@@ -598,7 +598,7 @@ main() {
 
 ```text
 b=3,c=120,d=2
-```",
+```",1
 13,runtime_exception,"An exception has occurred:
 OverflowException: sub
 	 at default.decode_shift(std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_bei_vbn0\main.cj:20)
@@ -606,7 +606,7 @@ OverflowException: sub
 public init()
 ```
 
-功能：构造一个默认的 [OverflowException](core_package_exceptions.md#class-overflowexception) 实例，默认异常信息为空。",
+功能：构造一个默认的 [OverflowException](core_package_exceptions.md#class-overflowexception) 实例，默认异常信息为空。",0
 14,runtime_exception,"An exception has occurred:
 NoneValueException
 	 at default.truncate_number(Float64)(C:\Users\Junjie\AppData\Local\Temp\cj_cbsuse4p\main.cj:3)
@@ -643,7 +643,7 @@ main() {
 
 ```text
 24
-```",
+```",1
 15,foreign_syntax,"error: unclosed delimiter: '('
   ==> main.cj:22:40:
    | 
@@ -699,7 +699,7 @@ func f(fn: (Int64) -> Int64) { fn(1) }
 func test() {
     f { i => i * i }
 }
-```",
+```",2
 16,runtime_exception,"An exception has occurred:
     Out of memory","libs/std/sync/sync_package_api/sync_package_classes.md > 类 > class AtomicUInt64 > func store(UInt64, MemoryOrder) <sup>(deprecated)</sup>","```cangjie
 public func store(val: UInt64, memoryOrder!: MemoryOrder): Unit
@@ -714,7 +714,7 @@ public func store(val: UInt64, memoryOrder!: MemoryOrder): Unit
 参数：
 
 - val: [UInt64](../../core/core_package_api/core_package_intrinsics.md#uint64) - 写入原子类型的值。
-- memoryOrder!: [MemoryOrder <sup>(deprecated)</sup>](sync_package_enums.md#enum-memoryorder-deprecated) - 当前操作的内存排序方式。",
+- memoryOrder!: [MemoryOrder <sup>(deprecated)</sup>](sync_package_enums.md#enum-memoryorder-deprecated) - 当前操作的内存排序方式。",0
 17,foreign_syntax,"error: expected pattern, found keyword 'let'
   ==> main.cj:24:18:
    | 
@@ -766,7 +766,7 @@ func sum(y: Array<Int64>): Int64 { // Get the sum of elements in the array
 
 let arr: Array<Int64> = [1, 3, 5]
 let res = arr |> inc |> sum // res = 12
-```",
+```",0
 18,foreign_syntax,"error: unclosed delimiter: '('
   ==> main.cj:62:64:
    | 
@@ -792,7 +792,7 @@ public static const Separator: String = PATH_SEPARATOR
 
 Windows 系统中分隔符为 ""\\""，非 Windows 系统中为 ""/""。
 
-类型：[String](../../core/core_package_api/core_package_structs.md#struct-string)",
+类型：[String](../../core/core_package_api/core_package_structs.md#struct-string)",0
 19,foreign_syntax,"error: unclosed delimiter: '('
   ==> main.cj:11:16:
    | 
@@ -811,7 +811,7 @@ func remove(range: Range<Int64>): Unit
 
 参数：
 
-- range: [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet)\<[Int64](../../core/core_package_api/core_package_intrinsics.md#int64)> - 需要被删除的元素的范围。",
+- range: [Range](../../core/core_package_api/core_package_structs.md#struct-ranget-where-t--countablet--comparablet--equatablet)\<[Int64](../../core/core_package_api/core_package_intrinsics.md#int64)> - 需要被删除的元素的范围。",0
 20,other_compile,"error: 'Rune' is not accessible in package 'std.convert'
  ==> main.cj:2:8:
   | 
@@ -844,7 +844,7 @@ static func arbitrary(random: RandomSource): Generator<Rune>
 
 返回值：
 
-- [Generator](../../unittest/unittest_package_api/unittest_package_interfaces.md#interface-generatort)\<Rune> - 生成 Rune 类型随机值生成器。",
+- [Generator](../../unittest/unittest_package_api/unittest_package_interfaces.md#interface-generatort)\<Rune> - 生成 Rune 类型随机值生成器。",0
 21,type_or_mutability,"error: invalid binary operator '!=' on type 'UInt8' and 'Struct-String'
  ==> main.cj:7:15:
   | 
@@ -912,7 +912,7 @@ public func format(fmt: String): String
 
 异常：
 
-- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 fmt 不合法时抛出异常。",
+- [IllegalArgumentException](../../core/core_package_api/core_package_exceptions.md#class-illegalargumentexception) - 当 fmt 不合法时抛出异常。",1
 22,foreign_syntax,"error: unclosed delimiter: '('
   ==> main.cj:62:64:
    | 
@@ -960,7 +960,7 @@ main() {
 8
 3>5>7>9
 true
-```",
+```",2
 23,runtime_exception,"An exception has occurred:
 IndexOutOfBoundsException: The size of Array is 8, start is 3, length is -1.
 	 at default.bf(std.core::String, std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_rejea4ar\main.cj:17)
@@ -992,7 +992,7 @@ public func slice(range: Range<Int64>): ArrayList<T>
 
 示例：
 
-使用示例见 [ArrayList 的 remove/clear/slice 函数](../collection_package_samples/sample_arraylist_remove_clear_slice.md)。",
+使用示例见 [ArrayList 的 remove/clear/slice 函数](../collection_package_samples/sample_arraylist_remove_clear_slice.md)。",1
 24,foreign_syntax,"error: expected ';' or '<NL>', found 'target'
   ==> main.cj:19:13:
    | 
@@ -1058,7 +1058,7 @@ public init(v: ?String)
 
 参数：
 
-- v: ?[String](../../core/core_package_api/core_package_structs.md#struct-string) - 传入的数据。",
+- v: ?[String](../../core/core_package_api/core_package_structs.md#struct-string) - 传入的数据。",0
 25,foreign_syntax,"error: expected ';' or '<NL>', found 'target'
   ==> main.cj:19:13:
    | 
@@ -1178,7 +1178,7 @@ while (let Some(i) <- it.next()) {
 }
 ```
 
-Array、ArrayList、HashSet、HashMap 类型都实现了 Iterable，因此可以将其用在 for-in 或者 while 中。",
+Array、ArrayList、HashSet、HashMap 类型都实现了 Iterable，因此可以将其用在 for-in 或者 while 中。",1
 26,type_or_mutability,"error: no matching function for operator '()' function call
  ==> main.cj:6:17:
   | 
@@ -1257,7 +1257,7 @@ main() {
 
 ```text
 4624003363408246211
-```",
+```",0
 27,other_compile,"error: unable to infer generic argument of this function
   ==> main.cj:24:5:
    | 
@@ -1309,7 +1309,7 @@ public func sortBy(comparator!: (T, T) -> Ordering): Unit
 #### func sortBy(Bool, (T, T) -> Ordering) <sup>(deprecated)</sup>
 
 ```cangjie
-public func sortBy(stable!: Bool, comparator!: (T, T) -> Orde",
+public func sortBy(stable!: Bool, comparator!: (T, T) -> Orde",1
 28,type_or_mutability,"error: no matching function for operator '()' function call
  ==> main.cj:5:18:
   | 
@@ -1347,7 +1347,7 @@ main() {
 ```text
 16
 8
-```",
+```",0
 29,runtime_exception,"An exception has occurred:
 IndexOutOfBoundsException: The size of Array is 8, start is 3, length is -1.
 	 at default.bf(std.core::String, std.core::String)(C:\Users\Junjie\AppData\Local\Temp\cj_97gyzba8\main.cj:18)
@@ -1359,7 +1359,7 @@ public init(message: String)
 
 参数：
 
-- message: [String](core_package_structs.md#struct-string) - 异常提示信息。",
+- message: [String](core_package_structs.md#struct-string) - 异常提示信息。",0
 30,other_compile,"error: unknown start of token: \
  ==> main.cj:4:17:
   | 
@@ -1445,4 +1445,4 @@ Lambda 表达式中不支持声明返回类型，其返回类型总是从上下�
 
       <!-- run -->
 
-      ```cangj",
+      ```cangj",2

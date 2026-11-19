@@ -1,0 +1,148 @@
+{
+  "distribution": {
+    "human": [
+      15,
+      11,
+      4
+    ],
+    "llm": [
+      10,
+      10,
+      10
+    ]
+  },
+  "primary": {
+    "n": 30,
+    "exact": 20,
+    "within_1": 29,
+    "kappa": 0.5,
+    "quadratic_kappa": 0.667,
+    "spearman": 0.764,
+    "human_higher": 0,
+    "llm_higher": 10,
+    "disagreements": [
+      {
+        "no": 7,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 8,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 10,
+        "human": 0,
+        "llm": 1
+      },
+      {
+        "no": 12,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 13,
+        "human": 0,
+        "llm": 1
+      },
+      {
+        "no": 17,
+        "human": 0,
+        "llm": 2
+      },
+      {
+        "no": 20,
+        "human": 0,
+        "llm": 1
+      },
+      {
+        "no": 21,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 25,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 29,
+        "human": 0,
+        "llm": 1
+      }
+    ],
+    "binary_ge1": {
+      "agree": 25,
+      "human_pos": 15,
+      "llm_pos": 20
+    },
+    "binary_ge2": {
+      "agree": 24,
+      "human_pos": 4,
+      "llm_pos": 10
+    }
+  },
+  "post_hoc_to_1": [
+    13,
+    20,
+    29
+  ],
+  "sensitivity": {
+    "n": 30,
+    "exact": 23,
+    "within_1": 29,
+    "kappa": 0.65,
+    "quadratic_kappa": 0.722,
+    "spearman": 0.791,
+    "human_higher": 0,
+    "llm_higher": 7,
+    "disagreements": [
+      {
+        "no": 7,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 8,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 10,
+        "human": 0,
+        "llm": 1
+      },
+      {
+        "no": 12,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 17,
+        "human": 0,
+        "llm": 2
+      },
+      {
+        "no": 21,
+        "human": 1,
+        "llm": 2
+      },
+      {
+        "no": 25,
+        "human": 1,
+        "llm": 2
+      }
+    ],
+    "binary_ge1": {
+      "agree": 28,
+      "human_pos": 18,
+      "llm_pos": 20
+    },
+    "binary_ge2": {
+      "agree": 24,
+      "human_pos": 4,
+      "llm_pos": 10
+    }
+  }
+}

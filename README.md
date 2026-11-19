@@ -134,6 +134,7 @@ python src/run_matrix.py --matrix review --dry-run
 # 检索方案离线评估与 rag2 检索服务（需在 .venv-retrieval 中运行：torch + sentence-transformers + bge-m3 / bge-reranker-v2-m3）
 .venv-retrieval/Scripts/python.exe src/retrieval_eval.py            # → results/retrieval_eval/report.md
 python src/retrieval_eval.py --export-check                          # 导出判定盲评表 manual_check.csv（各分数档 10 条）
+python src/manual_check_agreement.py                                 # 盲评与 LLM 判定一致性 → manual_check_agreement.md
 .venv-retrieval/Scripts/python.exe src/retrieval_server.py          # rag2 运行期间保持开启
 # 典型修复案例素材（按固定规则自动挑选）→ results/case_examples.md
 python src/case_examples.py
