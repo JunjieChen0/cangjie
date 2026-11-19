@@ -135,6 +135,7 @@ python src/run_matrix.py --matrix review --dry-run
 .venv-retrieval/Scripts/python.exe src/retrieval_eval.py            # → results/retrieval_eval/report.md
 python src/retrieval_eval.py --export-check                          # 导出判定盲评表 manual_check.csv（各分数档 10 条）
 python src/manual_check_agreement.py                                 # 盲评与 LLM 判定一致性 → manual_check_agreement.md
+python src/review_stats.py [--pilot]                                 # 补充实验统计（方案见 docs/补充实验统计方案.md）
 .venv-retrieval/Scripts/python.exe src/retrieval_server.py          # rag2 运行期间保持开启
 # 典型修复案例素材（按固定规则自动挑选）→ results/case_examples.md
 python src/case_examples.py

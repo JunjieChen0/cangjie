@@ -28,6 +28,23 @@ def test_parse_name_handles_compile_only_and_reps():
     assert S.parse_name("ds_v41f_ce_syntax_rag_rep1") == ("ds_v41f", "ce", "syntax", "rag", 1)
     assert S.parse_name("kimik31p_or_direct_raw_rep3") == ("kimik31p", "or", "direct", "raw", 3)
     assert S.parse_name("not_a_group") is None
+    assert S.parse_name("glm53f_ce_syntax_agent15_rep2") == ("glm53f", "ce", "syntax", "agent15", 2)
+    assert S.parse_name("u2f_he_direct_rag2_rep1") == ("u2f", "he", "direct", "rag2", 1)
+
+
+def test_rag2_rewrite_tokens_priced_at_rewriter_model(tmp_path):
+    _write_group(tmp_path, "ds_v41f_or_direct_rag2_rep1", {i: i < 2 for i in range(10)}, tokens=(1_000_000, 0))
+    p = os.path.join(tmp_path, "runs", "ds_v41f_or_direct_rag2_rep1.summary.json")
+    with open(p, encoding="utf-8") as f:
+        s = json.load(f)
+    s.update(rewrite_model="doubao-seed-2-0-mini-260428", total_rewrite_prompt_tokens=1_000_000,
+             total_rewrite_completion_tokens=1_000_000)
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(s, f)
+    g = S.load_groups(str(tmp_path), {"or": 10})
+    row, = S.summarize(g, {("ds_v41f", "or", "direct"): (0, 0)})
+    # DeepSeek 输入 2 元/百万 + 改写（Doubao 0.2 + 2.0 元/百万）= 4.2 元
+    assert abs(row["usd"] - 4.2 / 6.67) < 1e-9 and abs(row["run_usd_with_r0"] - 4.2 / 6.67) < 1e-9
 
 
 def test_load_groups_skips_incomplete_or_errored(tmp_path):

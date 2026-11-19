@@ -42,7 +42,7 @@ FLAKY = {"he": frozenset({"20"}), "ce": frozenset({"58"})}
 # Kimi-K3.1-Pro 生成慢，个别题 API 超时（HumanEval 240 秒、ClassEval 600 秒，每次调用重试 5 次）后不再补跑，
 # 按未通过计入分母；其他模型仍要求 errors = 0。
 TIMEOUT_AS_FAIL = frozenset({"kimik31p"})
-_NAME = re.compile(r"^(.+?)_(he|ce|or)_(direct|syntax)_([a-z]+(?:_co)?)_rep(\d+)$")
+_NAME = re.compile(r"^(.+?)_(he|ce|or)_(direct|syntax)_([a-z]+\d*(?:_co)?)_rep(\d+)$")   # 含 agent15、rag2
 
 
 def parse_name(name: str) -> tuple[str, str, str, str, int] | None:
@@ -83,6 +83,8 @@ def load_groups(base: str, n_tasks: dict[str, int] = N_TASKS,
         groups[(model, ds, prompt, fb)][rep] = {
             "curve": s["pass@1_by_round"], "passed": {i: bool(r["passed"]) for i, r in by_id.items()},
             "tokens": (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0)),
+            "rewrite": (s.get("rewrite_model"), s.get("total_rewrite_prompt_tokens") or 0,
+                        s.get("total_rewrite_completion_tokens") or 0),       # rag2 的查询改写调用（其余组为 0）
             "timeouts": len(errs),
             "timeout_ids": frozenset(i for i, r in by_id.items() if "error" in r)}
     return dict(groups)
@@ -124,11 +126,12 @@ def _mcnemar_per_rep(a: dict[int, dict], b: dict[int, dict]) -> list[float]:
 
 
 def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] | None = None,
-            drop_timeouts: bool = False) -> list[dict]:
-    """敏感性分析用：exclude={数据集: 要去掉的题号}；drop_timeouts=True 时，两组任一次重复中超时的题从两组同时去掉。"""
+            drop_timeouts: bool = False, pairs: tuple = PAIRS) -> list[dict]:
+    """敏感性分析用：exclude={数据集: 要去掉的题号}；drop_timeouts=True 时，两组任一次重复中超时的题从两组同时去掉。
+    pairs 为要做的 (A, B) 比较；Holm 校正在本次返回的全部比较内进行。"""
     rows = []
     for model, ds, prompt in sorted({k[:3] for k in groups}):
-        for fa, fb in PAIRS:
+        for fa, fb in pairs:
             a, b = groups.get((model, ds, prompt, fa)), groups.get((model, ds, prompt, fb))
             if not a or not b:
                 continue
@@ -178,11 +181,18 @@ def load_r0_tokens(base: str) -> dict[tuple, tuple[int, int]]:
     return out
 
 
+def rewrite_usd(rep: dict) -> float:
+    """一次重复中 rag2 查询改写调用的成本（按改写模型单价）；没有改写的组为 0。"""
+    model, pin, pout = rep.get("rewrite") or (None, 0, 0)
+    return usd_cost(model, pin, pout) if pin + pout else 0.0
+
+
 def run_cost(reps: dict[int, dict], r0_tokens: tuple[int, int], model: str) -> float:
-    """一次完整运行的成本（美元，国内牌价按统一汇率折算，见 pricing.py）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
+    """一次完整运行的成本（美元，国内牌价按统一汇率折算，见 pricing.py）：共享第 0 轮 + 修复阶段在各次重复上的平均
+    （rag2 另加查询改写调用的成本）。"""
     pin = r0_tokens[0] + st.mean(reps[r]["tokens"][0] for r in reps)
     pout = r0_tokens[1] + st.mean(reps[r]["tokens"][1] for r in reps)
-    return usd_cost(MODELS[model], pin, pout)
+    return usd_cost(MODELS[model], pin, pout) + st.mean(rewrite_usd(reps[r]) for r in reps)
 
 
 def summarize(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, tuple[int, int]] | None = None) -> list[dict]:
@@ -195,7 +205,7 @@ def summarize(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, tuple
         pin = sum(reps[r]["tokens"][0] for r in reps)
         pout = sum(reps[r]["tokens"][1] for r in reps)
         n_pass = sum(sum(reps[r]["passed"].values()) for r in reps)
-        usd = usd_cost(MODELS[key[0]], pin, pout)
+        usd = usd_cost(MODELS[key[0]], pin, pout) + sum(rewrite_usd(reps[r]) for r in reps)
         with_r0 = {}
         if r0_tokens and key[:3] in r0_tokens:
             run = run_cost(reps, r0_tokens[key[:3]], key[0])
