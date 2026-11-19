@@ -1,0 +1,66 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+import residual_failures as R  # noqa: E402
+from runner import RunResult  # noqa: E402
+
+
+def _row(i, passed, kinds=("compile_error",), status="[True, False]", fb="x", error=None):
+    hist = [{"round": k, "failure_kind": kind, "feedback": fb, "code": f"c{k}", "status": status}
+            for k, kind in enumerate(kinds)]
+    row = {"id": i, "passed": passed, "history": hist}
+    if error:
+        row["error"] = error
+    return row
+
+
+def test_last_failure_and_near_miss():
+    assert R.last_failure(_row(1, False, error="APITimeoutError")) == "api_timeout"
+    assert R.last_failure(_row(1, False, kinds=("compile_error", "test_failure"))) == "test_failure"
+    assert R.is_near_miss("[True, True, False]") and not R.is_near_miss("[True, False, False]")
+    assert not R.is_near_miss("") and not R.is_near_miss("[]")
+    assert R.is_near_miss([True, False]) and not R.is_near_miss([])          # 日志里实际是 JSON 列表
+
+
+def test_hard_problems_take_details_from_first_non_timeout_record():
+    t = _row(5, False, error="APITimeoutError")
+    t["history"] = []
+    ok = _row(5, False, kinds=("test_failure",), status=[True, False],
+              fb=r"Test failed! at default.test_a()(C:\Users\x\AppData\Local\Temp\cj_1\main.cj:3)")
+    ok["history"][-1]["code"] = "class Foo {}"
+    runs = {("m", "direct", "raw"): [{"5": t}], ("m", "direct", "hint"): [{"5": ok}]}
+    row, = R.hard_problems(runs, "m")
+    assert row["class"] == "Foo" and row["status"] == [True, False]
+    assert row["kinds"] == ["api_timeout", "test_failure"]
+    assert "Users" not in row["feedback_head"] and "test_a()" in row["feedback_head"]   # 去掉本机路径
+
+
+def test_residual_summary_counts_failures_near_misses_and_always_failing():
+    rep1 = {"1": _row(1, False, kinds=("test_failure",), status="[True, False]"),
+            "2": _row(2, False, kinds=("test_failure",), status="[False, False]"),
+            "3": _row(3, True)}
+    rep2 = {"1": _row(1, False, kinds=("test_failure",), status="[True, False]"),
+            "2": _row(2, True), "3": _row(3, False, error="APITimeoutError")}
+    s = R.residual_summary([rep1, rep2])
+    assert s["fail"] == 4 and s["cats"] == {"test_failure": 3, "api_timeout": 1}
+    assert (s["test_fail"], s["near_miss"]) == (3, 2)
+    assert s["always"] == ["1"]
+
+
+def test_truncation_census_only_counts_feedback_shown_to_model():
+    long, short = "y" * R.STORED_CAP, "y" * 10
+    rows = [_row(1, False, kinds=("compile_error", "test_failure", "test_failure"), fb=long),
+            _row(2, False, kinds=("test_failure", "test_failure"), fb=short)]
+    c = R.truncation_census(rows)
+    # 每题最后一条是最终代码的评测，不算；第 1 题前两条（存满）、第 2 题第一条（未满）
+    assert c == {("compile_error", True): 1, ("test_failure", True): 1, ("test_failure", False): 1}
+
+
+def test_full_feedback_length_matches_uncapped_aggregate():
+    ok = RunResult(True, "passed")
+    bad = RunResult(False, "test_failure", run_stdout="z" * 4000)
+    n = R.full_feedback_length([ok, bad])
+    assert n == len("1 of 2 tests failed.\n\n") + len("[test #1 test_failure]\n") + 4000
+    ce = [RunResult(False, "compile_error", compile_stderr="e" * 3500)] * 2
+    assert R.full_feedback_length(ce) == 3500                    # 相同编译错误去重

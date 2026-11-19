@@ -120,6 +120,8 @@ python src/run_matrix.py --matrix original --dry-run
 # 第 3 阶段 / 新题集统计 → results/stats/{stage3,original30}_stats.{md,json}
 python src/stage3_stats.py
 python src/stage3_stats.py --matrix original
+# ClassEval 剩余失败与反馈截断检查 → results/stats/residual_failures.{md,json}（--recheck 需要 cjc）
+python src/residual_failures.py --recheck -j 6
 
 # 统计、检验、作图、测试
 python src/analyze.py

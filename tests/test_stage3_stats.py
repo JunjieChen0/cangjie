@@ -132,3 +132,41 @@ def test_summarize_reports_mean_sd_and_cost(tmp_path):
     row = S.summarize(S.load_groups(str(tmp_path), {"or": 10}))[0]
     assert (row["r5_mean"], round(row["r5_sd"], 2), row["reps"]) == (30.0, 10.0, 3)
     assert abs(row["yuan_per_pass"] - 3 * 2.2 / 9) < 1e-6          # doubao 0.2+2.0 元/百万，共 9 次通过
+
+
+def test_cost_with_shared_r0_per_solved_problem(tmp_path):
+    for r, k in ((1, 2), (2, 4)):
+        _write_group(tmp_path, f"doubao_mini_or_direct_raw_rep{r}", {i: i < k for i in range(10)},
+                     tokens=(1_000_000, 1_000_000))
+    r0 = os.path.join(tmp_path, "r0")
+    os.makedirs(r0)
+    with open(os.path.join(r0, "doubao_mini_or_direct_r0.summary.json"), "w", encoding="utf-8") as f:
+        json.dump({"total_prompt_tokens": 2_000_000, "total_completion_tokens": 0}, f)
+    r0_tokens = S.load_r0_tokens(str(tmp_path))
+    assert r0_tokens == {("doubao_mini", "or", "direct"): (2_000_000, 0)}
+    row = S.summarize(S.load_groups(str(tmp_path), {"or": 10}), r0_tokens)[0]
+    # doubao 0.2 / 2.0 元每百万：输入 2M(R0) + 平均 1M，输出 平均 1M → 3×0.2 + 2.0 = 2.6 元；平均解 3 题
+    assert abs(row["run_yuan_with_r0"] - 2.6) < 1e-9
+    assert abs(row["yuan_per_solve_with_r0"] - 2.6 / 3) < 1e-9
+    assert "元/解（含 R0）" in S.write_markdown([row], [], "t")
+
+
+def test_holm_variants_drop_uninformative_and_split_families():
+    comps = [{"a": "hint", "b": "raw", "p": 0.01, "n_discordant": 5},
+             {"a": "hint_co", "b": "raw_co", "p": 0.02, "n_discordant": 5},
+             {"a": "raw", "b": "blind", "p": 0.01, "n_discordant": 5},
+             {"a": "rag", "b": "raw", "p": 1.0, "n_discordant": 0}]
+    v = S.holm_variants(comps)
+    assert v[3]["p_holm_informative"] is None                     # A：无信息比较不参与校正
+    assert abs(v[0]["p_holm_informative"] - 0.03) < 1e-12         # A：3 个比较
+    assert abs(v[0]["p_holm_by_type"] - 0.02) < 1e-12             # B：hint vs raw 族（含 _co）2 个比较
+    assert abs(v[2]["p_holm_by_type"] - 0.01) < 1e-12             # B：raw vs blind 族只有 1 个
+    assert v[3]["p_holm_by_type"] == 1.0
+
+
+def test_compare_counts_discordant_problems(tmp_path):
+    for r in (1, 2):
+        _write_group(tmp_path, f"doubao_mini_he_direct_raw_rep{r}", {i: False for i in range(4)})
+        _write_group(tmp_path, f"doubao_mini_he_direct_hint_rep{r}", {i: i == 0 for i in range(4)})
+    row, = S.compare(S.load_groups(str(tmp_path), {"he": 4}))
+    assert row["n_discordant"] == 1

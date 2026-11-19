@@ -23,8 +23,7 @@ from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from analyze import classify_error  # noqa: E402
 from data import ROOT  # noqa: E402
-from extra_stats import cost_yuan, model_key  # noqa: E402
-from stage3_stats import load_groups  # noqa: E402
+from stage3_stats import load_groups, run_cost  # noqa: E402
 
 BASE = os.path.join(ROOT, "results", "stage3")
 OUT_DIR = os.path.join(ROOT, "results", "figures")
@@ -46,13 +45,6 @@ def curve_band(reps: dict[int, dict]) -> tuple[list[float], list[float]]:
     mean = [st.mean(c[k] for c in curves) for k in range(len(curves[0]))]
     sd = [st.stdev(c[k] for c in curves) if len(curves) > 1 else 0.0 for k in range(len(curves[0]))]
     return mean, sd
-
-
-def run_cost(reps: dict[int, dict], r0_tokens: tuple[int, int], model: str) -> float:
-    """一次完整运行的成本（元，取最高价档）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
-    pin = r0_tokens[0] + st.mean(reps[r]["tokens"][0] for r in reps)
-    pout = r0_tokens[1] + st.mean(reps[r]["tokens"][1] for r in reps)
-    return max(cost_yuan(pin, pout, model_key(model)).values())
 
 
 def error_repair_rates(cats: dict[str, str], reps: dict[int, dict]) -> dict[str, tuple[int, float, float]]:

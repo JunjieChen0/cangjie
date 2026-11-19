@@ -1,6 +1,8 @@
 {
  "summary": [
   {
+   "run_yuan_with_r0": 0.754,
+   "yuan_per_solve_with_r0": 0.5655,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -28,6 +30,8 @@
    "yuan_per_pass": 0.41825
   },
   {
+   "run_yuan_with_r0": 0.565,
+   "yuan_per_solve_with_r0": 0.042374999999999996,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -55,6 +59,8 @@
    "yuan_per_pass": 0.027625
   },
   {
+   "run_yuan_with_r0": 0.607,
+   "yuan_per_solve_with_r0": 0.04921621621621621,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -82,6 +88,8 @@
    "yuan_per_pass": 0.033297297297297294
   },
   {
+   "run_yuan_with_r0": 0.581,
+   "yuan_per_solve_with_r0": 0.06971999999999999,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -109,6 +117,8 @@
    "yuan_per_pass": 0.04612
   },
   {
+   "run_yuan_with_r0": 0.615,
+   "yuan_per_solve_with_r0": 0.04010869565217391,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -136,6 +146,8 @@
    "yuan_per_pass": 0.025891304347826088
   },
   {
+   "run_yuan_with_r0": 0.416,
+   "yuan_per_solve_with_r0": 0.015407407407407406,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -163,6 +175,8 @@
    "yuan_per_pass": 0.007308641975308641
   },
   {
+   "run_yuan_with_r0": 0.422,
+   "yuan_per_solve_with_r0": 0.016025316455696204,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -190,6 +204,8 @@
    "yuan_per_pass": 0.007734177215189873
   },
   {
+   "run_yuan_with_r0": 0.428,
+   "yuan_per_solve_with_r0": 0.017351351351351352,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -217,6 +233,8 @@
    "yuan_per_pass": 0.008513513513513513
   },
   {
+   "run_yuan_with_r0": 3.146,
+   "yuan_per_solve_with_r0": 0.11235714285714285,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -245,6 +263,8 @@
    "yuan_per_pass": 0.06658333333333333
   },
   {
+   "run_yuan_with_r0": 1.51,
+   "yuan_per_solve_with_r0": 0.050333333333333334,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -273,6 +293,8 @@
    "yuan_per_pass": 0.007611111111111112
   },
   {
+   "run_yuan_with_r0": 1.76,
+   "yuan_per_solve_with_r0": 0.058666666666666666,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -301,6 +323,8 @@
    "yuan_per_pass": 0.015944444444444445
   },
   {
+   "run_yuan_with_r0": 1.728,
+   "yuan_per_solve_with_r0": 0.05824719101123595,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -329,6 +353,8 @@
    "yuan_per_pass": 0.01503370786516854
   },
   {
+   "run_yuan_with_r0": 1.489,
+   "yuan_per_solve_with_r0": 0.049633333333333335,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -357,6 +383,8 @@
    "yuan_per_pass": 0.016255555555555558
   },
   {
+   "run_yuan_with_r0": 1.151,
+   "yuan_per_solve_with_r0": 0.03836666666666667,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -385,6 +413,8 @@
    "yuan_per_pass": 0.004977777777777778
   },
   {
+   "run_yuan_with_r0": 1.178,
+   "yuan_per_solve_with_r0": 0.039266666666666665,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -413,6 +443,8 @@
    "yuan_per_pass": 0.005877777777777778
   },
   {
+   "run_yuan_with_r0": 1.146,
+   "yuan_per_solve_with_r0": 0.0382,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -441,6 +473,8 @@
    "yuan_per_pass": 0.0048111111111111115
   },
   {
+   "run_yuan_with_r0": 6.643,
+   "yuan_per_solve_with_r0": 0.22392134831460672,
    "model": "kimik31p",
    "ds": "or",
    "prompt": "direct",
@@ -468,6 +502,8 @@
    "yuan_per_pass": 0.07852808988764044
   },
   {
+   "run_yuan_with_r0": 6.601,
+   "yuan_per_solve_with_r0": 0.22003333333333333,
    "model": "kimik31p",
    "ds": "or",
    "prompt": "direct",
@@ -503,6 +539,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 10,
    "reps": "3/3",
    "diff": 16.67,
    "ci_lo": 7.78,
@@ -522,6 +559,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 10,
    "reps": "3/3",
    "diff": 13.33,
    "ci_lo": 3.33,
@@ -541,6 +579,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 11,
    "reps": "3/3",
    "diff": -3.33,
    "ci_lo": -13.33,
@@ -560,6 +599,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 11,
    "reps": "3/3",
    "diff": 23.33,
    "ci_lo": 10.0,
@@ -579,6 +619,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 7,
    "reps": "3/3",
    "diff": 7.78,
    "ci_lo": 1.11,
@@ -598,6 +639,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 6,
    "reps": "3/3",
    "diff": 5.56,
    "ci_lo": -2.22,
@@ -617,6 +659,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 6,
    "reps": "3/3",
    "diff": -2.22,
    "ci_lo": -12.22,
@@ -636,6 +679,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 13,
    "reps": "3/3",
    "diff": 31.11,
    "ci_lo": 17.78,
@@ -655,6 +699,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 1,
    "reps": "3/3",
    "diff": 1.11,
    "ci_lo": 0.0,
@@ -674,6 +719,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 1,
    "reps": "3/3",
    "diff": 1.11,
    "ci_lo": 0.0,
@@ -693,6 +739,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -712,6 +759,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 2,
    "reps": "3/3",
    "diff": 5.56,
    "ci_lo": 0.0,
@@ -731,6 +779,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -750,6 +799,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -769,6 +819,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -788,6 +839,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -807,6 +859,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 1,
    "reps": "3/3",
    "diff": -1.11,
    "ci_lo": -3.33,
@@ -828,6 +881,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 10,
    "reps": "3/3",
    "diff": 16.67,
    "ci_lo": 7.78,
@@ -847,6 +901,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 10,
    "reps": "3/3",
    "diff": 13.33,
    "ci_lo": 3.33,
@@ -866,6 +921,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 11,
    "reps": "3/3",
    "diff": -3.33,
    "ci_lo": -13.33,
@@ -885,6 +941,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 11,
    "reps": "3/3",
    "diff": 23.33,
    "ci_lo": 10.0,
@@ -904,6 +961,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 7,
    "reps": "3/3",
    "diff": 7.78,
    "ci_lo": 1.11,
@@ -923,6 +981,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 6,
    "reps": "3/3",
    "diff": 5.56,
    "ci_lo": -2.22,
@@ -942,6 +1001,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 6,
    "reps": "3/3",
    "diff": -2.22,
    "ci_lo": -12.22,
@@ -961,6 +1021,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 13,
    "reps": "3/3",
    "diff": 31.11,
    "ci_lo": 17.78,
@@ -980,6 +1041,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 1,
    "reps": "3/3",
    "diff": 1.11,
    "ci_lo": 0.0,
@@ -999,6 +1061,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 1,
    "reps": "3/3",
    "diff": 1.11,
    "ci_lo": 0.0,
@@ -1018,6 +1081,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1037,6 +1101,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 2,
    "reps": "3/3",
    "diff": 5.56,
    "ci_lo": 0.0,
@@ -1056,6 +1121,7 @@
    "a": "hint",
    "b": "raw",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1075,6 +1141,7 @@
    "a": "rag",
    "b": "raw",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1094,6 +1161,7 @@
    "a": "rag",
    "b": "hint",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1113,6 +1181,7 @@
    "a": "raw",
    "b": "blind",
    "n": 30,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1132,6 +1201,7 @@
    "a": "hint",
    "b": "raw",
    "n": 29,
+   "n_discordant": 0,
    "reps": "3/3",
    "diff": 0.0,
    "ci_lo": 0.0,
@@ -1143,6 +1213,76 @@
     1.0
    ],
    "p_holm": 1.0
+  }
+ ],
+ "holm_variants": [
+  {
+   "p_holm_informative": 0.0131986801319868,
+   "p_holm_by_type": 0.0059994000599940004
+  },
+  {
+   "p_holm_informative": 0.43555644435556445,
+   "p_holm_by_type": 0.19358064193580643
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 0.03799620037996201,
+   "p_holm_by_type": 0.011398860113988602
+  },
+  {
+   "p_holm_informative": 0.7439256074392561,
+   "p_holm_by_type": 0.37196280371962803
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 0.007199280071992801,
+   "p_holm_by_type": 0.0023997600239976003
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": null,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 0.9981001899810019
+  },
+  {
+   "p_holm_informative": null,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": null,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": null,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": null,
+   "p_holm_by_type": 1.0
+  },
+  {
+   "p_holm_informative": 1.0,
+   "p_holm_by_type": 1.0
   }
  ]
 }

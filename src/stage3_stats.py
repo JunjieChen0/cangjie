@@ -137,6 +137,7 @@ def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] 
             diffs = per_problem_diff(a, b, frozenset(ex))
             mean, lo, hi = bootstrap_ci(diffs)
             rows.append({"model": model, "ds": ds, "prompt": prompt, "a": fa, "b": fb, "n": len(diffs),
+                         "n_discordant": sum(d != 0 for d in diffs),
                          "reps": f"{len(a)}/{len(b)}", "diff": round(mean, 2), "ci_lo": round(lo, 2),
                          "ci_hi": round(hi, 2), "p": sign_flip_p(diffs),
                          "mcnemar_per_rep": [round(p, 4) for p in _mcnemar_per_rep(a, b)]})
@@ -145,7 +146,46 @@ def compare(groups: dict[tuple, dict[int, dict]], exclude: dict[str, frozenset] 
     return rows
 
 
-def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
+def holm_variants(comps: list[dict]) -> list[dict]:
+    """多重比较校正的两种替代划分（事后，仅作敏感性分析），与 comps 一一对应：
+    - p_holm_informative：去掉两组在每道题上都相同（n_discordant = 0、不可能显著）的比较后再做 Holm，去掉的记为 None；
+    - p_holm_by_type：按比较类型（hint vs raw、rag vs raw、rag vs hint、raw vs blind；_co 并入对应类型）分族各自做 Holm。"""
+    out = [{} for _ in comps]
+    info = [i for i, r in enumerate(comps) if r["n_discordant"] > 0]
+    for i, ph in zip(info, holm([comps[i]["p"] for i in info])):
+        out[i]["p_holm_informative"] = ph
+    for i in set(range(len(comps))) - set(info):
+        out[i]["p_holm_informative"] = None
+    families: dict[tuple, list[int]] = defaultdict(list)
+    for i, r in enumerate(comps):
+        families[(r["a"].removesuffix("_co"), r["b"].removesuffix("_co"))].append(i)
+    for ids in families.values():
+        for i, ph in zip(ids, holm([comps[i]["p"] for i in ids])):
+            out[i]["p_holm_by_type"] = ph
+    return out
+
+
+def load_r0_tokens(base: str) -> dict[tuple, tuple[int, int]]:
+    """{(模型, 数据集, 起点): (输入 token, 输出 token)}，来自 <base>/r0/*_r0.summary.json（共享第 0 轮）。"""
+    out = {}
+    for p in glob.glob(os.path.join(base, "r0", "*_r0.summary.json")):
+        m = re.match(r"^(.+?)_(he|ce|or)_(direct|syntax)_r0\.summary\.json$", os.path.basename(p))
+        if m:
+            with open(p, encoding="utf-8") as f:
+                s = json.load(f)
+            out[m.groups()] = (s.get("total_prompt_tokens", 0), s.get("total_completion_tokens", 0))
+    return out
+
+
+def run_cost(reps: dict[int, dict], r0_tokens: tuple[int, int], model: str) -> float:
+    """一次完整运行的成本（元，取最高价档）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
+    pin = r0_tokens[0] + st.mean(reps[r]["tokens"][0] for r in reps)
+    pout = r0_tokens[1] + st.mean(reps[r]["tokens"][1] for r in reps)
+    return max(cost_yuan(pin, pout, model_key(model)).values())
+
+
+def summarize(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, tuple[int, int]] | None = None) -> list[dict]:
+    """r0_tokens（load_r0_tokens 的结果）给出时，另算含共享第 0 轮的一次完整运行成本与每解一题成本。"""
     rows = []
     for key in sorted(groups):
         reps = groups[key]
@@ -155,7 +195,12 @@ def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
         pout = sum(reps[r]["tokens"][1] for r in reps)
         n_pass = sum(sum(reps[r]["passed"].values()) for r in reps)
         yuan = cost_yuan(pin, pout, model_key(key[0]))
-        rows.append({"model": key[0], "ds": key[1], "prompt": key[2], "feedback": key[3], "reps": len(reps),
+        with_r0 = {}
+        if r0_tokens and key[:3] in r0_tokens:
+            run = run_cost(reps, r0_tokens[key[:3]], key[0])
+            solved = st.mean(sum(reps[r]["passed"].values()) for r in reps)
+            with_r0 = {"run_yuan_with_r0": run, "yuan_per_solve_with_r0": run / solved if solved else None}
+        rows.append({**with_r0, "model": key[0], "ds": key[1], "prompt": key[2], "feedback": key[3], "reps": len(reps),
                      "timeouts": sum(reps[r].get("timeouts", 0) for r in reps),
                      "r0": curves[0][0], "r5_mean": round(st.mean(r5), 2),
                      "r5_sd": round(st.stdev(r5), 2) if len(r5) > 1 else 0.0,
@@ -165,21 +210,27 @@ def summarize(groups: dict[tuple, dict[int, dict]]) -> list[dict]:
     return rows
 
 
-def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: list[dict] | None = None) -> str:
+def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: list[dict] | None = None,
+                   holm_alt: list[dict] | None = None) -> str:
     L = [f"# {title}（自动生成）", "",
          "只统计完整的组（n 等于题数且 errors = 0）。R5 为最多修复 5 轮后的通过率，3 次重复取均值 ± 标准差。",
-         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。", ""]
+         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。",
+         "「元/次通过（仅修复）」= 各次重复修复阶段总成本 ÷ 总通过题次，不含第 0 轮；"
+         "「元/解（含 R0）」= 一次完整运行（共享第 0 轮 + 修复阶段的重复平均）的成本 ÷ 平均通过题数，不同起点之间应比较这一列。", ""]
     timed_out = [r for r in summary if r.get("timeouts")]
     if timed_out:
         L += ["API 超时按未通过计入分母（只对 " + "、".join(sorted(TIMEOUT_AS_FAIL)) + "，不补跑）：" + "；".join(
             f"{r['model']} {r['ds']} {r['prompt']} {r['feedback']} {r['timeouts']} 题次" for r in timed_out) + "。", ""]
     L += [
          "## 各配置通过率", "",
-         "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 元/次通过 |", "|---|---|---|---|---|---|---|---|---|"]
+         "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 元/次通过（仅修复） | 元/解（含 R0） |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
     for r in summary:
         ypp = f"{r['yuan_per_pass']:.4f}" if r["yuan_per_pass"] is not None else "—"
+        yps = f"{r['yuan_per_solve_with_r0']:.4f}" if r.get("yuan_per_solve_with_r0") is not None else "—"
         L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['feedback']} | {r['reps']} | {r['r0']:.2f} | "
-                 f"{r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | {' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | {ypp} |")
+                 f"{r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | {' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | "
+                 f"{ypp} | {yps} |")
     L += ["", "## 两两比较", "",
           "差值 = A − B（百分点），按题平均 3 次重复后计算；95% CI 为按题 bootstrap；p 为按题符号翻转置换检验；"
           f"p(Holm) 在下表全部 {len(comps)} 个比较上校正；最后一列为逐次重复 McNemar p 值（稳健性参考，未校正）。", "",
@@ -201,6 +252,17 @@ def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: lis
         for r, s in zip(comps, sens):
             L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['a']} vs {r['b']} | {r['diff']:+.2f} | "
                      f"{fmt_p(r['p_holm'])} | {s['n']} | {s['diff']:+.2f} | {fmt_p(s['p_holm'])} |")
+    if holm_alt:
+        L += ["", "## 敏感性分析：多重比较校正的其他划分（事后划分，不作为主结论）", "",
+              "A = 去掉两组在每道题上都相同（不同的题数为 0、不可能显著）的比较后，在其余比较上做 Holm；"
+              "B = 按比较类型分族（hint vs raw、rag vs raw、rag vs hint、raw vs blind；_co 并入对应类型）各自做 Holm。"
+              "主结论以上表 p(Holm) 为准。", "",
+              "| 模型 | 数据集 | 起点 | A vs B | 不同的题数 | 差值 | p | p(Holm) | A | B |",
+              "|---|---|---|---|---|---|---|---|---|---|"]
+        for r, v in zip(comps, holm_alt):
+            a = fmt_p(v["p_holm_informative"]) if v["p_holm_informative"] is not None else "—"
+            L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['a']} vs {r['b']} | {r['n_discordant']} | "
+                     f"{r['diff']:+.2f} | {fmt_p(r['p'])} | {fmt_p(r['p_holm'])} | {a} | {fmt_p(v['p_holm_by_type'])} |")
     return "\n".join(L) + "\n"
 
 
@@ -212,15 +274,16 @@ def main():
     args = ap.parse_args()
     base = args.base or os.path.join(ROOT, "results", OUT_SUBDIR[args.matrix])
     groups = load_groups(base)
-    summary, comps, sens = summarize(groups), compare(groups), compare(groups, FLAKY, drop_timeouts=True)
+    summary, comps = summarize(groups, load_r0_tokens(base)), compare(groups)
+    sens, holm_alt = compare(groups, FLAKY, drop_timeouts=True), holm_variants(comps)
     os.makedirs(args.out, exist_ok=True)
     stem = os.path.join(args.out, f"{OUT_SUBDIR[args.matrix]}_stats")
     with open(stem + ".json", "w", encoding="utf-8") as f:
-        json.dump({"summary": summary, "comparisons": comps, "sensitivity_excl_flaky": sens},
-                  f, ensure_ascii=False, indent=1)
+        json.dump({"summary": summary, "comparisons": comps, "sensitivity_excl_flaky": sens,
+                   "holm_variants": holm_alt}, f, ensure_ascii=False, indent=1)
     title = "第 3 阶段实验统计" if args.matrix == "stage3" else "新题集 Original-30 实验统计"
     with open(stem + ".md", "w", encoding="utf-8") as f:
-        f.write(write_markdown(summary, comps, title, sens))
+        f.write(write_markdown(summary, comps, title, sens, holm_alt))
     print(f"{len(groups)} 个配置，{len(comps)} 个比较 → {stem}.md")
 
 
