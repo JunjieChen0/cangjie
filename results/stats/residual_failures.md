@@ -15,48 +15,54 @@
 
 编译/其他 包括 api_or_undeclared、foreign_syntax、type_or_mutability、runtime_exception 等，完整分布见 json 中的 cats。
 
-## 固定难题：raw / hint / rag 每次重复都失败的题（`direct` 起点，供人工归类）
+## 固定难题：raw / hint / rag 每次重复都失败的题（`direct` 起点）
+
+“人工归类”取自 `results\stats\hard_problem_coding.csv`（逐题依据见该文件 evidence 列；coder / reviewer 列记录编码人与复核人）。修复反馈只给出失败的测试函数名，不给断言内容与期望值。
 
 ### ds_v41f（16 题）
 
+归类计数：隐含规格：功能行为未说明 9；隐含规格：边界或非法输入约定 3；隐含规格：翻译约定 2；仓颉语义：整数溢出 1；基准缺陷：测试不可执行 1
+
 | 题号 | 类名 | 最终失败类别 | 测试通过情况（第一条非超时记录） | 反馈开头 | 人工归类 |
 |---|---|---|---|---|---|
-| 0 | AccessGatewayFilter | foreign_syntax, test_failure | ✗✗✗✗ | error: expected '=>' in lambda expression, found 'set_current_user_info_and_log' ==> main.cj:31:17: \| 31 \| set_current_user_info_and_log(user) \| ^^^^^^^^^^^^^^^ | |
-| 4 | Student | test_failure | ✓✓✓✓✗✓✓ | 1 of 7 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_course_average_1() at default.main() | |
-| 16 | Calculator | api_or_undeclared, test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_calculate_8() at default.main() | |
-| 17 | Event | test_failure | ✓✓✓✓✗✓✓ | 1 of 7 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_available_slots_2() at default.main() | |
-| 23 | CombinationCalculator | api_or_undeclared, runtime_exception, test_failure | ✗✗✗✗✗✗ | error: undeclared identifier 'toInt64' ==> main.cj:84:18: \| 84 \| return v.toInt64() \| ^^^^^^^ \| 1 error generated, 1 error printed. | |
-| 36 | EmailClient | api_or_undeclared, other_compile, test_failure | ✗✗✗✗✗✗ | error: 'isNone' is not a member of interface 'Any' ==> main.cj:59:35: \| 59 \| if (email["time"].isNone()) { \| ^^^^^^ \| error: invalid binary operator '<' on type | |
-| 39 | ExpressionCalculator | api_or_undeclared, test_failure | ✗✗✓✗✓✗✗ | 5 of 7 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_calculate_1() at default.main() 53485150525151504 | |
-| 43 | Employee | foreign_syntax, test_failure, type_or_mutability | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_update_employee_6() at default.main() | |
-| 48 | IpUtil | api_or_undeclared, foreign_syntax, test_failure | ✓✓✗✗ | 2 of 4 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_hostname_1() at default.main() [test #3 test_ | |
-| 53 | LongestWord | api_or_undeclared, test_failure | ✓✗ | 1 of 2 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_find_longest_word_4() at default.main() | |
-| 57 | MetricsCalculator2 | api_or_undeclared, foreign_syntax, test_failure | ✗✗✓ | 2 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_mrr_7() at default.main() [test #1 test_failure]  | |
-| 61 | MusicPlayer | test_failure | ✓✓✗✓✓✓✓✓✓ | 1 of 9 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_play_4() at default.main() | |
-| 65 | NumberWordFormatter | test_failure | ✗✗✓✓✓✓ | 2 of 6 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_format_4() at default.main() [test #1 test_failur | |
-| 66 | NumericEntityUnescaper | api_or_undeclared, test_failure | ✗✓✓ | 1 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_replace_6() at default.main() | |
-| 67 | Dish | test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_add_dish_1() at default.main() | |
-| 74 | Server | api_or_undeclared, test_failure, type_or_mutability | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_recv_3() at default.main() | |
+| 0 | AccessGatewayFilter | foreign_syntax, test_failure | ✗✗✗✗ | error: expected '=>' in lambda expression, found 'set_current_user_info_and_log' ==> main.cj:31:17: \| 31 \| set_current_user_info_and_log(user) \| ^^^^^^^^^^^^^^^ | 隐含规格：功能行为未说明 |
+| 4 | Student | test_failure | ✓✓✓✓✗✓✓ | 1 of 7 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_course_average_1() at default.main() | 隐含规格：翻译约定 |
+| 16 | Calculator | api_or_undeclared, test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_calculate_8() at default.main() | 隐含规格：功能行为未说明 |
+| 17 | Event | test_failure | ✓✓✓✓✗✓✓ | 1 of 7 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_available_slots_2() at default.main() | 隐含规格：功能行为未说明 |
+| 23 | CombinationCalculator | api_or_undeclared, runtime_exception, test_failure | ✗✗✗✗✗✗ | error: undeclared identifier 'toInt64' ==> main.cj:84:18: \| 84 \| return v.toInt64() \| ^^^^^^^ \| 1 error generated, 1 error printed. | 仓颉语义：整数溢出 |
+| 36 | EmailClient | api_or_undeclared, other_compile, test_failure | ✗✗✗✗✗✗ | error: 'isNone' is not a member of interface 'Any' ==> main.cj:59:35: \| 59 \| if (email["time"].isNone()) { \| ^^^^^^ \| error: invalid binary operator '<' on type | 隐含规格：功能行为未说明 |
+| 39 | ExpressionCalculator | api_or_undeclared, test_failure | ✗✗✓✗✓✗✗ | 5 of 7 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_calculate_1() at default.main() 53485150525151504 | 隐含规格：功能行为未说明 |
+| 43 | Employee | foreign_syntax, test_failure, type_or_mutability | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_update_employee_6() at default.main() | 隐含规格：功能行为未说明 |
+| 48 | IpUtil | api_or_undeclared, foreign_syntax, test_failure | ✓✓✗✗ | 2 of 4 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_get_hostname_1() at default.main() [test #3 test_ | 基准缺陷：测试不可执行 |
+| 53 | LongestWord | api_or_undeclared, test_failure | ✓✗ | 1 of 2 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_find_longest_word_4() at default.main() | 隐含规格：功能行为未说明 |
+| 57 | MetricsCalculator2 | api_or_undeclared, foreign_syntax, test_failure | ✗✗✓ | 2 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_mrr_7() at default.main() [test #1 test_failure]  | 隐含规格：边界或非法输入约定 |
+| 61 | MusicPlayer | test_failure | ✓✓✗✓✓✓✓✓✓ | 1 of 9 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_play_4() at default.main() | 隐含规格：翻译约定 |
+| 65 | NumberWordFormatter | test_failure | ✗✗✓✓✓✓ | 2 of 6 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_format_4() at default.main() [test #1 test_failur | 隐含规格：功能行为未说明 |
+| 66 | NumericEntityUnescaper | api_or_undeclared, test_failure | ✗✓✓ | 1 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_replace_6() at default.main() | 隐含规格：边界或非法输入约定 |
+| 67 | Dish | test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_add_dish_1() at default.main() | 隐含规格：功能行为未说明 |
+| 74 | Server | api_or_undeclared, test_failure, type_or_mutability | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_recv_3() at default.main() | 隐含规格：边界或非法输入约定 |
 
 ### kimik31p（15 题）
 
+归类计数：API 超时（无代码） 6；隐含规格：功能行为未说明 3；隐含规格：边界或非法输入约定 3；仓颉语义：整数溢出 1；基准缺陷：测试不可执行 1；隐含规格：翻译约定 1
+
 | 题号 | 类名 | 最终失败类别 | 测试通过情况（第一条非超时记录） | 反馈开头 | 人工归类 |
 |---|---|---|---|---|---|
-| 0 | AccessGatewayFilter | api_timeout, test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_filter_7() at default.main() Current user: user1, | |
-| 1 |  | api_timeout |  |  | |
-| 23 | CombinationCalculator | api_timeout, test_failure | ✓✗✓✓✓✓ | 1 of 6 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_count_all_2() at default.main() | |
-| 36 |  | api_timeout |  |  | |
-| 39 |  | api_timeout |  |  | |
-| 48 | IpUtil | api_or_undeclared | ✓✓✗✓ | error: undeclared identifier 'gethostname' ==> main.cj:48:20: \| 48 \| let hostname = gethostname() \| ^ \| 1 error generated, 1 error printed. | |
-| 49 |  | api_timeout |  |  | |
-| 53 | LongestWord | api_timeout, test_failure | ✓✗ | 1 of 2 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_find_longest_word_4() at default.main() | |
-| 54 |  | api_timeout |  |  | |
-| 57 | MetricsCalculator2 | runtime_exception, test_failure | ✗✓✓ | 1 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_mrr_8() at default.main() | |
-| 61 | MusicPlayer | api_timeout, test_failure | ✓✓✗✓✓✓✓✓✓ | 1 of 9 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_play_4() at default.main() | |
-| 66 |  | api_timeout |  |  | |
-| 67 |  | api_or_undeclared, api_timeout | ✗✗✗✗ | [with test #0] error: undeclared type name 'Dish' ==> main.cj:34:44: \| 34 \| if (order.selected_dishes != ArrayList<Dish>([Dish("dish3", 15, 4)])) { \| ^ \| error: | |
-| 74 | Server | test_failure | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_recv_3() at default.main() | |
-| 81 | Statistics3 | test_failure | ✓✓✓✓✗✓✓✗ | 2 of 8 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_correlation_matrix() at default.main() [test #7 t | |
+| 0 | AccessGatewayFilter | api_timeout, test_failure | ✗✓✓✓ | 1 of 4 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_filter_7() at default.main() Current user: user1, | 隐含规格：功能行为未说明 |
+| 1 |  | api_timeout |  |  | API 超时（无代码） |
+| 23 | CombinationCalculator | api_timeout, test_failure | ✓✗✓✓✓✓ | 1 of 6 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_count_all_2() at default.main() | 仓颉语义：整数溢出 |
+| 36 |  | api_timeout |  |  | API 超时（无代码） |
+| 39 |  | api_timeout |  |  | API 超时（无代码） |
+| 48 | IpUtil | api_or_undeclared | ✓✓✗✓ | error: undeclared identifier 'gethostname' ==> main.cj:48:20: \| 48 \| let hostname = gethostname() \| ^ \| 1 error generated, 1 error printed. | 基准缺陷：测试不可执行 |
+| 49 |  | api_timeout |  |  | API 超时（无代码） |
+| 53 | LongestWord | api_timeout, test_failure | ✓✗ | 1 of 2 tests failed. [test #1 test_failure] An exception has occurred: Exception: Test failed! at default.test_find_longest_word_4() at default.main() | 隐含规格：功能行为未说明 |
+| 54 |  | api_timeout |  |  | API 超时（无代码） |
+| 57 | MetricsCalculator2 | runtime_exception, test_failure | ✗✓✓ | 1 of 3 tests failed. [test #0 test_failure] An exception has occurred: Exception: Test failed! at default.test_mrr_8() at default.main() | 隐含规格：边界或非法输入约定 |
+| 61 | MusicPlayer | api_timeout, test_failure | ✓✓✗✓✓✓✓✓✓ | 1 of 9 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_play_4() at default.main() | 隐含规格：翻译约定 |
+| 66 |  | api_timeout |  |  | API 超时（无代码） |
+| 67 |  | api_or_undeclared, api_timeout | ✗✗✗✗ | [with test #0] error: undeclared type name 'Dish' ==> main.cj:34:44: \| 34 \| if (order.selected_dishes != ArrayList<Dish>([Dish("dish3", 15, 4)])) { \| ^ \| error: | 隐含规格：功能行为未说明 |
+| 74 | Server | test_failure | ✓✓✗✓✓✓ | 1 of 6 tests failed. [test #2 test_failure] An exception has occurred: Exception: Test failed! at default.test_recv_3() at default.main() | 隐含规格：边界或非法输入约定 |
+| 81 | Statistics3 | test_failure | ✓✓✓✓✗✓✓✗ | 2 of 8 tests failed. [test #4 test_failure] An exception has occurred: Exception: Test failed! at default.test_correlation_matrix() at default.main() [test #7 t | 隐含规格：边界或非法输入约定 |
 
 ## 反馈截断检查
 
@@ -82,10 +88,10 @@
 
 | 模型 与 失败类别 | 复查条数（去重后代码） | 超过上限（被截断） | 被截断者的报错行保留 | 报错行全部丢失 | 长度中位数 / 90 分位 / 最大 |
 |---|---|---|---|---|---|
-| doubao_mini compile_error | 1496（964） | 329 | 4217 / 7295（57.8%） | 0 | 1981 / 5016 / 13882 |
-| doubao_mini runtime_exception | 1（1） | 0 | — | 0 | 1800 / 1800 / 1800 |
+| doubao_mini compile_error | 1496（964） | 330 | 4232 / 7311（57.9%） | 0 | 1983 / 5016 / 13882 |
+| doubao_mini runtime_exception | 1（1） | 0 | — | 0 | 1019 / 1019 / 1019 |
 | doubao_mini test_failure | 3（3） | 0 | — | 0 | 1780 / 1780 / 2442 |
-| ds_v41f compile_error | 150（64） | 48 | 625 / 980（63.8%） | 0 | 2109 / 6698 / 13578 |
+| ds_v41f compile_error | 150（64） | 48 | 625 / 988（63.3%） | 0 | 2109 / 6698 / 16973 |
 | ds_v41f runtime_exception | 1（1） | 0 | — | 0 | 2595 / 2595 / 2595 |
 | ds_v41f test_failure | 1（1） | 0 | — | 0 | 1728 / 1728 / 1728 |
 | kimik31p compile_error | 13（8） | 3 | 46 / 60（76.7%） | 0 | 2026 / 3412 / 4386 |

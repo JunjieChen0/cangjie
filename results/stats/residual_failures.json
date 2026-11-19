@@ -749,11 +749,11 @@
   "doubao_mini compile_error": {
    "checked": 1496,
    "unique_code": 964,
-   "over_cap": 329,
-   "error_lines_total": 7295,
-   "error_lines_kept": 4217,
+   "over_cap": 330,
+   "error_lines_total": 7311,
+   "error_lines_kept": 4232,
    "lost_all_errors": 0,
-   "length_median": 1981.0,
+   "length_median": 1983.0,
    "length_p90": 5016,
    "length_max": 13882
   },
@@ -764,9 +764,9 @@
    "error_lines_total": 0,
    "error_lines_kept": 0,
    "lost_all_errors": 0,
-   "length_median": 1800,
-   "length_p90": 1800,
-   "length_max": 1800
+   "length_median": 1019,
+   "length_p90": 1019,
+   "length_max": 1019
   },
   "doubao_mini test_failure": {
    "checked": 3,
@@ -783,12 +783,12 @@
    "checked": 150,
    "unique_code": 64,
    "over_cap": 48,
-   "error_lines_total": 980,
+   "error_lines_total": 988,
    "error_lines_kept": 625,
    "lost_all_errors": 0,
    "length_median": 2109.0,
    "length_p90": 6698,
-   "length_max": 13578
+   "length_max": 16973
   },
   "ds_v41f runtime_exception": {
    "checked": 1,

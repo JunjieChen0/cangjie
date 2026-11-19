@@ -81,6 +81,17 @@ def test_summarize_recheck_weights_duplicates_and_counts_retention():
     assert s["length_max"] == len(long_ce)
 
 
+def test_coding_label_uses_csv_and_marks_pure_timeouts(tmp_path):
+    p = tmp_path / "coding.csv"
+    p.write_text("id,class,category,subtype,evidence,coder,reviewer\n5,Foo,隐含规格,边界或非法输入约定,e,c,\n",
+                 encoding="utf-8")
+    coding = R.load_coding(str(p))
+    assert R.coding_label({"id": "5", "kinds": ["test_failure"]}, coding) == "隐含规格：边界或非法输入约定"
+    assert R.coding_label({"id": "5", "kinds": ["api_timeout"]}, coding) == "API 超时（无代码）"
+    assert R.coding_label({"id": "9", "kinds": ["test_failure"]}, coding) == ""
+    assert R.load_coding(str(tmp_path / "missing.csv")) == {}
+
+
 def test_full_feedback_length_matches_uncapped_aggregate():
     ok = RunResult(True, "passed")
     bad = RunResult(False, "test_failure", run_stdout="z" * 4000)

@@ -3,7 +3,7 @@
 - 剩余失败：每个配置（模型 × 起点 × 反馈）5 轮后仍失败的题次，按最后一轮失败类别统计（API 超时单列）；
   测试失败中“只差一个测试”（n 个测试过了 n−1 个）的比例；每次重复都失败的题。
 - 固定难题清单：某模型在 raw / hint / rag 三种反馈的每次重复中都失败的题，附最后一轮失败类别、测试通过情况与反馈开头，
-  供人工归类根因（“人工归类”一列留空）。
+  “人工归类”一列取自手工维护的 results/stats/hard_problem_coding.csv。
 - 截断检查：给模型看过的反馈（每题最后一轮之前的各轮）在日志里只存了前 STORED_CAP 个字符。存下的不足 STORED_CAP 的，
   原文也不足，肯定没有被 repair.FEEDBACK_CAP（3000）截断；存满的不确定。--recheck 会在本地重新编译运行这些轮的代码，
   算出未截断的反馈长度（只调用 cjc，不调用模型 API）。
@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import csv
 import glob
 import json
 import os
@@ -34,6 +35,7 @@ STORED_CAP = 1500          # repair.py 写 history 时 feedback 只存前 1500 �
 FEEDBACK_CAP = 3000        # repair.FEEDBACK_CAP：给模型看的反馈总长上限
 BASE = os.path.join(ROOT, "results", "stage3")
 OUT = os.path.join(ROOT, "results", "stats")
+CODING = os.path.join(OUT, "hard_problem_coding.csv")   # 固定难题的人工归类（初稿 + 复核），手工维护，脚本只读
 ARMS = ("raw", "hint", "rag")
 
 
@@ -206,7 +208,25 @@ def recheck(runs: dict[tuple, list], models: tuple[str, ...], workers: int) -> d
         return summarize_recheck(list(ex.map(run, list(jobs))))
 
 
-def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict | None) -> str:
+def load_coding(path: str = CODING) -> dict[str, dict]:
+    """人工归类表 {题号: 行}（列：id, class, category, subtype, evidence, coder, reviewer）；文件不存在时为空。"""
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        return {row["id"]: row for row in csv.DictReader(f)}
+
+
+def coding_label(row: dict, coding: dict[str, dict]) -> str:
+    """固定难题的归类：该模型每次都是 API 超时的题没有代码可分析，单独标出；其余取归类表的“主类：子类”。"""
+    if row["kinds"] == ["api_timeout"]:
+        return "API 超时（无代码）"
+    c = coding.get(row["id"])
+    return f"{c['category']}：{c['subtype']}" if c else ""
+
+
+def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict | None,
+                   coding: dict[str, dict] | None = None) -> str:
+    coding = coding or {}
     L = ["# ClassEval 剩余失败与反馈截断检查（自动生成）", "",
          "数据：`results/stage3/runs/` 中 ClassEval 各组（全部测试驱动修复）。题次 = 题 × 重复。", "",
          "## 修复 5 轮后仍失败的题次", "",
@@ -220,14 +240,18 @@ def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict 
                  f"{c.get('test_failure', 0)} | {near} | {c.get('api_timeout', 0)} | {other} | {len(t['always'])} |")
     L += ["", "编译/其他 包括 api_or_undeclared、foreign_syntax、type_or_mutability、runtime_exception 等，"
           "完整分布见 json 中的 cats。", "",
-          "## 固定难题：raw / hint / rag 每次重复都失败的题（`direct` 起点，供人工归类）", ""]
+          "## 固定难题：raw / hint / rag 每次重复都失败的题（`direct` 起点）", "",
+          f"“人工归类”取自 `{os.path.relpath(CODING, ROOT)}`（逐题依据见该文件 evidence 列；coder / reviewer 列记录编码人与复核人）。"
+          "修复反馈只给出失败的测试函数名，不给断言内容与期望值。", ""]
     for model, rows in hard.items():
+        counts = Counter(coding_label(r, coding) or "未归类" for r in rows)
         L += [f"### {model}（{len(rows)} 题）", "",
+              "归类计数：" + "；".join(f"{k} {v}" for k, v in counts.most_common()), "",
               "| 题号 | 类名 | 最终失败类别 | 测试通过情况（第一条非超时记录） | 反馈开头 | 人工归类 |", "|---|---|---|---|---|---|"]
         for r in rows:
             fb = r["feedback_head"].replace("|", "\\|")
             st = "".join("✓" if x else "✗" for x in r["status"]) if isinstance(r["status"], list) else r["status"]
-            L.append(f"| {r['id']} | {r['class']} | {', '.join(r['kinds'])} | {st} | {fb} | |")
+            L.append(f"| {r['id']} | {r['class']} | {', '.join(r['kinds'])} | {st} | {fb} | {coding_label(r, coding)} |")
         L.append("")
     L += ["## 反馈截断检查", "",
           f"给模型看过的反馈（每题最后一轮之前）按日志中是否存满 {STORED_CAP} 字符计数。未存满的，原文也不足 {STORED_CAP} 字符，"
@@ -278,7 +302,7 @@ def main():
         json.dump({"residual": table, "truncation_census": census, "hard_problems": hard, "recheck": rechecked},
                   f, ensure_ascii=False, indent=1)
     with open(stem + ".md", "w", encoding="utf-8") as f:
-        f.write(write_markdown(table, census, hard, rechecked))
+        f.write(write_markdown(table, census, hard, rechecked, load_coding()))
     print(f"→ {stem}.md")
 
 
