@@ -1,8 +1,8 @@
 {
  "summary": [
   {
-   "run_yuan_with_r0": 3.022,
-   "yuan_per_solve_with_r0": 2.2665,
+   "run_usd_with_r0": 0.4530683658170914,
+   "usd_per_solve_with_r0": 0.3398012743628186,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "direct",
@@ -24,14 +24,12 @@
     4334226,
     2965218
    ],
-   "yuan": {
-    "list": 6.797
-   },
-   "yuan_per_pass": 1.69925
+   "usd": 1.0190826386806597,
+   "usd_per_pass": 0.25477065967016493
   },
   {
-   "run_yuan_with_r0": 2.761,
-   "yuan_per_solve_with_r0": 0.3185769230769231,
+   "run_usd_with_r0": 0.41390280859570217,
+   "usd_per_solve_with_r0": 0.047758016376427175,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "direct",
@@ -53,14 +51,12 @@
     6055972,
     2401192
    ],
-   "yuan": {
-    "list": 6.014
-   },
-   "yuan_per_pass": 0.23130769230769233
+   "usd": 0.9015859670164917,
+   "usd_per_pass": 0.034676383346788145
   },
   {
-   "run_yuan_with_r0": 2.778,
-   "yuan_per_solve_with_r0": 0.19381395348837208,
+   "run_usd_with_r0": 0.4165135232383808,
+   "usd_per_solve_with_r0": 0.029059083016631217,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "direct",
@@ -82,14 +78,12 @@
     7858934,
     2247016
    ],
-   "yuan": {
-    "list": 6.066
-   },
-   "yuan_per_pass": 0.14106976744186045
+   "usd": 0.9094181109445277,
+   "usd_per_pass": 0.021149258394058786
   },
   {
-   "run_yuan_with_r0": 2.679,
-   "yuan_per_solve_with_r0": 0.3827142857142857,
+   "run_usd_with_r0": 0.40167741129435275,
+   "usd_per_solve_with_r0": 0.05738248732776468,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "direct",
@@ -111,14 +105,12 @@
     5784801,
     2305994
    ],
-   "yuan": {
-    "list": 5.769
-   },
-   "yuan_per_pass": 0.27471428571428574
+   "usd": 0.8649097751124438,
+   "usd_per_pass": 0.04118617976725923
   },
   {
-   "run_yuan_with_r0": 3.219,
-   "yuan_per_solve_with_r0": 0.134125,
+   "run_usd_with_r0": 0.4825547226386807,
+   "usd_per_solve_with_r0": 0.020106446776611695,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "syntax",
@@ -140,14 +132,12 @@
     7405714,
     2790944
    ],
-   "yuan": {
-    "list": 7.063
-   },
-   "yuan_per_pass": 0.09809722222222222
+   "usd": 1.0589251574212895,
+   "usd_per_pass": 0.014707293853073464
   },
   {
-   "run_yuan_with_r0": 3.243,
-   "yuan_per_solve_with_r0": 0.10931460674157302,
+   "run_usd_with_r0": 0.48619633183408295,
+   "usd_per_solve_with_r0": 0.01638864039890167,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "syntax",
@@ -169,14 +159,12 @@
     8922287,
     2675721
    ],
-   "yuan": {
-    "list": 7.136
-   },
-   "yuan_per_pass": 0.08017977528089888
+   "usd": 1.0698499850074963,
+   "usd_per_pass": 0.012020786348398834
   },
   {
-   "run_yuan_with_r0": 3.137,
-   "yuan_per_solve_with_r0": 0.1363913043478261,
+   "run_usd_with_r0": 0.47028746626686657,
+   "usd_per_solve_with_r0": 0.020447281142037678,
    "model": "doubao_mini",
    "ds": "ce",
    "prompt": "syntax",
@@ -198,14 +186,12 @@
     7251115,
     2683670
    ],
-   "yuan": {
-    "list": 6.818
-   },
-   "yuan_per_pass": 0.09881159420289855
+   "usd": 1.0221233883058471,
+   "usd_per_pass": 0.014813382439215176
   },
   {
-   "run_yuan_with_r0": 3.338,
-   "yuan_per_solve_with_r0": 0.1451304347826087,
+   "run_usd_with_r0": 0.5004462468765618,
+   "usd_per_solve_with_r0": 0.021758532472893992,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -227,14 +213,12 @@
     2001649,
     3627069
    ],
-   "yuan": {
-    "list": 7.654
-   },
-   "yuan_per_pass": 0.11092753623188406
+   "usd": 1.147596371814093,
+   "usd_per_pass": 0.016631831475566565
   },
   {
-   "run_yuan_with_r0": 2.423,
-   "yuan_per_solve_with_r0": 0.028618110236220472,
+   "run_usd_with_r0": 0.36329600199900053,
+   "usd_per_solve_with_r0": 0.004290897661405518,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -256,14 +240,12 @@
     2758777,
     2179168
    ],
-   "yuan": {
-    "list": 4.91
-   },
-   "yuan_per_pass": 0.019330708661417322
+   "usd": 0.7361456371814094,
+   "usd_per_pass": 0.0028982111700055486
   },
   {
-   "run_yuan_with_r0": 2.104,
-   "yuan_per_solve_with_r0": 0.026745762711864407,
+   "run_usd_with_r0": 0.3154945927036482,
+   "usd_per_solve_with_r0": 0.004010524483520951,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -285,14 +267,12 @@
     2430476,
     1733745
    ],
-   "yuan": {
-    "list": 3.954
-   },
-   "yuan_per_pass": 0.016754237288135593
+   "usd": 0.5927414092953524,
+   "usd_per_pass": 0.0025116161410820015
   },
   {
-   "run_yuan_with_r0": 2.758,
-   "yuan_per_solve_with_r0": 0.033909836065573774,
+   "run_usd_with_r0": 0.4135232383808097,
+   "usd_per_solve_with_r0": 0.0050843021112394636,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -314,14 +294,12 @@
     5905502,
     2367019
    ],
-   "yuan": {
-    "list": 5.915
-   },
-   "yuan_per_pass": 0.024241803278688526
+   "usd": 0.8868273463268366,
+   "usd_per_pass": 0.0036345383046181828
   },
   {
-   "run_yuan_with_r0": 2.407,
-   "yuan_per_solve_with_r0": 0.03195132743362832,
+   "run_usd_with_r0": 0.36086060969515243,
+   "usd_per_solve_with_r0": 0.004790185084448927,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -343,14 +321,12 @@
     5221306,
     1908549
    ],
-   "yuan": {
-    "list": 4.861
-   },
-   "yuan_per_pass": 0.021508849557522122
+   "usd": 0.728839460269865,
+   "usd_per_pass": 0.0032249533640259513
   },
   {
-   "run_yuan_with_r0": 2.619,
-   "yuan_per_solve_with_r0": 0.04464204545454546,
+   "run_usd_with_r0": 0.392644187906047,
+   "usd_per_solve_with_r0": 0.006692798657489438,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -372,14 +348,12 @@
     2691323,
     2479542
    ],
-   "yuan": {
-    "list": 5.497
-   },
-   "yuan_per_pass": 0.031232954545454546
+   "usd": 0.8241901949025486,
+   "usd_per_pass": 0.004682898834673572
   },
   {
-   "run_yuan_with_r0": 2.382,
-   "yuan_per_solve_with_r0": 0.04330909090909091,
+   "run_usd_with_r0": 0.35705875062468767,
+   "usd_per_solve_with_r0": 0.0064919772840852305,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "direct",
@@ -401,14 +375,12 @@
     2487430,
     2143899
    ],
-   "yuan": {
-    "list": 4.785
-   },
-   "yuan_per_pass": 0.029
+   "usd": 0.7174338830584708,
+   "usd_per_pass": 0.004348084139748308
   },
   {
-   "run_yuan_with_r0": 2.522,
-   "yuan_per_solve_with_r0": 0.023067073170731707,
+   "run_usd_with_r0": 0.37810401799100457,
+   "usd_per_solve_with_r0": 0.0034582684572347982,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "syntax",
@@ -430,14 +402,12 @@
     3534707,
     1917454
    ],
-   "yuan": {
-    "list": 4.542
-   },
-   "yuan_per_pass": 0.013847560975609756
+   "usd": 0.6809369415292355,
+   "usd_per_pass": 0.002076027260759864
   },
   {
-   "run_yuan_with_r0": 1.896,
-   "yuan_per_solve_with_r0": 0.013805825242718445,
+   "run_usd_with_r0": 0.2842755522238881,
+   "usd_per_solve_with_r0": 0.0020699676132807385,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "syntax",
@@ -459,14 +429,12 @@
     2960499,
     1036121
    ],
-   "yuan": {
-    "list": 2.664
-   },
-   "yuan_per_pass": 0.006466019417475728
+   "usd": 0.39945154422788604,
+   "usd_per_pass": 0.0009695425830773933
   },
   {
-   "run_yuan_with_r0": 1.888,
-   "yuan_per_solve_with_r0": 0.01308083140877598,
+   "run_usd_with_r0": 0.2830980709645178,
+   "usd_per_solve_with_r0": 0.0019614185055278365,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "syntax",
@@ -488,14 +456,12 @@
     3752652,
     945125
    ],
-   "yuan": {
-    "list": 2.641
-   },
-   "yuan_per_pass": 0.006099307159353349
+   "usd": 0.3959191004497751,
+   "usd_per_pass": 0.0009143628185907046
   },
   {
-   "run_yuan_with_r0": 1.882,
-   "yuan_per_solve_with_r0": 0.013906403940886698,
+   "run_usd_with_r0": 0.28218070964517744,
+   "usd_per_solve_with_r0": 0.0020850791353091928,
    "model": "doubao_mini",
    "ds": "he",
    "prompt": "syntax",
@@ -517,14 +483,12 @@
     2978930,
     1013319
    ],
-   "yuan": {
-    "list": 2.622
-   },
-   "yuan_per_pass": 0.006458128078817734
+   "usd": 0.3931670164917541,
+   "usd_per_pass": 0.0009683916662358476
   },
   {
-   "run_yuan_with_r0": 44.739,
-   "yuan_per_solve_with_r0": 1.24275,
+   "run_usd_with_r0": 6.707539230384808,
+   "usd_per_solve_with_r0": 0.18632053417735578,
    "model": "ds_v41f",
    "ds": "ce",
    "prompt": "direct",
@@ -546,15 +510,12 @@
     2906961,
     12598900
    ],
-   "yuan": {
-    "offpeak": 53.303,
-    "peak": 106.605
-   },
-   "yuan_per_pass": 0.9870833333333334
+   "usd": 15.982776911544228,
+   "usd_per_pass": 0.147988675106891
   },
   {
-   "run_yuan_with_r0": 39.342,
-   "yuan_per_solve_with_r0": 0.6744342857142857,
+   "run_usd_with_r0": 5.89842508745627,
+   "usd_per_solve_with_r0": 0.10111585864210748,
    "model": "ds_v41f",
    "ds": "ce",
    "prompt": "direct",
@@ -576,15 +537,12 @@
     2484522,
     10680713
    ],
-   "yuan": {
-    "offpeak": 45.207,
-    "peak": 90.415
-   },
-   "yuan_per_pass": 0.5166571428571429
+   "usd": 13.55543448275862,
+   "usd_per_pass": 0.07745962561576354
   },
   {
-   "run_yuan_with_r0": 38.397,
-   "yuan_per_solve_with_r0": 0.6329175824175824,
+   "run_usd_with_r0": 5.756616591704147,
+   "usd_per_solve_with_r0": 0.0948892844786398,
    "model": "ds_v41f",
    "ds": "ce",
    "prompt": "direct",
@@ -606,15 +564,12 @@
     3257284,
     10132824
    ],
-   "yuan": {
-    "offpeak": 43.789,
-    "peak": 87.577
-   },
-   "yuan_per_pass": 0.4811923076923077
+   "usd": 13.13000899550225,
+   "usd_per_pass": 0.07214290656869368
   },
   {
-   "run_yuan_with_r0": 41.081,
-   "yuan_per_solve_with_r0": 0.7165290697674419,
+   "run_usd_with_r0": 6.159125737131434,
+   "usd_per_solve_with_r0": 0.10742661169415291,
    "model": "ds_v41f",
    "ds": "ce",
    "prompt": "direct",
@@ -636,15 +591,12 @@
     2370848,
     11361209
    ],
-   "yuan": {
-    "offpeak": 47.816,
-    "peak": 95.631
-   },
-   "yuan_per_pass": 0.5559941860465116
+   "usd": 14.337536431784107,
+   "usd_per_pass": 0.08335776995223318
   },
   {
-   "run_yuan_with_r0": 12.36,
-   "yuan_per_solve_with_r0": 0.07789915966386554,
+   "run_usd_with_r0": 1.8531390304847575,
+   "usd_per_solve_with_r0": 0.011679447671122422,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -666,15 +618,12 @@
     242463,
     2503112
    ],
-   "yuan": {
-    "offpeak": 10.255,
-    "peak": 20.51
-   },
-   "yuan_per_pass": 0.04308823529411765
+   "usd": 3.074935832083958,
+   "usd_per_pass": 0.006459949227067139
   },
   {
-   "run_yuan_with_r0": 7.408,
-   "yuan_per_solve_with_r0": 0.045262729124236255,
+   "run_usd_with_r0": 1.1106405797101448,
+   "usd_per_solve_with_r0": 0.0067859913220579115,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -696,15 +645,12 @@
     141614,
     671150
    ],
-   "yuan": {
-    "offpeak": 2.826,
-    "peak": 5.652
-   },
-   "yuan_per_pass": 0.011511201629327903
+   "usd": 0.8474404797601199,
+   "usd_per_pass": 0.0017259480239513645
   },
   {
-   "run_yuan_with_r0": 6.492,
-   "yuan_per_solve_with_r0": 0.04179399141630901,
+   "run_usd_with_r0": 0.9733747126436781,
+   "usd_per_solve_with_r0": 0.006266360811010803,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -726,15 +672,12 @@
     109865,
     335751
    ],
-   "yuan": {
-    "offpeak": 1.453,
-    "peak": 2.906
-   },
-   "yuan_per_pass": 0.006236051502145923
+   "usd": 0.43564287856071965,
+   "usd_per_pass": 0.0009348559625766516
   },
   {
-   "run_yuan_with_r0": 7.899,
-   "yuan_per_solve_with_r0": 0.04826272912423626,
+   "run_usd_with_r0": 1.1842887556221888,
+   "usd_per_solve_with_r0": 0.007235980176917651,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -756,15 +699,12 @@
     268604,
     823615
    ],
-   "yuan": {
-    "offpeak": 3.563,
-    "peak": 7.126
-   },
-   "yuan_per_pass": 0.014513238289205704
+   "usd": 1.0683850074962518,
+   "usd_per_pass": 0.0021759368788111036
   },
   {
-   "run_yuan_with_r0": 6.663,
-   "yuan_per_solve_with_r0": 0.04298709677419355,
+   "run_usd_with_r0": 0.9989574212893553,
+   "usd_per_solve_with_r0": 0.006444886588963582,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -786,15 +726,12 @@
     198524,
     377575
    ],
-   "yuan": {
-    "offpeak": 1.709,
-    "peak": 3.418
-   },
-   "yuan_per_pass": 0.007350537634408603
+   "usd": 0.5123910044977511,
+   "usd_per_pass": 0.0011019161387048411
   },
   {
-   "run_yuan_with_r0": 7.657,
-   "yuan_per_solve_with_r0": 0.04678411405295316,
+   "run_usd_with_r0": 1.1479018490754622,
+   "usd_per_solve_with_r0": 0.007013656918994678,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -816,15 +753,12 @@
     155841,
     760793
    ],
-   "yuan": {
-    "offpeak": 3.199,
-    "peak": 6.398
-   },
-   "yuan_per_pass": 0.013030549898167005
+   "usd": 0.9592242878560719,
+   "usd_per_pass": 0.0019536136208881303
   },
   {
-   "run_yuan_with_r0": 6.771,
-   "yuan_per_solve_with_r0": 0.043590128755364804,
+   "run_usd_with_r0": 1.0151108445777113,
+   "usd_per_solve_with_r0": 0.006535048355650501,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "direct",
@@ -846,15 +780,12 @@
     112135,
     439576
    ],
-   "yuan": {
-    "offpeak": 1.87,
-    "peak": 3.741
-   },
-   "yuan_per_pass": 0.008027896995708154
+   "usd": 0.5608512743628186,
+   "usd_per_pass": 0.0012035435072163488
   },
   {
-   "run_yuan_with_r0": 6.712,
-   "yuan_per_solve_with_r0": 0.041603305785123966,
+   "run_usd_with_r0": 1.006232283858071,
+   "usd_per_solve_with_r0": 0.006236976966062424,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "syntax",
@@ -876,15 +807,12 @@
     361845,
     853634
    ],
-   "yuan": {
-    "offpeak": 3.776,
-    "peak": 7.553
-   },
-   "yuan_per_pass": 0.015605371900826446
+   "usd": 1.1323481259370316,
+   "usd_per_pass": 0.002339562243671553
   },
   {
-   "run_yuan_with_r0": 5.759,
-   "yuan_per_solve_with_r0": 0.03511585365853659,
+   "run_usd_with_r0": 0.8634874562718642,
+   "usd_per_solve_with_r0": 0.005265167416291855,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "syntax",
@@ -906,15 +834,12 @@
     262171,
     521512
    ],
-   "yuan": {
-    "offpeak": 2.348,
-    "peak": 4.696
-   },
-   "yuan_per_pass": 0.00954471544715447
+   "usd": 0.7041136431784107,
+   "usd_per_pass": 0.00143112529101303
   },
   {
-   "run_yuan_with_r0": 5.314,
-   "yuan_per_solve_with_r0": 0.032402439024390245,
+   "run_usd_with_r0": 0.7966989505247377,
+   "usd_per_solve_with_r0": 0.004857920430028888,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "syntax",
@@ -936,15 +861,12 @@
     252272,
     356932
    ],
-   "yuan": {
-    "offpeak": 1.68,
-    "peak": 3.36
-   },
-   "yuan_per_pass": 0.006829268292682927
+   "usd": 0.5037481259370314,
+   "usd_per_pass": 0.001023878304750064
   },
   {
-   "run_yuan_with_r0": 5.672,
-   "yuan_per_solve_with_r0": 0.03458536585365853,
+   "run_usd_with_r0": 0.8503348325837081,
+   "usd_per_solve_with_r0": 0.005184968491364074,
    "model": "ds_v41f",
    "ds": "he",
    "prompt": "syntax",
@@ -966,15 +888,12 @@
     230883,
     496436
    ],
-   "yuan": {
-    "offpeak": 2.217,
-    "peak": 4.433
-   },
-   "yuan_per_pass": 0.009010162601626017
+   "usd": 0.664655772113943,
+   "usd_per_pass": 0.00135092636608525
   },
   {
-   "run_yuan_with_r0": 99.671,
-   "yuan_per_solve_with_r0": 1.5101666666666667,
+   "run_usd_with_r0": 14.943197901049476,
+   "usd_per_solve_with_r0": 0.22641208940984056,
    "model": "kimik31p",
    "ds": "ce",
    "prompt": "direct",
@@ -996,14 +915,12 @@
     352305,
     820423
    ],
-   "yuan": {
-    "list": 60.369
-   },
-   "yuan_per_pass": 0.9146818181818182
+   "usd": 9.05078395802099,
+   "usd_per_pass": 0.1371330902730453
   },
   {
-   "run_yuan_with_r0": 81.661,
-   "yuan_per_solve_with_r0": 1.1834927536231885,
+   "run_usd_with_r0": 12.242976761619191,
+   "usd_per_solve_with_r0": 0.177434445820568,
    "model": "kimik31p",
    "ds": "ce",
    "prompt": "direct",
@@ -1025,14 +942,12 @@
     265234,
     572209
    ],
-   "yuan": {
-    "list": 42.358
-   },
-   "yuan_per_pass": 0.6138840579710144
+   "usd": 6.3505628185907055,
+   "usd_per_pass": 0.09203714229841602
   },
   {
-   "run_yuan_with_r0": 28.559,
-   "yuan_per_solve_with_r0": 0.1744949083503055,
+   "run_usd_with_r0": 4.28174127936032,
+   "usd_per_solve_with_r0": 0.02616135201238485,
    "model": "kimik31p",
    "ds": "he",
    "prompt": "direct",
@@ -1054,14 +969,12 @@
     114189,
     239687
    ],
-   "yuan": {
-    "list": 17.783
-   },
-   "yuan_per_pass": 0.03621792260692465
+   "usd": 2.66614287856072,
+   "usd_per_pass": 0.005430026229247902
   },
   {
-   "run_yuan_with_r0": 28.933,
-   "yuan_per_solve_with_r0": 0.17786680327868853,
+   "run_usd_with_r0": 4.337736281859072,
+   "usd_per_solve_with_r0": 0.02666641156880577,
    "model": "kimik31p",
    "ds": "he",
    "prompt": "direct",
@@ -1083,10 +996,8 @@
     109457,
     257069
    ],
-   "yuan": {
-    "list": 18.904
-   },
-   "yuan_per_pass": 0.038737704918032786
+   "usd": 2.8341278860569714,
+   "usd_per_pass": 0.005807639110772482
   }
  ],
  "comparisons": [

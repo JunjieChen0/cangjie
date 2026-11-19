@@ -80,3 +80,30 @@ def test_is_done_requires_full_n_and_zero_errors(tmp_path):
     _write_summary(tmp_path, job, n=164, errors=0)
     assert M.is_done(job, str(tmp_path), pilot=False)
     assert not M.is_done(job, str(tmp_path), pilot=True)   # 试跑要求 n = 10
+
+
+def test_review_matrix_covers_new_models_kimi_and_deepseek_ce_syntax():
+    r0, rep = M.expand_matrix("review")
+    names = {j.name for j in rep}
+    assert len(names) == len(rep) == 3 * 81 + 81 + 12 + len([j for j in rep if j.feedback in M.AGENT_ARMS])
+    assert all(j.r0_name in {x.name for x in r0} for j in rep if j.init_matrix is None)
+    for m in M.NEW_MODELS + ("kimik31p",):
+        assert {f"{m}_{ds}_{p}_rag_rep3" for ds in ("he", "ce", "or") for p in ("direct", "syntax")} <= names
+    kimi = [j for j in rep if j.model == "kimik31p"]
+    assert all(j.temp == M.KIMI_TEMP and j.env["LLM_TIMEOUT"] == M.KIMI_REVIEW_TIMEOUT for j in kimi)
+    assert {f"ds_v41f_ce_syntax_{fb}_rep1" for fb in M.FOUR} <= names
+    assert M.out_dir(False, "review").replace("\\", "/").endswith("results/review/")
+
+
+def test_agent_jobs_reuse_existing_r0_and_set_step_budget():
+    r0, rep = M.expand_matrix("review")
+    agents = [j for j in rep if j.feedback in M.AGENT_ARMS]
+    assert len(agents) == 4 * 3 * 2 * 2 * 3 + 2 * (2 * 2 + 1) * 2 * 3 + 2 * 3 + 2 * 3
+    j = next(x for x in agents if x.name == "doubao_mini_he_direct_agent15_rep2")
+    assert j.init_matrix == "stage3" and j.rounds == 15
+    cmd = M.build_cmd(j, M.out_dir(False, "review"), False, 4)
+    assert cmd[cmd.index("--feedback") + 1] == "agent" and cmd[cmd.index("--rounds") + 1] == "15"
+    assert cmd[cmd.index("--init") + 1].replace("\\", "/").endswith("results/stage3/r0/doubao_mini_he_direct_r0.jsonl")
+    assert "doubao_mini_he_direct_r0" not in {x.name for x in r0}     # 不在 review 中重复生成第 0 轮
+    k = next(x for x in agents if x.name == "ds_v41f_or_syntax_agent_rep1")
+    assert M.r0_path(k, "unused", False).replace("\\", "/").endswith("results/original30/r0/ds_v41f_or_syntax_r0.jsonl")

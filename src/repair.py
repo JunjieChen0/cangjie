@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -27,7 +28,7 @@ from dataclasses import dataclass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prompts as P  # noqa: E402
 from data import load_classeval, load_humaneval, load_original30, load_syntax_rule, read_jsonl, write_jsonl  # noqa: E402
-from doc_retrieval import format_docs, retrieve_for_feedback  # noqa: E402
+from doc_retrieval import format_docs, retrieve, retrieve_for_feedback  # noqa: E402
 from llm import chat, extract_code, strip_main  # noqa: E402
 from reeval_classeval import load_classeval_tests  # noqa: E402
 from repair_hints import match_hints  # noqa: E402
@@ -106,6 +107,50 @@ def repair_prompt(res, mode: str) -> tuple[str, dict]:
     raise ValueError(mode)
 
 
+_AGENT_CODE_RE = re.compile(r"```(?:cangjie|cj)?\s*\n(.*?)```", re.S | re.I)
+_AGENT_SEARCH_RE = re.compile(r"^\s*`?SEARCH:\s*(.+?)`?\s*$", re.M | re.I)
+
+
+def parse_action(reply: str) -> tuple[str, str]:
+    """Agent 一步的动作：('test', 代码) / ('search', 查询) / ('invalid', '')；同时给出时以代码为准。"""
+    blocks = _AGENT_CODE_RE.findall(reply or "")
+    if blocks:
+        return "test", blocks[-1]
+    m = _AGENT_SEARCH_RE.search(reply or "")
+    return ("search", m.group(1).strip()) if m else ("invalid", "")
+
+
+def search_docs(query: str) -> list[dict]:
+    """Agent 的文档检索：对模型自己写的查询做 BM25（与 rag 同一语料与片段长度）。"""
+    return retrieve(query)
+
+
+def agent_steps(item: dict, args, res, code: str, ask_raw, post, record) -> tuple:
+    """Agent 基线：第 0 轮失败后，每步由模型选择检索文档或提交新代码运行测试；最多 args.rounds 步（每步一次模型调用）。"""
+    step, last, query, chunks = 0, "test", "", []
+    while not res.passed and step < args.rounds:
+        left = args.rounds - step
+        if last == "test":
+            obs = P.AGENT_OBSERVATION.format(kind=res.failure_kind, feedback=res.feedback, left=left)
+        elif last == "search":
+            obs = P.AGENT_SEARCH_RESULT.format(query=query, docs=format_docs(chunks), left=left)
+        else:
+            obs = P.AGENT_INVALID.format(left=left)
+        reply = ask_raw(obs)
+        step += 1
+        last, arg = parse_action(reply)
+        if last == "test":
+            code = post(arg)
+            res = evaluate(code, item, args.all_tests)
+            record(step, res, code, action="test")
+        elif last == "search":
+            query, chunks = arg, search_docs(arg)
+            record(step, res, code, action="search", query=query, retrieved=[c["title"] for c in chunks])
+        else:
+            record(step, res, code, action="invalid")
+    return res, code
+
+
 def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
     messages = [{"role": "system", "content": P.SYSTEM}]
     history, usage_total = [], {"prompt_tokens": 0, "completion_tokens": 0}
@@ -114,19 +159,24 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
     def post(code: str) -> str:
         return strip_main(code) if args.strip_main else code
 
-    def ask() -> str:
+    def ask_raw(user_msg: str | None = None) -> str:
+        if user_msg is not None:
+            messages.append({"role": "user", "content": user_msg})
         reply, u = chat(messages, model=args.model, temperature=args.temperature)
         messages.append({"role": "assistant", "content": reply})
         for k in usage_total:
             usage_total[k] += u[k]
         temps_used.add(u.get("temperature", args.temperature))
-        return post(extract_code(reply))
+        return reply
 
-    def record(rnd: int, res, code: str) -> None:
+    def ask() -> str:
+        return post(extract_code(ask_raw()))
+
+    def record(rnd: int, res, code: str, **extra) -> None:
         entry = {"round": rnd, "failure_kind": res.failure_kind, "feedback": res.feedback[:1500], "code": code}
         if isinstance(res, TestsResult):
             entry["status"] = res.status
-        history.append(entry)
+        history.append({**entry, **extra})
 
     messages.append({"role": "user", "content": first_prompt(item, args.prompt, syntax_rule)})
     if init_code is not None:  # 复用已有的第 0 轮结果
@@ -134,6 +184,14 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         messages.append({"role": "assistant", "content": f"```cangjie\n{init_code}\n```"})
     else:
         code = ask()
+
+    if args.feedback == "agent":
+        res = evaluate(code, item, args.all_tests)
+        record(0, res, code, action="test")
+        res, code = agent_steps(item, args, res, code, ask_raw, post, record)
+        return {"id": item["id"], "passed": res.passed, "rounds_used": len(history) - 1, "usage": usage_total,
+                "history": history, "solution": code, "model": args.model or os.environ.get("LLM_MODEL"),
+                "temperature_used": sorted(temps_used)}
 
     for rnd in range(args.rounds + 1):
         if args.compile_only_feedback:
@@ -165,7 +223,8 @@ def main():
                     help="original = data/original30 新写的 30 道题")
     ap.add_argument("--model", default=None, help="模型名（默认读取 LLM_MODEL）")
     ap.add_argument("--prompt", choices=["direct", "syntax"], default="syntax")
-    ap.add_argument("--feedback", choices=["blind", "raw", "hint", "rag"], default="raw")
+    ap.add_argument("--feedback", choices=["blind", "raw", "hint", "rag", "agent"], default="raw",
+                    help="agent = Agent 基线：每步由模型选择检索文档或运行测试，--rounds 为步数上限")
     ap.add_argument("--rounds", type=int, default=3, help="最多修复轮数（0 = 不修复，即单次生成基线）")
     ap.add_argument("--init", help="已有的第 0 轮 solutions jsonl（如 CangjieBench 公开结果）")
     ap.add_argument("--strip-main", action="store_true", help="自动删除模型生成的 main()")
@@ -180,6 +239,8 @@ def main():
     ap.add_argument("-o", "--output", required=True)
     args = ap.parse_args()
 
+    if args.feedback == "agent" and args.compile_only_feedback:
+        ap.error("agent 模式不与 --compile-only-feedback 同用")
     if args.all_tests and args.dataset != "classeval":
         ap.error("--all-tests 只适用于 --dataset classeval")
     ds = {"humaneval": load_humaneval, "classeval": load_classeval, "original": load_original30}[args.dataset]()

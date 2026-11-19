@@ -22,5 +22,5 @@ def test_feedback_rows_report_r5_r10_and_gains():
     assert (row["r5_mean"], row["r10_mean"]) == (52.0, 62.0)
     assert round(row["r5_sd"], 2) == 2.83
     assert row["gains"][-1] == 2.0                    # 第 10 轮相对第 9 轮的平均增量
-    assert abs(row["yuan_per_solve_with_r0"] - 0.2) < 1e-9   # 1M 输入 × 0.2 元 ÷ 平均 1 题
+    assert abs(row["usd_per_solve_with_r0"] - 0.2 / 6.67) < 1e-9   # 1M 输入 × 0.2 元 ÷ 平均 1 题，折美元
     assert "R10 均值 ± SD" in T.write_markdown([row], [])

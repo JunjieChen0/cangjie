@@ -6,47 +6,47 @@ Feedback arms: `blind` = told only that the program failed; `raw` = raw compiler
 
 ## Table S1. Stage 3: pass rates and cost per configuration
 
-HumanEval-Cangjie (164 problems) and ClassEval-Cangjie (84 problems). Cost is the CNY equivalent at the Volcano Engine Ark list price (2026-11-17; DeepSeek at the peak rate), the same price list as Figure 2 and the cost table in the paper; it must not be converted to the USD figures of Table S15, which use the vendors' international list prices.
+HumanEval-Cangjie (164 problems) and ClassEval-Cangjie (84 problems). Costs are in USD: the vendors' official domestic pay-as-you-go list prices in CNY (2026-11-19; DeepSeek at the peak rate, no cache discounts) converted at 6.67 CNY per USD (2026-11-17). The experiments ran under a subscription plan, so these are equivalent list-price costs, not actual spending.
 
-| Model | Benchmark | Prompt | Feedback | Reps | R0 | R5 mean ± SD | Mean pass rate per round (R0→R5) | CNY per pass (repair only) | CNY per solved problem (incl. R0) |
+| Model | Benchmark | Prompt | Feedback | Reps | R0 | R5 mean ± SD | Mean pass rate per round (R0→R5) | USD per pass (repair only) | USD per solved problem (incl. R0) |
 |---|---|---|---|---|---|---|---|---|---|
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | blind | 3 | 1.19 | 1.59 ± 0.69 | 1.2 → 1.2 → 1.2 → 1.2 → 1.2 → 1.6 | 1.6992 | 2.2665 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | hint | 3 | 1.19 | 10.31 ± 0.69 | 1.2 → 2.8 → 6.0 → 7.9 → 8.7 → 10.3 | 0.2313 | 0.3186 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | rag | 3 | 1.19 | 17.07 ± 0.69 | 1.2 → 4.8 → 9.1 → 11.5 → 13.5 → 17.1 | 0.1411 | 0.1938 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | raw | 3 | 1.19 | 8.33 ± 1.19 | 1.2 → 2.8 → 6.7 → 7.1 → 7.9 → 8.3 | 0.2747 | 0.3827 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | hint | 3 | 4.76 | 28.57 ± 2.38 | 4.8 → 11.9 → 20.2 → 24.6 → 27.0 → 28.6 | 0.0981 | 0.1341 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | rag | 3 | 4.76 | 35.31 ± 1.37 | 4.8 → 11.5 → 20.2 → 29.4 → 32.1 → 35.3 | 0.0802 | 0.1093 |
-| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | raw | 3 | 4.76 | 27.38 ± 3.15 | 4.8 → 12.7 → 18.3 → 23.8 → 25.4 → 27.4 | 0.0988 | 0.1364 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | blind | 3 | 10.98 | 14.02 ± 1.61 | 11.0 → 11.6 → 12.2 → 12.8 → 13.4 → 14.0 | 0.1109 | 0.1451 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | hint | 3 | 10.98 | 51.63 ± 1.86 | 11.0 → 19.3 → 31.9 → 38.0 → 44.7 → 51.6 | 0.0193 | 0.0286 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | hint_co | 3 | 10.98 | 47.97 ± 2.14 | 11.0 → 18.9 → 31.3 → 36.0 → 42.3 → 48.0 | 0.0168 | 0.0267 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | rag | 3 | 10.98 | 49.59 ± 1.86 | 11.0 → 16.9 → 25.6 → 36.0 → 42.7 → 49.6 | 0.0242 | 0.0339 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | rag_co | 3 | 10.98 | 45.93 ± 1.27 | 11.0 → 17.1 → 24.8 → 33.3 → 40.0 → 45.9 | 0.0215 | 0.0320 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | raw | 3 | 10.98 | 35.77 ± 1.76 | 11.0 → 14.8 → 22.1 → 26.2 → 32.1 → 35.8 | 0.0312 | 0.0446 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | raw_co | 3 | 10.98 | 33.54 ± 1.22 | 11.0 → 15.7 → 21.1 → 24.4 → 29.1 → 33.5 | 0.0290 | 0.0433 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | blind | 3 | 48.78 | 66.66 ± 0.35 | 48.8 → 57.5 → 62.2 → 64.8 → 65.8 → 66.7 | 0.0138 | 0.0231 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | hint | 3 | 48.78 | 83.74 ± 1.86 | 48.8 → 63.8 → 74.8 → 78.9 → 82.1 → 83.7 | 0.0065 | 0.0138 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | rag | 3 | 48.78 | 88.01 ± 1.26 | 48.8 → 67.3 → 75.8 → 81.9 → 85.6 → 88.0 | 0.0061 | 0.0131 |
-| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | raw | 3 | 48.78 | 82.52 ± 0.70 | 48.8 → 63.6 → 72.4 → 77.2 → 79.9 → 82.5 | 0.0065 | 0.0139 |
-| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | blind | 3 | 25.00 | 42.86 ± 2.38 | 25.0 → 32.9 → 37.3 → 40.1 → 42.5 → 42.9 | 0.9871 | 1.2428 |
-| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | hint | 3 | 25.00 | 69.45 ± 2.99 | 25.0 → 52.0 → 60.7 → 65.1 → 65.9 → 69.5 | 0.5167 | 0.6744 |
-| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | rag | 3 | 25.00 | 72.22 ± 2.48 | 25.0 → 53.2 → 62.7 → 66.3 → 70.6 → 72.2 | 0.4812 | 0.6329 |
-| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | raw | 3 | 25.00 | 68.26 ± 1.82 | 25.0 → 51.2 → 62.7 → 64.7 → 66.7 → 68.3 | 0.5560 | 0.7165 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | blind | 3 | 75.00 | 96.75 ± 0.70 | 75.0 → 86.8 → 92.3 → 94.3 → 95.3 → 96.8 | 0.0431 | 0.0779 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | hint | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 95.9 → 97.8 → 99.0 → 99.6 → 99.8 | 0.0115 | 0.0453 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | hint_co | 3 | 75.00 | 94.71 ± 1.27 | 75.0 → 92.7 → 94.1 → 94.3 → 94.7 → 94.7 | 0.0062 | 0.0418 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | rag | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 96.1 → 98.4 → 98.6 → 99.4 → 99.8 | 0.0145 | 0.0483 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | rag_co | 3 | 75.00 | 94.51 ± 0.61 | 75.0 → 91.5 → 93.9 → 94.3 → 94.3 → 94.5 | 0.0074 | 0.0430 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | raw | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 95.1 → 97.2 → 98.8 → 99.0 → 99.8 | 0.0130 | 0.0468 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | raw_co | 3 | 75.00 | 94.71 ± 0.35 | 75.0 → 91.7 → 93.3 → 94.1 → 94.3 → 94.7 | 0.0080 | 0.0436 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | blind | 3 | 89.63 | 98.37 ± 0.35 | 89.6 → 94.3 → 96.8 → 97.2 → 97.8 → 98.4 | 0.0156 | 0.0416 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | hint | 3 | 89.02 | 100.00 ± 0.00 | 89.0 → 97.0 → 98.4 → 99.0 → 99.6 → 100.0 | 0.0095 | 0.0351 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | rag | 3 | 89.02 | 100.00 ± 0.00 | 89.4 → 98.2 → 99.4 → 99.4 → 100.0 → 100.0 | 0.0068 | 0.0324 |
-| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | raw | 3 | 89.63 | 100.00 ± 0.00 | 89.6 → 97.2 → 98.2 → 99.6 → 99.6 → 100.0 | 0.0090 | 0.0346 |
-| Kimi-K3.1-Pro | ClassEval-Cangjie | direct | hint | 1 | 35.71 | 78.57 ± 0.00 | 35.7 → 65.5 → 72.6 → 77.4 → 78.6 → 78.6 | 0.9147 | 1.5102 |
-| Kimi-K3.1-Pro | ClassEval-Cangjie | direct | raw | 1 | 35.71 | 82.14 ± 0.00 | 35.7 → 65.5 → 76.2 → 78.6 → 79.8 → 82.1 | 0.6139 | 1.1835 |
-| Kimi-K3.1-Pro | HumanEval-Cangjie | direct | hint | 3 | 77.44 | 99.80 ± 0.35 | 77.6 → 97.8 → 99.6 → 99.8 → 99.8 → 99.8 | 0.0362 | 0.1745 |
-| Kimi-K3.1-Pro | HumanEval-Cangjie | direct | raw | 3 | 77.44 | 99.19 ± 0.35 | 77.6 → 96.1 → 99.2 → 99.2 → 99.2 → 99.2 | 0.0387 | 0.1779 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | blind | 3 | 1.19 | 1.59 ± 0.69 | 1.2 → 1.2 → 1.2 → 1.2 → 1.2 → 1.6 | 0.2548 | 0.3398 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | hint | 3 | 1.19 | 10.31 ± 0.69 | 1.2 → 2.8 → 6.0 → 7.9 → 8.7 → 10.3 | 0.0347 | 0.0478 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | rag | 3 | 1.19 | 17.07 ± 0.69 | 1.2 → 4.8 → 9.1 → 11.5 → 13.5 → 17.1 | 0.0211 | 0.0291 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | direct | raw | 3 | 1.19 | 8.33 ± 1.19 | 1.2 → 2.8 → 6.7 → 7.1 → 7.9 → 8.3 | 0.0412 | 0.0574 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | hint | 3 | 4.76 | 28.57 ± 2.38 | 4.8 → 11.9 → 20.2 → 24.6 → 27.0 → 28.6 | 0.0147 | 0.0201 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | rag | 3 | 4.76 | 35.31 ± 1.37 | 4.8 → 11.5 → 20.2 → 29.4 → 32.1 → 35.3 | 0.0120 | 0.0164 |
+| Doubao-Seed-2.0-mini | ClassEval-Cangjie | syntax | raw | 3 | 4.76 | 27.38 ± 3.15 | 4.8 → 12.7 → 18.3 → 23.8 → 25.4 → 27.4 | 0.0148 | 0.0204 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | blind | 3 | 10.98 | 14.02 ± 1.61 | 11.0 → 11.6 → 12.2 → 12.8 → 13.4 → 14.0 | 0.0166 | 0.0218 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | hint | 3 | 10.98 | 51.63 ± 1.86 | 11.0 → 19.3 → 31.9 → 38.0 → 44.7 → 51.6 | 0.0029 | 0.0043 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | hint_co | 3 | 10.98 | 47.97 ± 2.14 | 11.0 → 18.9 → 31.3 → 36.0 → 42.3 → 48.0 | 0.0025 | 0.0040 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | rag | 3 | 10.98 | 49.59 ± 1.86 | 11.0 → 16.9 → 25.6 → 36.0 → 42.7 → 49.6 | 0.0036 | 0.0051 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | rag_co | 3 | 10.98 | 45.93 ± 1.27 | 11.0 → 17.1 → 24.8 → 33.3 → 40.0 → 45.9 | 0.0032 | 0.0048 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | raw | 3 | 10.98 | 35.77 ± 1.76 | 11.0 → 14.8 → 22.1 → 26.2 → 32.1 → 35.8 | 0.0047 | 0.0067 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | direct | raw_co | 3 | 10.98 | 33.54 ± 1.22 | 11.0 → 15.7 → 21.1 → 24.4 → 29.1 → 33.5 | 0.0043 | 0.0065 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | blind | 3 | 48.78 | 66.66 ± 0.35 | 48.8 → 57.5 → 62.2 → 64.8 → 65.8 → 66.7 | 0.0021 | 0.0035 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | hint | 3 | 48.78 | 83.74 ± 1.86 | 48.8 → 63.8 → 74.8 → 78.9 → 82.1 → 83.7 | 0.0010 | 0.0021 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | rag | 3 | 48.78 | 88.01 ± 1.26 | 48.8 → 67.3 → 75.8 → 81.9 → 85.6 → 88.0 | 0.0009 | 0.0020 |
+| Doubao-Seed-2.0-mini | HumanEval-Cangjie | syntax | raw | 3 | 48.78 | 82.52 ± 0.70 | 48.8 → 63.6 → 72.4 → 77.2 → 79.9 → 82.5 | 0.0010 | 0.0021 |
+| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | blind | 3 | 25.00 | 42.86 ± 2.38 | 25.0 → 32.9 → 37.3 → 40.1 → 42.5 → 42.9 | 0.1480 | 0.1863 |
+| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | hint | 3 | 25.00 | 69.45 ± 2.99 | 25.0 → 52.0 → 60.7 → 65.1 → 65.9 → 69.5 | 0.0775 | 0.1011 |
+| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | rag | 3 | 25.00 | 72.22 ± 2.48 | 25.0 → 53.2 → 62.7 → 66.3 → 70.6 → 72.2 | 0.0721 | 0.0949 |
+| DeepSeek-V4.1-Flash | ClassEval-Cangjie | direct | raw | 3 | 25.00 | 68.26 ± 1.82 | 25.0 → 51.2 → 62.7 → 64.7 → 66.7 → 68.3 | 0.0834 | 0.1074 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | blind | 3 | 75.00 | 96.75 ± 0.70 | 75.0 → 86.8 → 92.3 → 94.3 → 95.3 → 96.8 | 0.0065 | 0.0117 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | hint | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 95.9 → 97.8 → 99.0 → 99.6 → 99.8 | 0.0017 | 0.0068 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | hint_co | 3 | 75.00 | 94.71 ± 1.27 | 75.0 → 92.7 → 94.1 → 94.3 → 94.7 → 94.7 | 0.0009 | 0.0063 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | rag | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 96.1 → 98.4 → 98.6 → 99.4 → 99.8 | 0.0022 | 0.0072 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | rag_co | 3 | 75.00 | 94.51 ± 0.61 | 75.0 → 91.5 → 93.9 → 94.3 → 94.3 → 94.5 | 0.0011 | 0.0064 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | raw | 3 | 75.00 | 99.80 ± 0.35 | 75.0 → 95.1 → 97.2 → 98.8 → 99.0 → 99.8 | 0.0020 | 0.0070 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | direct | raw_co | 3 | 75.00 | 94.71 ± 0.35 | 75.0 → 91.7 → 93.3 → 94.1 → 94.3 → 94.7 | 0.0012 | 0.0065 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | blind | 3 | 89.63 | 98.37 ± 0.35 | 89.6 → 94.3 → 96.8 → 97.2 → 97.8 → 98.4 | 0.0023 | 0.0062 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | hint | 3 | 89.02 | 100.00 ± 0.00 | 89.0 → 97.0 → 98.4 → 99.0 → 99.6 → 100.0 | 0.0014 | 0.0053 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | rag | 3 | 89.02 | 100.00 ± 0.00 | 89.4 → 98.2 → 99.4 → 99.4 → 100.0 → 100.0 | 0.0010 | 0.0049 |
+| DeepSeek-V4.1-Flash | HumanEval-Cangjie | syntax | raw | 3 | 89.63 | 100.00 ± 0.00 | 89.6 → 97.2 → 98.2 → 99.6 → 99.6 → 100.0 | 0.0014 | 0.0052 |
+| Kimi-K3.1-Pro | ClassEval-Cangjie | direct | hint | 1 | 35.71 | 78.57 ± 0.00 | 35.7 → 65.5 → 72.6 → 77.4 → 78.6 → 78.6 | 0.1371 | 0.2264 |
+| Kimi-K3.1-Pro | ClassEval-Cangjie | direct | raw | 1 | 35.71 | 82.14 ± 0.00 | 35.7 → 65.5 → 76.2 → 78.6 → 79.8 → 82.1 | 0.0920 | 0.1774 |
+| Kimi-K3.1-Pro | HumanEval-Cangjie | direct | hint | 3 | 77.44 | 99.80 ± 0.35 | 77.6 → 97.8 → 99.6 → 99.8 → 99.8 → 99.8 | 0.0054 | 0.0262 |
+| Kimi-K3.1-Pro | HumanEval-Cangjie | direct | raw | 3 | 77.44 | 99.19 ± 0.35 | 77.6 → 96.1 → 99.2 → 99.2 → 99.2 → 99.2 | 0.0058 | 0.0267 |
 
 ## Table S2. Stage 3: all 33 pairwise comparisons
 
@@ -170,28 +170,28 @@ Variant A drops comparisons with no discordant problem (they cannot reach signif
 
 ## Table S5. Original-30: pass rates and cost per configuration
 
-Original-30: 30 new hand-written function-level problems (contamination control). Cost is the CNY equivalent at the Volcano Engine Ark list price (2026-11-17; DeepSeek at the peak rate), the same price list as Figure 2 and the cost table in the paper; it must not be converted to the USD figures of Table S15, which use the vendors' international list prices.
+Original-30: 30 new hand-written function-level problems (contamination control). Costs are in USD: the vendors' official domestic pay-as-you-go list prices in CNY (2026-11-19; DeepSeek at the peak rate, no cache discounts) converted at 6.67 CNY per USD (2026-11-17). The experiments ran under a subscription plan, so these are equivalent list-price costs, not actual spending.
 
-| Model | Benchmark | Prompt | Feedback | Reps | R0 | R5 mean ± SD | Mean pass rate per round (R0→R5) | CNY per pass (repair only) | CNY per solved problem (incl. R0) |
+| Model | Benchmark | Prompt | Feedback | Reps | R0 | R5 mean ± SD | Mean pass rate per round (R0→R5) | USD per pass (repair only) | USD per solved problem (incl. R0) |
 |---|---|---|---|---|---|---|---|---|---|
-| Doubao-Seed-2.0-mini | Original-30 | direct | blind | 3 | 0.00 | 4.44 ± 1.93 | 0.0 → 0.0 → 1.1 → 4.4 → 4.4 → 4.4 | 0.4183 | 0.5655 |
-| Doubao-Seed-2.0-mini | Original-30 | direct | hint | 3 | 0.00 | 44.44 ± 7.70 | 0.0 → 10.0 → 21.1 → 33.3 → 37.8 → 44.4 | 0.0276 | 0.0424 |
-| Doubao-Seed-2.0-mini | Original-30 | direct | rag | 3 | 0.00 | 41.11 ± 7.70 | 0.0 → 10.0 → 17.8 → 26.7 → 33.3 → 41.1 | 0.0333 | 0.0492 |
-| Doubao-Seed-2.0-mini | Original-30 | direct | raw | 3 | 0.00 | 27.78 ± 5.09 | 0.0 → 8.9 → 17.8 → 18.9 → 22.2 → 27.8 | 0.0461 | 0.0697 |
-| Doubao-Seed-2.0-mini | Original-30 | syntax | blind | 3 | 46.67 | 51.11 ± 5.09 | 46.7 → 47.8 → 48.9 → 48.9 → 50.0 → 51.1 | 0.0259 | 0.0401 |
-| Doubao-Seed-2.0-mini | Original-30 | syntax | hint | 3 | 46.67 | 90.00 ± 3.33 | 46.7 → 58.9 → 72.2 → 78.9 → 86.7 → 90.0 | 0.0073 | 0.0154 |
-| Doubao-Seed-2.0-mini | Original-30 | syntax | rag | 3 | 46.67 | 87.78 ± 1.92 | 46.7 → 62.2 → 74.4 → 82.2 → 84.4 → 87.8 | 0.0077 | 0.0160 |
-| Doubao-Seed-2.0-mini | Original-30 | syntax | raw | 3 | 46.67 | 82.22 ± 6.94 | 46.7 → 56.7 → 70.0 → 78.9 → 81.1 → 82.2 | 0.0085 | 0.0174 |
-| DeepSeek-V4.1-Flash | Original-30 | direct | blind | 3 | 53.33 | 93.33 ± 0.00 | 53.3 → 74.4 → 90.0 → 93.3 → 93.3 → 93.3 | 0.0666 | 0.1124 |
-| DeepSeek-V4.1-Flash | Original-30 | direct | hint | 3 | 53.33 | 100.00 ± 0.00 | 53.3 → 95.6 → 97.8 → 98.9 → 100.0 → 100.0 | 0.0076 | 0.0503 |
-| DeepSeek-V4.1-Flash | Original-30 | direct | rag | 3 | 53.33 | 100.00 ± 0.00 | 53.3 → 91.1 → 96.7 → 98.9 → 100.0 → 100.0 | 0.0159 | 0.0587 |
-| DeepSeek-V4.1-Flash | Original-30 | direct | raw | 3 | 53.33 | 98.89 ± 1.92 | 53.3 → 94.4 → 97.8 → 97.8 → 98.9 → 98.9 | 0.0150 | 0.0582 |
-| DeepSeek-V4.1-Flash | Original-30 | syntax | blind | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 97.8 → 97.8 → 97.8 → 98.9 → 100.0 | 0.0163 | 0.0496 |
-| DeepSeek-V4.1-Flash | Original-30 | syntax | hint | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 100.0 → 100.0 → 100.0 → 100.0 → 100.0 | 0.0050 | 0.0384 |
-| DeepSeek-V4.1-Flash | Original-30 | syntax | rag | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 98.9 → 98.9 → 100.0 → 100.0 → 100.0 | 0.0059 | 0.0393 |
-| DeepSeek-V4.1-Flash | Original-30 | syntax | raw | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 100.0 → 100.0 → 100.0 → 100.0 → 100.0 | 0.0048 | 0.0382 |
-| Kimi-K3.1-Pro | Original-30 | direct | hint | 3 | 70.00 | 98.89 ± 1.92 | 70.0 → 90.0 → 96.7 → 97.8 → 98.9 → 98.9 | 0.0785 | 0.2239 |
-| Kimi-K3.1-Pro | Original-30 | direct | raw | 3 | 70.00 | 100.00 ± 0.00 | 70.0 → 88.9 → 98.9 → 100.0 → 100.0 → 100.0 | 0.0763 | 0.2200 |
+| Doubao-Seed-2.0-mini | Original-30 | direct | blind | 3 | 0.00 | 4.44 ± 1.93 | 0.0 → 0.0 → 1.1 → 4.4 → 4.4 → 4.4 | 0.0627 | 0.0848 |
+| Doubao-Seed-2.0-mini | Original-30 | direct | hint | 3 | 0.00 | 44.44 ± 7.70 | 0.0 → 10.0 → 21.1 → 33.3 → 37.8 → 44.4 | 0.0041 | 0.0064 |
+| Doubao-Seed-2.0-mini | Original-30 | direct | rag | 3 | 0.00 | 41.11 ± 7.70 | 0.0 → 10.0 → 17.8 → 26.7 → 33.3 → 41.1 | 0.0050 | 0.0074 |
+| Doubao-Seed-2.0-mini | Original-30 | direct | raw | 3 | 0.00 | 27.78 ± 5.09 | 0.0 → 8.9 → 17.8 → 18.9 → 22.2 → 27.8 | 0.0069 | 0.0105 |
+| Doubao-Seed-2.0-mini | Original-30 | syntax | blind | 3 | 46.67 | 51.11 ± 5.09 | 46.7 → 47.8 → 48.9 → 48.9 → 50.0 → 51.1 | 0.0039 | 0.0060 |
+| Doubao-Seed-2.0-mini | Original-30 | syntax | hint | 3 | 46.67 | 90.00 ± 3.33 | 46.7 → 58.9 → 72.2 → 78.9 → 86.7 → 90.0 | 0.0011 | 0.0023 |
+| Doubao-Seed-2.0-mini | Original-30 | syntax | rag | 3 | 46.67 | 87.78 ± 1.92 | 46.7 → 62.2 → 74.4 → 82.2 → 84.4 → 87.8 | 0.0012 | 0.0024 |
+| Doubao-Seed-2.0-mini | Original-30 | syntax | raw | 3 | 46.67 | 82.22 ± 6.94 | 46.7 → 56.7 → 70.0 → 78.9 → 81.1 → 82.2 | 0.0013 | 0.0026 |
+| DeepSeek-V4.1-Flash | Original-30 | direct | blind | 3 | 53.33 | 93.33 ± 0.00 | 53.3 → 74.4 → 90.0 → 93.3 → 93.3 → 93.3 | 0.0100 | 0.0168 |
+| DeepSeek-V4.1-Flash | Original-30 | direct | hint | 3 | 53.33 | 100.00 ± 0.00 | 53.3 → 95.6 → 97.8 → 98.9 → 100.0 → 100.0 | 0.0011 | 0.0075 |
+| DeepSeek-V4.1-Flash | Original-30 | direct | rag | 3 | 53.33 | 100.00 ± 0.00 | 53.3 → 91.1 → 96.7 → 98.9 → 100.0 → 100.0 | 0.0024 | 0.0088 |
+| DeepSeek-V4.1-Flash | Original-30 | direct | raw | 3 | 53.33 | 98.89 ± 1.92 | 53.3 → 94.4 → 97.8 → 97.8 → 98.9 → 98.9 | 0.0023 | 0.0087 |
+| DeepSeek-V4.1-Flash | Original-30 | syntax | blind | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 97.8 → 97.8 → 97.8 → 98.9 → 100.0 | 0.0024 | 0.0074 |
+| DeepSeek-V4.1-Flash | Original-30 | syntax | hint | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 100.0 → 100.0 → 100.0 → 100.0 → 100.0 | 0.0007 | 0.0058 |
+| DeepSeek-V4.1-Flash | Original-30 | syntax | rag | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 98.9 → 98.9 → 100.0 → 100.0 → 100.0 | 0.0009 | 0.0059 |
+| DeepSeek-V4.1-Flash | Original-30 | syntax | raw | 3 | 90.00 | 100.00 ± 0.00 | 90.0 → 100.0 → 100.0 → 100.0 → 100.0 → 100.0 | 0.0007 | 0.0057 |
+| Kimi-K3.1-Pro | Original-30 | direct | hint | 3 | 70.00 | 98.89 ± 1.92 | 70.0 → 90.0 → 96.7 → 97.8 → 98.9 → 98.9 | 0.0118 | 0.0336 |
+| Kimi-K3.1-Pro | Original-30 | direct | raw | 3 | 70.00 | 100.00 ± 0.00 | 70.0 → 88.9 → 98.9 → 100.0 → 100.0 → 100.0 | 0.0114 | 0.0330 |
 
 ## Table S6. Original-30: all 17 pairwise comparisons
 
@@ -389,39 +389,41 @@ Feedback shown to the model (all rounds except the last) is stored truncated to 
 
 ## Table S15. Token usage and cost in USD
 
-USD at the vendors' international pay-as-you-go list prices (checked 2026-11-19; DeepSeek at the peak rate), without cache discounts. Requests that timed out or were interrupted before a summary was written are not included. The experiments were run under a subscription plan, so these are equivalent list-price costs, not actual spending. These USD figures use a different price list from the CNY costs in Tables S1 and S5 and Figure 2 and are not exchange-rate conversions of them.
+Costs are in USD: the vendors' official domestic pay-as-you-go list prices in CNY (2026-11-19; DeepSeek at the peak rate, no cache discounts) converted at 6.67 CNY per USD (2026-11-17). The experiments ran under a subscription plan, so these are equivalent list-price costs, not actual spending. Requests that timed out or were interrupted before a summary was written are not included.
 
-| Model | Input price (USD per 1M tokens) | Output price (USD per 1M tokens) |
-|---|---|---|
-| Doubao-Seed-2.0-mini | $0.10 | $0.40 |
-| DeepSeek-V4.1-Flash | $0.30 | $1.20 |
-| Kimi-K3.1-Pro | $2.00 | $10.00 |
-| GLM-5.3-Flash | $0.15 | $0.50 |
+| Model | Input (CNY per 1M tokens) | Output (CNY per 1M tokens) | Input (USD) | Output (USD) | Source |
+|---|---|---|---|---|---|
+| Doubao-Seed-2.0-mini | 0.20 | 2.00 | $0.0300 | $0.2999 | Volcano Engine Ark list price, prompt length [0, 32K] |
+| DeepSeek-V4.1-Flash | 2.00 | 8.00 | $0.2999 | $1.1994 | Volcano Engine Ark list price, peak hours |
+| Kimi-K3.1-Pro | 13.00 | 68.00 | $1.9490 | $10.1949 | Volcano Engine Ark list price |
+| GLM-5.3-Flash | 0.80 | 2.80 | $0.1199 | $0.4198 | Volcano Engine Ark list price |
+| Doubao-Seed-2.1-lite | 0.80 | 2.70 | $0.1199 | $0.4048 | Volcano Engine Ark list price, prompt length [0, 1024K] |
+| U2-Flash | 1.00 | 2.00 | $0.1499 | $0.2999 | Unisound MaaS list price (before promotional discount) |
 
 | Group | Model | Runs | Input tokens | Output tokens | USD |
 |---|---|---|---|---|---|
-| Stage 3 (main experiment) | Doubao-Seed-2.0-mini | 58 | 85,173,296 | 41,044,562 | $24.94 |
-| Stage 3 (main experiment) | DeepSeek-V4.1-Flash | 48 | 13,869,037 | 55,150,688 | $70.34 |
-| Stage 3 (main experiment) | Kimi-K3.1-Pro | 10 | 965,612 | 2,776,393 | $29.70 |
-| Stage 3 (main experiment) | all | 116 | 100,007,945 | 98,971,643 | $124.97 |
-| Original-30 | Doubao-Seed-2.0-mini | 26 | 5,713,867 | 3,729,398 | $2.06 |
+| Stage 3 (main experiment) | Doubao-Seed-2.0-mini | 58 | 85,173,296 | 41,044,562 | $14.86 |
+| Stage 3 (main experiment) | DeepSeek-V4.1-Flash | 48 | 13,869,037 | 55,150,688 | $70.31 |
+| Stage 3 (main experiment) | Kimi-K3.1-Pro | 10 | 965,612 | 2,776,393 | $30.19 |
+| Stage 3 (main experiment) | all | 116 | 100,007,945 | 98,971,643 | $115.35 |
+| Original-30 | Doubao-Seed-2.0-mini | 26 | 5,713,867 | 3,729,398 | $1.29 |
 | Original-30 | DeepSeek-V4.1-Flash | 26 | 529,172 | 1,643,508 | $2.13 |
-| Original-30 | Kimi-K3.1-Pro | 7 | 85,478 | 250,810 | $2.68 |
-| Original-30 | all | 59 | 6,328,517 | 5,623,716 | $6.87 |
-| 10-round extension | Doubao-Seed-2.0-mini | 9 | 29,236,286 | 11,331,079 | $7.46 |
-| 10-round extension | all | 9 | 29,236,286 | 11,331,079 | $7.46 |
-| Pilot runs | Doubao-Seed-2.0-mini | 84 | 8,116,324 | 3,568,922 | $2.24 |
+| Original-30 | Kimi-K3.1-Pro | 7 | 85,478 | 250,810 | $2.72 |
+| Original-30 | all | 59 | 6,328,517 | 5,623,716 | $6.14 |
+| 10-round extension | Doubao-Seed-2.0-mini | 9 | 29,236,286 | 11,331,079 | $4.27 |
+| 10-round extension | all | 9 | 29,236,286 | 11,331,079 | $4.27 |
+| Pilot runs | Doubao-Seed-2.0-mini | 84 | 8,116,324 | 3,568,922 | $1.31 |
 | Pilot runs | DeepSeek-V4.1-Flash | 50 | 1,246,254 | 3,800,383 | $4.93 |
-| Pilot runs | Kimi-K3.1-Pro | 17 | 169,384 | 508,546 | $5.42 |
-| Pilot runs | all | 151 | 9,531,962 | 7,877,851 | $12.60 |
-| Early exploration | Doubao-Seed-2.0-mini | 24 | 22,513,707 | 20,974,153 | $10.64 |
-| Early exploration | DeepSeek-V4.1-Flash | 9 | 1,568,206 | 7,112,484 | $9.01 |
-| Early exploration | Kimi-K3.1-Pro | 3 | 176,710 | 803,435 | $8.39 |
+| Pilot runs | Kimi-K3.1-Pro | 17 | 169,384 | 508,546 | $5.51 |
+| Pilot runs | all | 151 | 9,531,962 | 7,877,851 | $11.76 |
+| Early exploration | Doubao-Seed-2.0-mini | 25 | 22,548,730 | 20,995,945 | $6.97 |
+| Early exploration | DeepSeek-V4.1-Flash | 9 | 1,568,206 | 7,112,484 | $9.00 |
+| Early exploration | Kimi-K3.1-Pro | 3 | 176,710 | 803,435 | $8.54 |
 | Early exploration | GLM-5.3-Flash | 1 | 2,274 | 13,134 | $0.01 |
-| Early exploration | all | 37 | 24,260,897 | 28,903,206 | $28.04 |
-| **Reported experiments, subtotal** | all | 184 | 135,572,748 | 115,926,438 | $139.30 |
-| **All runs** | Doubao-Seed-2.0-mini | 201 | 150,753,480 | 80,648,114 | $47.33 |
-| **All runs** | DeepSeek-V4.1-Flash | 133 | 17,212,669 | 67,707,063 | $86.41 |
-| **All runs** | Kimi-K3.1-Pro | 37 | 1,397,184 | 4,339,184 | $46.19 |
+| Early exploration | all | 38 | 24,295,920 | 28,924,998 | $24.51 |
+| **Reported experiments, subtotal** | all | 184 | 135,572,748 | 115,926,438 | $125.77 |
+| **All runs** | Doubao-Seed-2.0-mini | 202 | 150,788,503 | 80,669,906 | $28.71 |
+| **All runs** | DeepSeek-V4.1-Flash | 133 | 17,212,669 | 67,707,063 | $86.37 |
+| **All runs** | Kimi-K3.1-Pro | 37 | 1,397,184 | 4,339,184 | $46.96 |
 | **All runs** | GLM-5.3-Flash | 1 | 2,274 | 13,134 | $0.01 |
-| **All runs** | all | 372 | 169,365,607 | 152,707,495 | $179.94 |
+| **All runs** | all | 373 | 169,400,630 | 152,729,287 | $162.05 |

@@ -64,6 +64,30 @@ Hints about Cangjie that are likely relevant to this error:
 Please fix the code. Return the complete corrected code in ```cangjie```. Do NOT write a main() function.
 """
 
+# Agent 基线（审稿意见后补充）：每一步由模型自己选动作——检索官方文档，或提交新代码运行测试。
+# 每次模型调用算一步，步数上限即 --rounds；第 0 轮与修复组共享。
+AGENT_OBSERVATION = """Your Cangjie code failed ({kind}). Here is the output of running it:
+
+```
+{feedback}
+```
+
+You can take ONE action now ({left} action(s) left in total):
+1. Search the official Cangjie documentation: reply with a single line `SEARCH: <query>`.
+2. Run the tests on a new version: reply with the complete code in ```cangjie``` (no main() function).
+"""
+
+AGENT_SEARCH_RESULT = """Search results for "{query}":
+
+{docs}
+
+You can take ONE action now ({left} action(s) left in total): `SEARCH: <query>`, or the complete code in ```cangjie```.
+"""
+
+AGENT_INVALID = """Your reply was neither a `SEARCH: <query>` line nor a ```cangjie``` code block.
+You can take ONE action now ({left} action(s) left in total): `SEARCH: <query>`, or the complete code in ```cangjie```.
+"""
+
 # R3: 原始报错 + 用报错文本从官方文档检索到的片段（doc_retrieval.py，BM25），与 hint 结构一致
 REPAIR_RAG = """Your previous Cangjie code failed ({kind}). Here is the error output:
 

@@ -2,7 +2,7 @@
 
 - 从与第 3 阶段相同的共享第 0 轮出发（--init results/stage3/r0/doubao_mini_he_direct_r0.jsonl），温度 0.3；
   因为是重新采样，前 5 轮与第 3 阶段主实验数字不同，只单独报告，不并入主表。
-- 每种反馈：R5、R10 均值 ± SD，0–10 轮平均曲线与逐轮增量，修复阶段 token，含共享第 0 轮的元/解。
+- 每种反馈：R5、R10 均值 ± SD，0–10 轮平均曲线与逐轮增量，修复阶段 token，含共享第 0 轮的美元/解。
 - 第 10 轮两两比较（hint vs raw、rag vs raw、rag vs hint）沿用 stage3_stats.compare 的方法，在这 3 个比较内单独做 Holm。
 - 图：results/figures/fig5_rounds10_curve.png（均值，阴影为 ± SD，虚线为主实验的 5 轮上限）。
 
@@ -50,7 +50,7 @@ def feedback_rows(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, t
                      "r10_mean": round(st.mean(r10), 2), "r10_sd": _sd(r10), "curve_mean": mean,
                      "gains": round_gains(mean),
                      "repair_tokens_mean": round(st.mean(sum(reps[r]["tokens"]) for r in reps)),
-                     "run_yuan_with_r0": run, "yuan_per_solve_with_r0": run / solved if solved else None})
+                     "run_usd_with_r0": run, "usd_per_solve_with_r0": run / solved if solved else None})
     return rows
 
 
@@ -58,11 +58,11 @@ def write_markdown(rows: list[dict], comps: list[dict]) -> str:
     L = ["# 延长修复轮数补充实验统计（自动生成）", "",
          "Doubao-Seed-2.0-Mini，HumanEval `direct` 起点，从第 3 阶段共享第 0 轮出发，最多修复 10 轮，温度 0.3，每种反馈 3 次重复。"
          "重新采样，前 5 轮与第 3 阶段主实验数字不同，单独报告。", "",
-         "| 反馈 | 重复 | R0 | R5 均值 ± SD | R10 均值 ± SD | 修复 token（每次平均） | 元/解（含 R0） |",
+         "| 反馈 | 重复 | R0 | R5 均值 ± SD | R10 均值 ± SD | 修复 token（每次平均） | 美元/解（含 R0） |",
          "|---|---|---|---|---|---|---|"]
     for r in rows:
         L.append(f"| {r['feedback']} | {r['reps']} | {r['r0']:.2f} | {r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | "
-                 f"{r['r10_mean']:.2f} ± {r['r10_sd']:.2f} | {r['repair_tokens_mean']:,} | {r['yuan_per_solve_with_r0']:.4f} |")
+                 f"{r['r10_mean']:.2f} ± {r['r10_sd']:.2f} | {r['repair_tokens_mean']:,} | {r['usd_per_solve_with_r0']:.4f} |")
     L += ["", "## 逐轮平均通过率与增量", "", "| 反馈 | R0 → R10 平均通过率 | 第 6–10 轮每轮增量 |", "|---|---|---|"]
     for r in rows:
         L.append(f"| {r['feedback']} | {' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | "

@@ -1,8 +1,8 @@
 {
  "summary": [
   {
-   "run_yuan_with_r0": 0.754,
-   "yuan_per_solve_with_r0": 0.5655,
+   "run_usd_with_r0": 0.1130536531734133,
+   "usd_per_solve_with_r0": 0.08479023988005999,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -24,14 +24,12 @@
     447103,
     791568
    ],
-   "yuan": {
-    "list": 1.673
-   },
-   "yuan_per_pass": 0.41825
+   "usd": 0.25075811094452777,
+   "usd_per_pass": 0.06268952773613194
   },
   {
-   "run_yuan_with_r0": 0.565,
-   "yuan_per_solve_with_r0": 0.042374999999999996,
+   "run_usd_with_r0": 0.08469425287356322,
+   "usd_per_solve_with_r0": 0.0063520689655172415,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -53,14 +51,12 @@
     591055,
     493437
    ],
-   "yuan": {
-    "list": 1.105
-   },
-   "yuan_per_pass": 0.027625
+   "usd": 0.16567991004497754,
+   "usd_per_pass": 0.004141997751124438
   },
   {
-   "run_yuan_with_r0": 0.607,
-   "yuan_per_solve_with_r0": 0.04921621621621621,
+   "run_usd_with_r0": 0.0910192503748126,
+   "usd_per_solve_with_r0": 0.007379939219579399,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -82,14 +78,12 @@
     1222191,
     493605
    ],
-   "yuan": {
-    "list": 1.232
-   },
-   "yuan_per_pass": 0.033297297297297294
+   "usd": 0.18465490254872563,
+   "usd_per_pass": 0.004990673041857449
   },
   {
-   "run_yuan_with_r0": 0.581,
-   "yuan_per_solve_with_r0": 0.06971999999999999,
+   "run_usd_with_r0": 0.08710049975012493,
+   "usd_per_solve_with_r0": 0.010452059970014992,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "direct",
@@ -111,14 +105,12 @@
     579810,
     518636
    ],
-   "yuan": {
-    "list": 1.153
-   },
-   "yuan_per_pass": 0.04612
+   "usd": 0.17289865067466267,
+   "usd_per_pass": 0.006915946026986507
   },
   {
-   "run_yuan_with_r0": 0.615,
-   "yuan_per_solve_with_r0": 0.04010869565217391,
+   "run_usd_with_r0": 0.09222203898050975,
+   "usd_per_solve_with_r0": 0.006014480803076722,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -140,14 +132,12 @@
     828600,
     512520
    ],
-   "yuan": {
-    "list": 1.191
-   },
-   "yuan_per_pass": 0.025891304347826088
+   "usd": 0.17852473763118443,
+   "usd_per_pass": 0.0038809725571996613
   },
   {
-   "run_yuan_with_r0": 0.416,
-   "yuan_per_solve_with_r0": 0.015407407407407406,
+   "run_usd_with_r0": 0.062312913543228377,
+   "usd_per_solve_with_r0": 0.0023078856867862364,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -169,14 +159,12 @@
     588952,
     237244
    ],
-   "yuan": {
-    "list": 0.592
-   },
-   "yuan_per_pass": 0.007308641975308641
+   "usd": 0.08879736131934032,
+   "usd_per_pass": 0.001096263719991856
   },
   {
-   "run_yuan_with_r0": 0.422,
-   "yuan_per_solve_with_r0": 0.016025316455696204,
+   "run_usd_with_r0": 0.06324680659670165,
+   "usd_per_solve_with_r0": 0.0024017774656975312,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -198,14 +186,12 @@
     766368,
     228846
    ],
-   "yuan": {
-    "list": 0.611
-   },
-   "yuan_per_pass": 0.007734177215189873
+   "usd": 0.09159904047976013,
+   "usd_per_pass": 0.0011594815250602548
   },
   {
-   "run_yuan_with_r0": 0.428,
-   "yuan_per_solve_with_r0": 0.017351351351351352,
+   "run_usd_with_r0": 0.06421262368815593,
+   "usd_per_solve_with_r0": 0.002603214473844159,
    "model": "doubao_mini",
    "ds": "or",
    "prompt": "syntax",
@@ -227,14 +213,12 @@
     603918,
     254754
    ],
-   "yuan": {
-    "list": 0.63
-   },
-   "yuan_per_pass": 0.008513513513513513
+   "usd": 0.09449649175412293,
+   "usd_per_pass": 0.0012769796182989586
   },
   {
-   "run_yuan_with_r0": 3.146,
-   "yuan_per_solve_with_r0": 0.11235714285714285,
+   "run_usd_with_r0": 0.471703548225887,
+   "usd_per_solve_with_r0": 0.01684655529378168,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -256,15 +240,12 @@
     71605,
     681231
    ],
-   "yuan": {
-    "offpeak": 2.797,
-    "peak": 5.593
-   },
-   "yuan_per_pass": 0.06658333333333333
+   "usd": 0.8385394302848576,
+   "usd_per_pass": 0.009982612265295922
   },
   {
-   "run_yuan_with_r0": 1.51,
-   "yuan_per_solve_with_r0": 0.050333333333333334,
+   "run_usd_with_r0": 0.22639980009995006,
+   "usd_per_solve_with_r0": 0.0075466600033316684,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -286,15 +267,12 @@
     50257,
     73002
    ],
-   "yuan": {
-    "offpeak": 0.342,
-    "peak": 0.685
-   },
-   "yuan_per_pass": 0.007611111111111112
+   "usd": 0.10262818590704648,
+   "usd_per_pass": 0.001140313176744961
   },
   {
-   "run_yuan_with_r0": 1.76,
-   "yuan_per_solve_with_r0": 0.058666666666666666,
+   "run_usd_with_r0": 0.2638852573713143,
+   "usd_per_solve_with_r0": 0.008796175245710476,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -316,15 +294,12 @@
     104999,
     153077
    ],
-   "yuan": {
-    "offpeak": 0.717,
-    "peak": 1.435
-   },
-   "yuan_per_pass": 0.015944444444444445
+   "usd": 0.21508455772113944,
+   "usd_per_pass": 0.0023898284191237714
   },
   {
-   "run_yuan_with_r0": 1.728,
-   "yuan_per_solve_with_r0": 0.05824719101123595,
+   "run_usd_with_r0": 0.2590330834582708,
+   "usd_per_solve_with_r0": 0.008731452251402386,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "direct",
@@ -346,15 +321,12 @@
     53801,
     153740
    ],
-   "yuan": {
-    "offpeak": 0.669,
-    "peak": 1.338
-   },
-   "yuan_per_pass": 0.01503370786516854
+   "usd": 0.20052803598200902,
+   "usd_per_pass": 0.002253123999797854
   },
   {
-   "run_yuan_with_r0": 1.489,
-   "yuan_per_solve_with_r0": 0.049633333333333335,
+   "run_usd_with_r0": 0.2233047476261869,
+   "usd_per_solve_with_r0": 0.007443491587539564,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -376,15 +348,12 @@
     58567,
     168237
    ],
-   "yuan": {
-    "offpeak": 0.732,
-    "peak": 1.463
-   },
-   "yuan_per_pass": 0.016255555555555558
+   "usd": 0.2193448275862069,
+   "usd_per_pass": 0.0024371647509578544
   },
   {
-   "run_yuan_with_r0": 1.151,
-   "yuan_per_solve_with_r0": 0.03836666666666667,
+   "run_usd_with_r0": 0.1725647176411794,
+   "usd_per_solve_with_r0": 0.00575215725470598,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -406,15 +375,12 @@
     31881,
     47995
    ],
-   "yuan": {
-    "offpeak": 0.224,
-    "peak": 0.448
-   },
-   "yuan_per_pass": 0.004977777777777778
+   "usd": 0.06712473763118441,
+   "usd_per_pass": 0.0007458304181242713
   },
   {
-   "run_yuan_with_r0": 1.178,
-   "yuan_per_solve_with_r0": 0.039266666666666665,
+   "run_usd_with_r0": 0.17662878560719641,
+   "usd_per_solve_with_r0": 0.0058876261869065475,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -436,15 +402,12 @@
     47778,
     54186
    ],
-   "yuan": {
-    "offpeak": 0.265,
-    "peak": 0.529
-   },
-   "yuan_per_pass": 0.005877777777777778
+   "usd": 0.07931694152923538,
+   "usd_per_pass": 0.0008812993503248376
   },
   {
-   "run_yuan_with_r0": 1.146,
-   "yuan_per_solve_with_r0": 0.0382,
+   "run_usd_with_r0": 0.17183958020989504,
+   "usd_per_solve_with_r0": 0.0057279860069965015,
    "model": "ds_v41f",
    "ds": "or",
    "prompt": "syntax",
@@ -466,15 +429,12 @@
     31194,
     46353
    ],
-   "yuan": {
-    "offpeak": 0.217,
-    "peak": 0.433
-   },
-   "yuan_per_pass": 0.0048111111111111115
+   "usd": 0.06494932533733133,
+   "usd_per_pass": 0.0007216591704147926
   },
   {
-   "run_yuan_with_r0": 6.643,
-   "yuan_per_solve_with_r0": 0.22392134831460672,
+   "run_usd_with_r0": 0.9959793603198401,
+   "usd_per_solve_with_r0": 0.03357233798830922,
    "model": "kimik31p",
    "ds": "or",
    "prompt": "direct",
@@ -496,14 +456,12 @@
     40614,
     95018
    ],
-   "yuan": {
-    "list": 6.989
-   },
-   "yuan_per_pass": 0.07852808988764044
+   "usd": 1.047856971514243,
+   "usd_per_pass": 0.011773673837238685
   },
   {
-   "run_yuan_with_r0": 6.601,
-   "yuan_per_solve_with_r0": 0.22003333333333333,
+   "run_usd_with_r0": 0.9897042478760619,
+   "usd_per_solve_with_r0": 0.03299014159586873,
    "model": "kimik31p",
    "ds": "or",
    "prompt": "direct",
@@ -525,10 +483,8 @@
     36709,
     93918
    ],
-   "yuan": {
-    "list": 6.864
-   },
-   "yuan_per_pass": 0.07626666666666666
+   "usd": 1.0290316341829087,
+   "usd_per_pass": 0.011433684824254541
   }
  ],
  "comparisons": [

@@ -25,8 +25,9 @@ import sys
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from extra_stats import PRICE_DATE, bootstrap_ci, cost_yuan, fmt_p, holm, model_key  # noqa: E402
-from run_matrix import N_TASKS, OUT_SUBDIR  # noqa: E402
+from extra_stats import bootstrap_ci, fmt_p, holm  # noqa: E402
+from pricing import CNY_PRICE_DATE, FX_DATE, FX_RATE, usd_cost  # noqa: E402
+from run_matrix import MODELS, N_TASKS, OUT_SUBDIR  # noqa: E402
 
 from data import ROOT  # noqa: E402
 
@@ -178,10 +179,10 @@ def load_r0_tokens(base: str) -> dict[tuple, tuple[int, int]]:
 
 
 def run_cost(reps: dict[int, dict], r0_tokens: tuple[int, int], model: str) -> float:
-    """一次完整运行的成本（元，取最高价档）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
+    """一次完整运行的成本（美元，国内牌价按统一汇率折算，见 pricing.py）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
     pin = r0_tokens[0] + st.mean(reps[r]["tokens"][0] for r in reps)
     pout = r0_tokens[1] + st.mean(reps[r]["tokens"][1] for r in reps)
-    return max(cost_yuan(pin, pout, model_key(model)).values())
+    return usd_cost(MODELS[model], pin, pout)
 
 
 def summarize(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, tuple[int, int]] | None = None) -> list[dict]:
@@ -194,19 +195,19 @@ def summarize(groups: dict[tuple, dict[int, dict]], r0_tokens: dict[tuple, tuple
         pin = sum(reps[r]["tokens"][0] for r in reps)
         pout = sum(reps[r]["tokens"][1] for r in reps)
         n_pass = sum(sum(reps[r]["passed"].values()) for r in reps)
-        yuan = cost_yuan(pin, pout, model_key(key[0]))
+        usd = usd_cost(MODELS[key[0]], pin, pout)
         with_r0 = {}
         if r0_tokens and key[:3] in r0_tokens:
             run = run_cost(reps, r0_tokens[key[:3]], key[0])
             solved = st.mean(sum(reps[r]["passed"].values()) for r in reps)
-            with_r0 = {"run_yuan_with_r0": run, "yuan_per_solve_with_r0": run / solved if solved else None}
+            with_r0 = {"run_usd_with_r0": run, "usd_per_solve_with_r0": run / solved if solved else None}
         rows.append({**with_r0, "model": key[0], "ds": key[1], "prompt": key[2], "feedback": key[3], "reps": len(reps),
                      "timeouts": sum(reps[r].get("timeouts", 0) for r in reps),
                      "r0": curves[0][0], "r5_mean": round(st.mean(r5), 2),
                      "r5_sd": round(st.stdev(r5), 2) if len(r5) > 1 else 0.0,
                      "curve_mean": [round(st.mean(c[k] for c in curves), 2) for k in range(len(curves[0]))],
-                     "tokens": (pin, pout), "yuan": yuan,
-                     "yuan_per_pass": max(yuan.values()) / n_pass if n_pass else None})
+                     "tokens": (pin, pout), "usd": usd,
+                     "usd_per_pass": usd / n_pass if n_pass else None})
     return rows
 
 
@@ -214,20 +215,20 @@ def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: lis
                    holm_alt: list[dict] | None = None) -> str:
     L = [f"# {title}（自动生成）", "",
          "只统计完整的组（n 等于题数且 errors = 0）。R5 为最多修复 5 轮后的通过率，3 次重复取均值 ± 标准差。",
-         f"成本按火山方舟官网在线推理单价折算（{PRICE_DATE}），DeepSeek 取高峰价（偏保守）；实验实际通过 Coding Plan 订阅调用。",
-         "「元/次通过（仅修复）」= 各次重复修复阶段总成本 ÷ 总通过题次，不含第 0 轮；"
-         "「元/解（含 R0）」= 一次完整运行（共享第 0 轮 + 修复阶段的重复平均）的成本 ÷ 平均通过题数，不同起点之间应比较这一列。", ""]
+         f"成本（美元）= 国内官方牌价（{CNY_PRICE_DATE}，DeepSeek 取高峰价）按 {FX_RATE} 元/美元（{FX_DATE}）折算，见 pricing.py；实验实际通过订阅调用。",
+         "「美元/次通过（仅修复）」= 各次重复修复阶段总成本 ÷ 总通过题次，不含第 0 轮；"
+         "「美元/解（含 R0）」= 一次完整运行（共享第 0 轮 + 修复阶段的重复平均）的成本 ÷ 平均通过题数，不同起点之间应比较这一列。", ""]
     timed_out = [r for r in summary if r.get("timeouts")]
     if timed_out:
         L += ["API 超时按未通过计入分母（只对 " + "、".join(sorted(TIMEOUT_AS_FAIL)) + "，不补跑）：" + "；".join(
             f"{r['model']} {r['ds']} {r['prompt']} {r['feedback']} {r['timeouts']} 题次" for r in timed_out) + "。", ""]
     L += [
          "## 各配置通过率", "",
-         "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 元/次通过（仅修复） | 元/解（含 R0） |",
+         "| 模型 | 数据集 | 起点 | 反馈 | 重复 | R0 | R5 均值 ± sd | 逐轮平均 | 美元/次通过（仅修复） | 美元/解（含 R0） |",
          "|---|---|---|---|---|---|---|---|---|---|"]
     for r in summary:
-        ypp = f"{r['yuan_per_pass']:.4f}" if r["yuan_per_pass"] is not None else "—"
-        yps = f"{r['yuan_per_solve_with_r0']:.4f}" if r.get("yuan_per_solve_with_r0") is not None else "—"
+        ypp = f"{r['usd_per_pass']:.4f}" if r["usd_per_pass"] is not None else "—"
+        yps = f"{r['usd_per_solve_with_r0']:.4f}" if r.get("usd_per_solve_with_r0") is not None else "—"
         L.append(f"| {r['model']} | {r['ds']} | {r['prompt']} | {r['feedback']} | {r['reps']} | {r['r0']:.2f} | "
                  f"{r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | {' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | "
                  f"{ypp} | {yps} |")

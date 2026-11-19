@@ -27,10 +27,15 @@ MODELS = {
     "ds_v41f": "deepseek-v4-1-flash-261017",
     "doubao_mini": "doubao-seed-2-0-mini-260428",
     "kimik31p": "kimi-k3-1-pro-261024",
+    "glm53f": "glm-5-3-flash-260828",            # 以下三个为审稿意见后的补充实验（review 矩阵）
+    "doubao21l": "doubao-seed-2-1-lite-260915",
+    "u2f": "u2-flash",                           # 云知声，走 UNISOUND_* 接口（见 llm.PROVIDERS），限流 20 RPM
 }
 N_TASKS = {"he": 164, "ce": 84, "or": 30}
 DATASET_ARG = {"he": "humaneval", "ce": "classeval", "or": "original"}
-OUT_SUBDIR = {"stage3": "stage3", "original": "original30"}
+OUT_SUBDIR = {"stage3": "stage3", "original": "original30", "review": "review"}
+NEW_MODELS = ("glm53f", "doubao21l", "u2f")
+KIMI_REVIEW_TIMEOUT = "1800"
 PILOT_LIMIT = 10
 TEMP = 0.3
 KIMI_TEMP = 1.0
@@ -49,15 +54,22 @@ class Job:
     compile_only: bool = False
     rep: int = 0
     env: dict = field(default_factory=dict)
+    rounds: int = ROUNDS               # 修复轮数；agent 组为步数上限（每步一次模型调用）
+    init_matrix: str | None = None     # 第 0 轮取自哪个矩阵的结果目录（None = 本矩阵自己生成）
 
     @property
     def r0_name(self) -> str:
         return f"{self.model}_{self.ds}_{self.prompt}_r0"
 
 
-def _repairs(model, ds, prompt, feedbacks, reps=REPS, temp=TEMP, compile_only=False, env=None):
+AGENT_ARMS = {"agent": ROUNDS, "agent15": 15}       # Agent 基线：与修复循环同预算（5 步）与放宽预算（15 步）
+FEEDBACK_ARG = {"agent15": "agent"}                 # 组名中的反馈 → repair.py --feedback 的取值
+
+
+def _repairs(model, ds, prompt, feedbacks, reps=REPS, temp=TEMP, compile_only=False, env=None, init_matrix=None):
     tag = "_co" if compile_only else ""
-    return [Job(f"{model}_{ds}_{prompt}_{fb}{tag}_rep{r}", model, ds, prompt, temp, fb, compile_only, r, env or {})
+    return [Job(f"{model}_{ds}_{prompt}_{fb}{tag}_rep{r}", model, ds, prompt, temp, fb, compile_only, r, env or {},
+                AGENT_ARMS.get(fb, ROUNDS), init_matrix)
             for fb in feedbacks for r in reps]
 
 
@@ -91,12 +103,52 @@ def _original_repairs() -> list[Job]:
     return rep
 
 
+def _full(model: str, temp: float = TEMP, env: dict | None = None) -> list[Job]:
+    """完整矩阵：HE / CE / Original-30 × direct / syntax × 四种反馈 × 3 次，另加 HE direct 只给编译错误的消融。"""
+    rep = []
+    for ds in ("he", "ce", "or"):
+        for p in ("direct", "syntax"):
+            rep += _repairs(model, ds, p, FOUR, temp=temp, env=env)
+    return rep + _repairs(model, "he", "direct", ("raw", "hint", "rag"), temp=temp, compile_only=True, env=env)
+
+
+def _review_repairs() -> list[Job]:
+    """审稿意见后的补充实验（results/review/），协议同第 3 阶段，结果单独成族报告：
+    三个新模型与 Kimi（超时放宽到 1800 秒、全新一套）各跑完整矩阵；补齐 DeepSeek ClassEval syntax。"""
+    rep = []
+    for m in NEW_MODELS:
+        rep += _full(m, env={"LLM_TIMEOUT": "600"})
+    rep += _full("kimik31p", temp=KIMI_TEMP, env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT})
+    rep += _repairs("ds_v41f", "ce", "syntax", FOUR, env={"LLM_TIMEOUT": "600"})
+    return rep + _agent_jobs()
+
+
+def _agent_jobs() -> list[Job]:
+    """Agent 基线（5 步与 15 步）。新模型与 Kimi 用 review 自己的第 0 轮；DeepSeek / Doubao 复用第 3 阶段与
+    Original-30 的共享第 0 轮，以便与原有修复组逐题配对。"""
+    arms, env, rep = tuple(AGENT_ARMS), {"LLM_TIMEOUT": "600"}, []
+    for m in NEW_MODELS + ("kimik31p",):
+        temp = KIMI_TEMP if m == "kimik31p" else TEMP
+        menv = {"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT} if m == "kimik31p" else env
+        for ds in ("he", "ce", "or"):
+            for p in ("direct", "syntax"):
+                rep += _repairs(m, ds, p, arms, temp=temp, env=menv)
+    for m in ("ds_v41f", "doubao_mini"):
+        for p in ("direct", "syntax"):
+            rep += _repairs(m, "he", p, arms, env=env, init_matrix="stage3")
+            rep += _repairs(m, "or", p, arms, env=env, init_matrix="original")
+        rep += _repairs(m, "ce", "direct", arms, env=env, init_matrix="stage3")
+    rep += _repairs("doubao_mini", "ce", "syntax", arms, env=env, init_matrix="stage3")
+    return rep + _repairs("ds_v41f", "ce", "syntax", arms, env=env)        # 第 0 轮在 review 中新生成
+
+
 def expand_matrix(matrix: str = "stage3") -> tuple[list[Job], list[Job]]:
-    """返回 (第 0 轮任务, 修复任务)。matrix 为 stage3（默认）或 original。"""
-    rep = {"stage3": _stage3_repairs, "original": _original_repairs}[matrix]()
+    """返回 (第 0 轮任务, 修复任务)。matrix 为 stage3（默认）、original 或 review。
+    第 0 轮取自其他矩阵的修复组（init_matrix）不在本矩阵生成第 0 轮。"""
+    rep = {"stage3": _stage3_repairs, "original": _original_repairs, "review": _review_repairs}[matrix]()
     r0, seen = [], set()
     for j in rep:
-        if j.r0_name not in seen:
+        if j.init_matrix is None and j.r0_name not in seen:
             seen.add(j.r0_name)
             r0.append(Job(j.r0_name, j.model, j.ds, j.prompt, j.temp, env=j.env))
     return r0, rep
@@ -111,6 +163,12 @@ def output_path(job: Job, base: str) -> str:
     return os.path.join(base, sub, f"{job.name}.jsonl")
 
 
+def r0_path(job: Job, base: str, pilot: bool) -> str:
+    """修复组所用第 0 轮文件：默认在本矩阵目录，init_matrix 指定时取那个矩阵的结果目录。"""
+    r0 = Job(job.r0_name, job.model, job.ds, job.prompt, job.temp)
+    return output_path(r0, out_dir(pilot, job.init_matrix) if job.init_matrix else base)
+
+
 def build_cmd(job: Job, base: str, pilot: bool, workers: int) -> list[str]:
     cmd = [sys.executable, os.path.join(ROOT, "src", "repair.py"),
            "--dataset", DATASET_ARG[job.ds],
@@ -121,8 +179,8 @@ def build_cmd(job: Job, base: str, pilot: bool, workers: int) -> list[str]:
     if job.feedback is None:
         cmd += ["--rounds", "0"]
     else:
-        r0 = Job(job.r0_name, job.model, job.ds, job.prompt, job.temp)
-        cmd += ["--rounds", str(ROUNDS), "--feedback", job.feedback, "--init", output_path(r0, base)]
+        cmd += ["--rounds", str(job.rounds), "--feedback", FEEDBACK_ARG.get(job.feedback, job.feedback),
+                "--init", r0_path(job, base, pilot)]
         if job.compile_only:
             cmd.append("--compile-only-feedback")
     if pilot:
@@ -174,11 +232,11 @@ def first_round_kinds(path: str) -> dict[str, str]:
         return {str(r["id"]): r["history"][0]["failure_kind"] for r in map(json.loads, f) if r.get("history")}
 
 
-def r0_mismatches(job: Job, base: str) -> int:
+def r0_mismatches(job: Job, base: str, pilot: bool = False) -> int:
     """修复组第 0 轮的判定应与共享的第 0 轮文件逐题一致；返回不一致题数。"""
     if job.compile_only:  # 只给编译错误时第 0 轮判定的是“能否编译”，口径不同，不比较
         return 0
-    r0 = first_round_kinds(output_path(Job(job.r0_name, job.model, job.ds, job.prompt, job.temp), base))
+    r0 = first_round_kinds(r0_path(job, base, pilot))
     mine = first_round_kinds(output_path(job, base))
     return sum(1 for i, k in mine.items() if r0.get(i) != k)
 
@@ -198,7 +256,7 @@ def check(r0_jobs: list[Job], rep_jobs: list[Job], base: str, pilot: bool) -> bo
         if temps and temps != [j.temp]:   # 全部题第 0 轮即通过时修复组不调用模型，记录为空
             problems.append(f"实际温度 {temps} ≠ 设定 {j.temp}")
         if j.feedback is not None:
-            mism = r0_mismatches(j, base)
+            mism = r0_mismatches(j, base, pilot)
             if mism:
                 problems.append(f"第 0 轮与共享文件不一致 {mism} 题")
         curve = s.get("pass@1_by_round", [])
@@ -219,7 +277,7 @@ def select(r0_jobs: list[Job], rep_jobs: list[Job], pattern: str | None) -> tupl
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--matrix", choices=sorted(OUT_SUBDIR), default="stage3",
-                    help="stage3 = 第 3 阶段矩阵（results/stage3/）；original = 新题集（results/original30/）")
+                    help="stage3 = 第 3 阶段矩阵（results/stage3/）；original = 新题集（results/original30/）；review = 审稿后补充实验（results/review/）")
     ap.add_argument("--pilot", action="store_true", help=f"每组只跑 {PILOT_LIMIT} 题，输出到 <结果目录>/pilot/")
     ap.add_argument("--only", help="只运行名称匹配该正则的组（所需的第 0 轮自动包含）")
     ap.add_argument("-p", "--parallel", type=int, default=1, help="同时运行的组数")

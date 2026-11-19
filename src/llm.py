@@ -31,16 +31,31 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 
-def get_client():
+# 不走默认服务商的模型：模型名前缀 → (base_url 环境变量, api_key 环境变量)
+PROVIDERS = {"u2-": ("UNISOUND_BASE_URL", "UNISOUND_API_KEY")}
+_other_clients: dict[str, object] = {}
+
+
+def _new_client(base_env: str, key_env: str):
+    from openai import OpenAI
+    return OpenAI(
+        base_url=os.environ.get(base_env, "https://api.deepseek.com/v1"),
+        api_key=os.environ.get(key_env, "EMPTY"),
+        timeout=float(os.environ.get("LLM_TIMEOUT", "240")),
+        max_retries=0,  # 只用 chat() 自己的重试；SDK 默认再重试 2 次，会让一次卡住的调用耗时变成 15 倍超时
+    )
+
+
+def get_client(model: str | None = None):
+    """按模型名前缀选服务商（见 PROVIDERS）；其余模型走 LLM_BASE_URL / LLM_API_KEY。"""
     global _client
+    for prefix, (base_env, key_env) in PROVIDERS.items():
+        if model and model.startswith(prefix):
+            if prefix not in _other_clients:
+                _other_clients[prefix] = _new_client(base_env, key_env)
+            return _other_clients[prefix]
     if _client is None:
-        from openai import OpenAI
-        _client = OpenAI(
-            base_url=os.environ.get("LLM_BASE_URL", "https://api.deepseek.com/v1"),
-            api_key=os.environ.get("LLM_API_KEY", "EMPTY"),
-            timeout=float(os.environ.get("LLM_TIMEOUT", "240")),
-            max_retries=0,  # 只用 chat() 自己的重试；SDK 默认再重试 2 次，会让一次卡住的调用耗时变成 15 倍超时
-        )
+        _client = _new_client("LLM_BASE_URL", "LLM_API_KEY")
     return _client
 
 
@@ -50,7 +65,7 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
     model = model or os.environ.get("LLM_MODEL", "deepseek-chat")
     for attempt in range(max_retries):
         try:
-            resp = get_client().chat.completions.create(
+            resp = get_client(model).chat.completions.create(
                 model=model, messages=messages, temperature=temperature,
             )
             u = resp.usage

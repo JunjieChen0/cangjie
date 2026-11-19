@@ -37,8 +37,8 @@ def known_values(stats: list[dict]) -> dict[str, set]:
                 mean_sd.add((round(r[m], 2), round(r[sd], 2)))
                 signed.add(round(round(r[m], 2) - round(r["r0"], 2), 2))
             signed.update(round(g, 2) for g in r.get("gains", []))             # 逐轮增量
-        for r in s.get("summary", []) + s.get("feedback", []):                 # 4 位小数的成本（元）
-            p.update(round(r[k], 4) for k in ("yuan_per_pass", "yuan_per_solve_with_r0") if r.get(k) is not None)
+        for r in s.get("summary", []) + s.get("feedback", []):                 # 4 位小数的成本（美元）
+            p.update(round(r[k], 4) for k in ("usd_per_pass", "usd_per_solve_with_r0") if r.get(k) is not None)
         for r in s.get("comparisons", []) + s.get("sensitivity_excl_flaky", []) + s.get("comparisons_r10", []):
             signed.update(round(r[k], 2) for k in ("diff", "ci_lo", "ci_hi") if k in r)
             p.update(round(x, 4) for x in [r.get("p"), r.get("p_holm"), *r.get("mcnemar_per_rep", [])]
@@ -47,6 +47,7 @@ def known_values(stats: list[dict]) -> dict[str, set]:
             p.update(round(x, 4) for x in (v.get("p_holm_informative"), v.get("p_holm_by_type")) if x is not None)
         usd.update(round(r["usd"], 2) for r in s.get("token_cost", []))          # token_cost_stats.json
         usd.update(round(v[k], 2) for v in s.get("usd_prices", {}).values() for k in ("input", "output"))
+        p.update(round(v[k], 4) for v in s.get("usd_prices", {}).values() for k in ("input", "output"))  # 4 位小数单价
     return {"signed": signed, "mean_sd": mean_sd, "p": p, "usd": usd}
 
 

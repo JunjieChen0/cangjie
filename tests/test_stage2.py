@@ -127,3 +127,15 @@ def test_chat_records_fallback_temperature(monkeypatch):
     text, usage = llm.chat([{"role": "user", "content": "hi"}], model="m", temperature=0.0)
     assert text == "ok" and calls == [0.0, 1.0]
     assert usage == {"prompt_tokens": 3, "completion_tokens": 4, "temperature": 1.0}
+
+
+def test_get_client_routes_u2_models_to_unisound(monkeypatch):
+    import llm
+    made = []
+    monkeypatch.setattr(llm, "_new_client", lambda b, k: made.append((b, k)) or (b, k))
+    monkeypatch.setattr(llm, "_other_clients", {})
+    monkeypatch.setattr(llm, "_client", None)
+    assert llm.get_client("u2-flash") == ("UNISOUND_BASE_URL", "UNISOUND_API_KEY")
+    assert llm.get_client("doubao-seed-2-0-mini-260428") == ("LLM_BASE_URL", "LLM_API_KEY")
+    llm.get_client("u2-flash")
+    assert len(made) == 2                       # 每个服务商只建一次客户端

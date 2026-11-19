@@ -12,7 +12,7 @@
 
 Key fields: pass rates (`r0`, `r5_mean`, `r5_sd`, `r10_mean`, `curve_mean`) are percentages; `diff`, `ci_lo`,
 `ci_hi` are percentage points (A − B); `p` is the sign-flip permutation p value and `p_holm` its Holm-adjusted
-value; `yuan_*` fields are CNY at the Volcano Engine Ark list price; `usd` is USD at international list prices.
+value; `usd*` fields are USD (domestic CNY list prices converted at one exchange rate, see Table S15).
 Model keys: `doubao_mini` = Doubao-Seed-2.0-mini, `ds_v41f` = DeepSeek-V4.1-Flash, `kimik31p` = Kimi-K3.1-Pro;
 dataset keys: `he` = HumanEval-Cangjie, `ce` = ClassEval-Cangjie, `or` = Original-30.
 The full replication package (code, raw model outputs and logs) is archived separately.

@@ -131,7 +131,7 @@ def test_summarize_reports_mean_sd_and_cost(tmp_path):
                      tokens=(1_000_000, 1_000_000))
     row = S.summarize(S.load_groups(str(tmp_path), {"or": 10}))[0]
     assert (row["r5_mean"], round(row["r5_sd"], 2), row["reps"]) == (30.0, 10.0, 3)
-    assert abs(row["yuan_per_pass"] - 3 * 2.2 / 9) < 1e-6          # doubao 0.2+2.0 元/百万，共 9 次通过
+    assert abs(row["usd_per_pass"] - 3 * 2.2 / 9 / 6.67) < 1e-6    # doubao 0.2+2.0 元/百万，共 9 次通过，折美元
 
 
 def test_cost_with_shared_r0_per_solved_problem(tmp_path):
@@ -146,9 +146,9 @@ def test_cost_with_shared_r0_per_solved_problem(tmp_path):
     assert r0_tokens == {("doubao_mini", "or", "direct"): (2_000_000, 0)}
     row = S.summarize(S.load_groups(str(tmp_path), {"or": 10}), r0_tokens)[0]
     # doubao 0.2 / 2.0 元每百万：输入 2M(R0) + 平均 1M，输出 平均 1M → 3×0.2 + 2.0 = 2.6 元；平均解 3 题
-    assert abs(row["run_yuan_with_r0"] - 2.6) < 1e-9
-    assert abs(row["yuan_per_solve_with_r0"] - 2.6 / 3) < 1e-9
-    assert "元/解（含 R0）" in S.write_markdown([row], [], "t")
+    assert abs(row["run_usd_with_r0"] - 2.6 / 6.67) < 1e-9
+    assert abs(row["usd_per_solve_with_r0"] - 2.6 / 3 / 6.67) < 1e-9
+    assert "美元/解（含 R0）" in S.write_markdown([row], [], "t")
 
 
 def test_holm_variants_drop_uninformative_and_split_families():

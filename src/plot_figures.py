@@ -1,6 +1,6 @@
 """生成论文插图（第 3 阶段数据，英文标注，输出到 results/figures/）：
 1. fig1_rounds_curve.png           — HumanEval：各模型 × 起点下四种反馈的 0–5 轮 Pass@1（3 次重复均值 ± SD）
-2. fig2_cost_pareto.png            — 每次完整运行的成本（元）vs R5 通过率（HumanEval / ClassEval）
+2. fig2_cost_pareto.png            — 每次完整运行的成本（美元）vs R5 通过率（HumanEval / ClassEval）
 3. fig3_error_repair.png           — Doubao HumanEval direct：按第 0 轮错误类别的修复成功率
 4. fig4_rounds_curve_classeval.png — ClassEval（全部测试口径）：0–5 轮 Pass@1
 
@@ -152,7 +152,7 @@ def plot_cost(groups):
         ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
         ax.xaxis.set_minor_formatter(NullFormatter())
         ax.set_title(title, fontsize=11)
-        ax.set_xlabel("Cost of one full run (CNY, log scale)")
+        ax.set_xlabel("Cost of one full run (USD, log scale)")
         ax.set_ylim(0, 102)
         ax.grid(True, which="both", linestyle="--", alpha=0.35)
     axes[0].set_ylabel("Pass@1 after 5 rounds (%)")

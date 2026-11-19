@@ -37,8 +37,8 @@
     2.03
    ],
    "repair_tokens_mean": 3395837,
-   "run_yuan_with_r0": 3.556,
-   "yuan_per_solve_with_r0": 0.030655172413793105
+   "run_usd_with_r0": 0.5331479060469766,
+   "usd_per_solve_with_r0": 0.004596102638336005
   },
   {
    "model": "doubao_mini",
@@ -77,8 +77,8 @@
     2.84
    ],
    "repair_tokens_mean": 6168526,
-   "run_yuan_with_r0": 4.144,
-   "yuan_per_solve_with_r0": 0.036564705882352944
+   "run_usd_with_r0": 0.6212616191904048,
+   "usd_per_solve_with_r0": 0.005481720169327102
   },
   {
    "model": "doubao_mini",
@@ -117,8 +117,8 @@
     2.03
    ],
    "repair_tokens_mean": 3958092,
-   "run_yuan_with_r0": 4.163,
-   "yuan_per_solve_with_r0": 0.049363636363636366
+   "run_usd_with_r0": 0.6240912243878061,
+   "usd_per_solve_with_r0": 0.00740029119827438
   }
  ],
  "comparisons_r10": [

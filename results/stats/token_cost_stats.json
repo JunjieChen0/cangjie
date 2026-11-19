@@ -1,26 +1,49 @@
 {
-  "usd_price_date": "2026-11-19",
-  "rmb_price_date": "2026-11-17",
+  "cny_price_date": "2026-11-19",
+  "fx_rate": 6.67,
+  "fx_date": "2026-11-17",
   "usd_prices": {
     "doubao-seed-2-0-mini-260428": {
-      "input": 0.1,
-      "output": 0.4,
-      "source": "BytePlus ModelArk model pricing page, Standard tier, prompt length [0, 128K]"
+      "input": 0.029985007496251877,
+      "output": 0.29985007496251875,
+      "cny_input": 0.2,
+      "cny_output": 2.0,
+      "source": "Volcano Engine Ark list price, prompt length [0, 32K]"
     },
     "deepseek-v4-1-flash-261017": {
-      "input": 0.3,
-      "output": 1.2,
-      "source": "DeepSeek API docs, Models & Pricing, peak rate (off-peak is half)"
+      "input": 0.29985007496251875,
+      "output": 1.199400299850075,
+      "cny_input": 2.0,
+      "cny_output": 8.0,
+      "source": "Volcano Engine Ark list price, peak hours"
     },
     "kimi-k3-1-pro-261024": {
-      "input": 2.0,
-      "output": 10.0,
-      "source": "Kimi API platform pricing for kimi-k3.1-pro"
+      "input": 1.949025487256372,
+      "output": 10.194902548725638,
+      "cny_input": 13.0,
+      "cny_output": 68.0,
+      "source": "Volcano Engine Ark list price"
     },
     "glm-5-3-flash-260828": {
-      "input": 0.15,
-      "output": 0.5,
-      "source": "BytePlus ModelArk model pricing page, Standard tier (one trial run only)"
+      "input": 0.11994002998500751,
+      "output": 0.4197901049475262,
+      "cny_input": 0.8,
+      "cny_output": 2.8,
+      "source": "Volcano Engine Ark list price"
+    },
+    "doubao-seed-2-1-lite-260915": {
+      "input": 0.11994002998500751,
+      "output": 0.40479760119940034,
+      "cny_input": 0.8,
+      "cny_output": 2.7,
+      "source": "Volcano Engine Ark list price, prompt length [0, 1024K]"
+    },
+    "u2-flash": {
+      "input": 0.14992503748125938,
+      "output": 0.29985007496251875,
+      "cny_input": 1.0,
+      "cny_output": 2.0,
+      "source": "Unisound MaaS list price (before promotional discount)"
     }
   },
   "token_cost": [
@@ -30,8 +53,8 @@
       "runs": 58,
       "prompt_tokens": 85173296,
       "completion_tokens": 41044562,
-      "usd": 24.94,
-      "rmb": 99.12
+      "usd": 14.86,
+      "cny": 99.12
     },
     {
       "category": "stage3",
@@ -39,8 +62,8 @@
       "runs": 48,
       "prompt_tokens": 13869037,
       "completion_tokens": 55150688,
-      "usd": 70.34,
-      "rmb": 468.94
+      "usd": 70.31,
+      "cny": 468.94
     },
     {
       "category": "stage3",
@@ -48,8 +71,8 @@
       "runs": 10,
       "prompt_tokens": 965612,
       "completion_tokens": 2776393,
-      "usd": 29.7,
-      "rmb": 201.35
+      "usd": 30.19,
+      "cny": 201.35
     },
     {
       "category": "stage3",
@@ -57,8 +80,8 @@
       "runs": 116,
       "prompt_tokens": 100007945,
       "completion_tokens": 98971643,
-      "usd": 124.97,
-      "rmb": 769.42
+      "usd": 115.35,
+      "cny": 769.42
     },
     {
       "category": "original30",
@@ -66,8 +89,8 @@
       "runs": 26,
       "prompt_tokens": 5713867,
       "completion_tokens": 3729398,
-      "usd": 2.06,
-      "rmb": 8.6
+      "usd": 1.29,
+      "cny": 8.6
     },
     {
       "category": "original30",
@@ -76,7 +99,7 @@
       "prompt_tokens": 529172,
       "completion_tokens": 1643508,
       "usd": 2.13,
-      "rmb": 14.21
+      "cny": 14.21
     },
     {
       "category": "original30",
@@ -84,8 +107,8 @@
       "runs": 7,
       "prompt_tokens": 85478,
       "completion_tokens": 250810,
-      "usd": 2.68,
-      "rmb": 18.17
+      "usd": 2.72,
+      "cny": 18.17
     },
     {
       "category": "original30",
@@ -93,8 +116,8 @@
       "runs": 59,
       "prompt_tokens": 6328517,
       "completion_tokens": 5623716,
-      "usd": 6.87,
-      "rmb": 40.97
+      "usd": 6.14,
+      "cny": 40.97
     },
     {
       "category": "rounds10",
@@ -102,8 +125,8 @@
       "runs": 9,
       "prompt_tokens": 29236286,
       "completion_tokens": 11331079,
-      "usd": 7.46,
-      "rmb": 28.51
+      "usd": 4.27,
+      "cny": 28.51
     },
     {
       "category": "rounds10",
@@ -111,8 +134,8 @@
       "runs": 9,
       "prompt_tokens": 29236286,
       "completion_tokens": 11331079,
-      "usd": 7.46,
-      "rmb": 28.51
+      "usd": 4.27,
+      "cny": 28.51
     },
     {
       "category": "pilot",
@@ -120,8 +143,8 @@
       "runs": 84,
       "prompt_tokens": 8116324,
       "completion_tokens": 3568922,
-      "usd": 2.24,
-      "rmb": 8.76
+      "usd": 1.31,
+      "cny": 8.76
     },
     {
       "category": "pilot",
@@ -130,7 +153,7 @@
       "prompt_tokens": 1246254,
       "completion_tokens": 3800383,
       "usd": 4.93,
-      "rmb": 32.9
+      "cny": 32.9
     },
     {
       "category": "pilot",
@@ -138,8 +161,8 @@
       "runs": 17,
       "prompt_tokens": 169384,
       "completion_tokens": 508546,
-      "usd": 5.42,
-      "rmb": 36.78
+      "usd": 5.51,
+      "cny": 36.78
     },
     {
       "category": "pilot",
@@ -147,17 +170,17 @@
       "runs": 151,
       "prompt_tokens": 9531962,
       "completion_tokens": 7877851,
-      "usd": 12.6,
-      "rmb": 78.44
+      "usd": 11.76,
+      "cny": 78.44
     },
     {
       "category": "early",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 24,
-      "prompt_tokens": 22513707,
-      "completion_tokens": 20974153,
-      "usd": 10.64,
-      "rmb": 46.45
+      "runs": 25,
+      "prompt_tokens": 22548730,
+      "completion_tokens": 20995945,
+      "usd": 6.97,
+      "cny": 46.5
     },
     {
       "category": "early",
@@ -165,8 +188,8 @@
       "runs": 9,
       "prompt_tokens": 1568206,
       "completion_tokens": 7112484,
-      "usd": 9.01,
-      "rmb": 60.04
+      "usd": 9.0,
+      "cny": 60.04
     },
     {
       "category": "early",
@@ -174,8 +197,8 @@
       "runs": 3,
       "prompt_tokens": 176710,
       "completion_tokens": 803435,
-      "usd": 8.39,
-      "rmb": 56.93
+      "usd": 8.54,
+      "cny": 56.93
     },
     {
       "category": "early",
@@ -184,16 +207,16 @@
       "prompt_tokens": 2274,
       "completion_tokens": 13134,
       "usd": 0.01,
-      "rmb": 0.0
+      "cny": 0.04
     },
     {
       "category": "early",
       "model": "all",
-      "runs": 37,
-      "prompt_tokens": 24260897,
-      "completion_tokens": 28903206,
-      "usd": 28.04,
-      "rmb": 163.42
+      "runs": 38,
+      "prompt_tokens": 24295920,
+      "completion_tokens": 28924998,
+      "usd": 24.51,
+      "cny": 163.51
     },
     {
       "category": "formal",
@@ -201,17 +224,17 @@
       "runs": 184,
       "prompt_tokens": 135572748,
       "completion_tokens": 115926438,
-      "usd": 139.3,
-      "rmb": 838.9
+      "usd": 125.77,
+      "cny": 838.9
     },
     {
       "category": "total",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 201,
-      "prompt_tokens": 150753480,
-      "completion_tokens": 80648114,
-      "usd": 47.33,
-      "rmb": 191.45
+      "runs": 202,
+      "prompt_tokens": 150788503,
+      "completion_tokens": 80669906,
+      "usd": 28.71,
+      "cny": 191.5
     },
     {
       "category": "total",
@@ -219,8 +242,8 @@
       "runs": 133,
       "prompt_tokens": 17212669,
       "completion_tokens": 67707063,
-      "usd": 86.41,
-      "rmb": 576.08
+      "usd": 86.37,
+      "cny": 576.08
     },
     {
       "category": "total",
@@ -228,8 +251,8 @@
       "runs": 37,
       "prompt_tokens": 1397184,
       "completion_tokens": 4339184,
-      "usd": 46.19,
-      "rmb": 313.23
+      "usd": 46.96,
+      "cny": 313.23
     },
     {
       "category": "total",
@@ -238,16 +261,16 @@
       "prompt_tokens": 2274,
       "completion_tokens": 13134,
       "usd": 0.01,
-      "rmb": 0.0
+      "cny": 0.04
     },
     {
       "category": "total",
       "model": "all",
-      "runs": 372,
-      "prompt_tokens": 169365607,
-      "completion_tokens": 152707495,
-      "usd": 179.94,
-      "rmb": 1080.76
+      "runs": 373,
+      "prompt_tokens": 169400630,
+      "completion_tokens": 152729287,
+      "usd": 162.05,
+      "cny": 1080.85
     }
   ]
 }

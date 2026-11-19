@@ -14,10 +14,10 @@ def test_curve_band_mean_and_sd():
 
 def test_run_cost_adds_shared_r0_to_mean_repair_cost():
     reps = {1: {"tokens": (1_000_000, 0)}, 2: {"tokens": (3_000_000, 2_000_000)}}
-    # doubao 0.2 / 2.0 元每百万：输入 1M(R0) + 平均 2M，输出 0 + 平均 1M
-    assert abs(F.run_cost(reps, (1_000_000, 0), "doubao_mini") - (3 * 0.2 + 1 * 2.0)) < 1e-9
+    # doubao 0.2 / 2.0 元每百万：输入 1M(R0) + 平均 2M，输出 0 + 平均 1M；按 6.67 元/美元折算
+    assert abs(F.run_cost(reps, (1_000_000, 0), "doubao_mini") - (3 * 0.2 + 1 * 2.0) / 6.67) < 1e-9
     # DeepSeek 取高峰价 2 / 8
-    assert abs(F.run_cost({1: {"tokens": (1_000_000, 1_000_000)}}, (0, 0), "ds_v41f") - 10.0) < 1e-9
+    assert abs(F.run_cost({1: {"tokens": (1_000_000, 1_000_000)}}, (0, 0), "ds_v41f") - 10.0 / 6.67) < 1e-9
 
 
 def test_merge_small_categories_into_other():

@@ -15,7 +15,8 @@ import zipfile
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from extra_stats import PRICE_DATE, fmt_p  # noqa: E402
+from extra_stats import fmt_p  # noqa: E402
+from pricing import CNY_PRICE_DATE, FX_DATE, FX_RATE  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATS = os.path.join(ROOT, "results", "stats")
@@ -26,7 +27,9 @@ DATA_FILES = ["stage3_stats.json", "original30_stats.json", "rounds10_stats.json
 
 MODEL = {"doubao_mini": "Doubao-Seed-2.0-mini", "ds_v41f": "DeepSeek-V4.1-Flash", "kimik31p": "Kimi-K3.1-Pro",
          "doubao-seed-2-0-mini-260428": "Doubao-Seed-2.0-mini", "deepseek-v4-1-flash-261017": "DeepSeek-V4.1-Flash",
-         "kimi-k3-1-pro-261024": "Kimi-K3.1-Pro", "glm-5-3-flash-260828": "GLM-5.3-Flash"}
+         "kimi-k3-1-pro-261024": "Kimi-K3.1-Pro", "glm-5-3-flash-260828": "GLM-5.3-Flash",
+         "doubao-seed-2-1-lite-260915": "Doubao-Seed-2.1-lite", "u2-flash": "U2-Flash",
+         "glm53f": "GLM-5.3-Flash", "doubao21l": "Doubao-Seed-2.1-lite", "u2f": "U2-Flash"}
 DATASET = {"he": "HumanEval-Cangjie", "ce": "ClassEval-Cangjie", "or": "Original-30"}
 CATEGORY = {"规格歧义": "specification ambiguity", "题意理解": "misread explicit specification",
             "仓颉语义": "Cangjie-specific semantic trap", "基准缺陷": "benchmark defect"}
@@ -36,7 +39,11 @@ SUBTYPE = {"功能行为未说明": "unspecified functional behaviour", "边界�
            "题面与参考实现矛盾": "statement contradicts reference solution"}
 COST_GROUP = {"stage3": "Stage 3 (main experiment)", "original30": "Original-30", "rounds10": "10-round extension",
               "pilot": "Pilot runs", "early": "Early exploration", "formal": "**Reported experiments, subtotal**",
-              "total": "**All runs**"}
+              "total": "**All runs**", "review": "Supplementary experiments"}
+
+COST_NOTE = (f"Costs are in USD: the vendors' official domestic pay-as-you-go list prices in CNY ({CNY_PRICE_DATE}; "
+             f"DeepSeek at the peak rate, no cache discounts) converted at {FX_RATE} CNY per USD ({FX_DATE}). The "
+             "experiments ran under a subscription plan, so these are equivalent list-price costs, not actual spending.")
 
 LEGEND = ("Feedback arms: `blind` = told only that the program failed; `raw` = raw compiler / test output; "
           "`hint` = raw output plus rule-based repair hints; `rag` = raw output plus documentation snippets retrieved "
@@ -71,12 +78,12 @@ def _cmp_label(c: dict) -> str:
 
 def summary_table(rows: list[dict]) -> list[str]:
     L = ["| Model | Benchmark | Prompt | Feedback | Reps | R0 | R5 mean ± SD | Mean pass rate per round (R0→R5) | "
-         "CNY per pass (repair only) | CNY per solved problem (incl. R0) |", "|---|---|---|---|---|---|---|---|---|---|"]
+         "USD per pass (repair only) | USD per solved problem (incl. R0) |", "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         L.append(f"| {MODEL[r['model']]} | {DATASET[r['ds']]} | {r['prompt']} | {r['feedback']} | {r['reps']} | "
                  f"{r['r0']:.2f} | {r['r5_mean']:.2f} ± {r['r5_sd']:.2f} | "
-                 f"{' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | {r['yuan_per_pass']:.4f} | "
-                 f"{r['yuan_per_solve_with_r0']:.4f} |")
+                 f"{' → '.join(f'{x:.1f}' for x in r['curve_mean'])} | {r['usd_per_pass']:.4f} | "
+                 f"{r['usd_per_solve_with_r0']:.4f} |")
     return L
 
 
@@ -102,9 +109,7 @@ def holm_table(comps: list[dict], variants: list[dict]) -> list[str]:
 def matrix_section(s: dict, first: int, title: str, n_problems: str) -> list[str]:
     n = len(s["comparisons"])
     return [f"## Table S{first}. {title}: pass rates and cost per configuration", "",
-            f"{n_problems} Cost is the CNY equivalent at the Volcano Engine Ark list price ({PRICE_DATE}; DeepSeek at "
-            "the peak rate), the same price list as Figure 2 and the cost table in the paper; it must not be converted "
-            "to the USD figures of Table S15, which use the vendors' international list prices.", "",
+            f"{n_problems} {COST_NOTE}", "",
             *summary_table(s["summary"]), "",
             f"## Table S{first + 1}. {title}: all {n} pairwise comparisons", "",
             "Difference = A − B in percentage points, computed on per-problem means over repetitions; 95% CI from a "
@@ -197,13 +202,11 @@ def residual_section(r: dict, coding: dict[str, dict]) -> list[str]:
 
 def cost_section(t: dict) -> list[str]:
     L = ["## Table S15. Token usage and cost in USD", "",
-         f"USD at the vendors' international pay-as-you-go list prices (checked {t['usd_price_date']}; DeepSeek at "
-         "the peak rate), without cache discounts. Requests that timed out or were interrupted before a summary was "
-         "written are not included. The experiments were run under a subscription plan, so these are equivalent "
-         "list-price costs, not actual spending. These USD figures use a different price list from the CNY costs in "
-         "Tables S1 and S5 and Figure 2 and are not exchange-rate conversions of them.", "",
-         "| Model | Input price (USD per 1M tokens) | Output price (USD per 1M tokens) |", "|---|---|---|"]
-    L += [f"| {MODEL[m]} | ${p['input']:.2f} | ${p['output']:.2f} |" for m, p in t["usd_prices"].items()]
+         f"{COST_NOTE} Requests that timed out or were interrupted before a summary was written are not included.", "",
+         "| Model | Input (CNY per 1M tokens) | Output (CNY per 1M tokens) | Input (USD) | Output (USD) | Source |",
+         "|---|---|---|---|---|---|"]
+    L += [f"| {MODEL[m]} | {p['cny_input']:.2f} | {p['cny_output']:.2f} | ${p['input']:.4f} | ${p['output']:.4f} | "
+          f"{p['source']} |" for m, p in t["usd_prices"].items()]
     L += ["", "| Group | Model | Runs | Input tokens | Output tokens | USD |", "|---|---|---|---|---|---|"]
     for r in t["token_cost"]:
         L.append(f"| {COST_GROUP[r['category']]} | {MODEL.get(r['model'], 'all')} | {r['runs']} | "
@@ -241,7 +244,7 @@ README = """# Supporting Information: file index
 
 Key fields: pass rates (`r0`, `r5_mean`, `r5_sd`, `r10_mean`, `curve_mean`) are percentages; `diff`, `ci_lo`,
 `ci_hi` are percentage points (A − B); `p` is the sign-flip permutation p value and `p_holm` its Holm-adjusted
-value; `yuan_*` fields are CNY at the Volcano Engine Ark list price; `usd` is USD at international list prices.
+value; `usd*` fields are USD (domestic CNY list prices converted at one exchange rate, see Table S15).
 Model keys: `doubao_mini` = Doubao-Seed-2.0-mini, `ds_v41f` = DeepSeek-V4.1-Flash, `kimik31p` = Kimi-K3.1-Pro;
 dataset keys: `he` = HumanEval-Cangjie, `ce` = ClassEval-Cangjie, `or` = Original-30.
 The full replication package (code, raw model outputs and logs) is archived separately.

@@ -14,14 +14,15 @@ def test_category_by_directory():
     assert T.category("results/original30/r0") == "original30"
     assert T.category("results/original30/pilot/runs") == "pilot"
     assert T.category("results/rounds10/runs") == "rounds10"
+    assert T.category("results/review/runs") == "review" and T.category("results/review/pilot/r0") == "pilot"
     assert T.category("results/ablation") == "early" and T.category("results/try") == "early"
 
 
-def test_usd_uses_international_list_price_and_rmb_uses_peak_tier():
-    assert T.usd_cost(DB, 1_000_000, 1_000_000) == 0.10 + 0.40
-    assert T.usd_cost(DS, 1_000_000, 1_000_000) == 0.30 + 1.20          # DeepSeek 高峰价
-    assert T.rmb_cost(DS, 1_000_000, 1_000_000) == 2.0 + 8.0            # 国内牌价取高峰档
-    assert T.rmb_cost(GLM, 1_000_000, 1_000_000) == 0.0                 # 不在国内牌价表
+def test_usd_is_domestic_list_price_converted_at_one_rate():
+    assert T.cny_cost(DS, 1_000_000, 1_000_000) == 2.0 + 8.0             # DeepSeek 高峰价
+    assert abs(T.usd_cost(DS, 1_000_000, 1_000_000) - 10.0 / 6.67) < 1e-12
+    assert abs(T.cny_cost(GLM, 1_000_000, 1_000_000) - 3.6) < 1e-12
+    assert T.cny_cost("u2-flash", 1_000_000, 0) == 1.0                   # 云知声原价
 
 
 def _summary(path, model, pin, pout):
@@ -39,6 +40,6 @@ def test_load_and_aggregate_skip_empty_and_selftest(tmp_path):
     rows = T.load_usage(str(tmp_path))
     assert sorted((x["category"], x["model"]) for x in rows) == [("pilot", DS), ("stage3", DB)]
     lines = {(x["category"], x["model"]): x for x in T.aggregate(rows)}
-    assert lines[("formal", "all")]["usd"] == 0.10 and lines[("formal", "all")]["runs"] == 1
-    assert lines[("total", "all")]["usd"] == 1.30 and lines[("total", "all")]["rmb"] == 8.2
+    assert lines[("formal", "all")]["cny"] == 0.2 and lines[("formal", "all")]["runs"] == 1
+    assert lines[("total", "all")]["cny"] == 8.2 and lines[("total", "all")]["usd"] == round(8.2 / 6.67, 2)
     assert lines[("pilot", DS)]["completion_tokens"] == 1_000_000
