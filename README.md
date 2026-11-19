@@ -126,6 +126,8 @@ python src/residual_failures.py --recheck -j 6
 python src/rounds10_stats.py
 # 全部实验 token 消耗与美元成本（国际站官网标价，DeepSeek 高峰价）→ results/stats/token_cost_stats.{md,json}
 python src/token_cost.py
+# 英文补充材料（Table S1–S15）→ results/supporting_information/，并打包 supporting_information.zip（投稿上传用，不进 git）
+python src/make_supporting_info.py
 
 # 统计、检验、作图、测试
 python src/analyze.py

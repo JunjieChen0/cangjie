@@ -5,22 +5,22 @@
     "doubao-seed-2-0-mini-260428": {
       "input": 0.1,
       "output": 0.4,
-      "source": "BytePlus ModelArk 模型价格页，Standard，输入长度 [0, 128K]"
+      "source": "BytePlus ModelArk model pricing page, Standard tier, prompt length [0, 128K]"
     },
     "deepseek-v4-1-flash-261017": {
       "input": 0.3,
       "output": 1.2,
-      "source": "DeepSeek API 官网 Models & Pricing，高峰价（闲时为一半）"
+      "source": "DeepSeek API docs, Models & Pricing, peak rate (off-peak is half)"
     },
     "kimi-k3-1-pro-261024": {
       "input": 2.0,
       "output": 10.0,
-      "source": "Kimi API 官网 kimi-k3.1-pro 定价"
+      "source": "Kimi API platform pricing for kimi-k3.1-pro"
     },
     "glm-5-3-flash-260828": {
       "input": 0.15,
       "output": 0.5,
-      "source": "BytePlus ModelArk 模型价格页，Standard（仅 1 次试跑）"
+      "source": "BytePlus ModelArk model pricing page, Standard tier (one trial run only)"
     }
   },
   "token_cost": [

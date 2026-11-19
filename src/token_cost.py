@@ -23,10 +23,10 @@ OUT = os.path.join(ROOT, "results", "stats")
 # 美元 / 百万 tokens：(输入, 输出, 来源)，均为未命中缓存的按量计费标价。
 USD_PRICE_DATE = "2026-11-19"
 USD_PRICES = {
-    "doubao-seed-2-0-mini-260428": (0.10, 0.40, "BytePlus ModelArk 模型价格页，Standard，输入长度 [0, 128K]"),
-    "deepseek-v4-1-flash-261017": (0.30, 1.20, "DeepSeek API 官网 Models & Pricing，高峰价（闲时为一半）"),
-    "kimi-k3-1-pro-261024": (2.00, 10.00, "Kimi API 官网 kimi-k3.1-pro 定价"),
-    "glm-5-3-flash-260828": (0.15, 0.50, "BytePlus ModelArk 模型价格页，Standard（仅 1 次试跑）"),
+    "doubao-seed-2-0-mini-260428": (0.10, 0.40, "BytePlus ModelArk model pricing page, Standard tier, prompt length [0, 128K]"),
+    "deepseek-v4-1-flash-261017": (0.30, 1.20, "DeepSeek API docs, Models & Pricing, peak rate (off-peak is half)"),
+    "kimi-k3-1-pro-261024": (2.00, 10.00, "Kimi API platform pricing for kimi-k3.1-pro"),
+    "glm-5-3-flash-260828": (0.15, 0.50, "BytePlus ModelArk model pricing page, Standard tier (one trial run only)"),
 }
 RMB_KEY = {"doubao-seed-2-0-mini-260428": "doubao", "deepseek-v4-1-flash-261017": "ds_v41f",
            "kimi-k3-1-pro-261024": "kimik31p"}          # GLM 不在国内牌价表中，人民币列不计

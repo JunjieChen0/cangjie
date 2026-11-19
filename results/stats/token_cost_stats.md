@@ -8,10 +8,10 @@
 
 | 模型 | 输入 | 输出 | 来源 |
 |---|---:|---:|---|
-| Doubao `doubao-seed-2-0-mini-260428` | $0.10 | $0.40 | BytePlus ModelArk 模型价格页，Standard，输入长度 [0, 128K] |
-| DeepSeek `deepseek-v4-1-flash-261017` | $0.30 | $1.20 | DeepSeek API 官网 Models & Pricing，高峰价（闲时为一半） |
-| Kimi `kimi-k3-1-pro-261024` | $2.00 | $10.00 | Kimi API 官网 kimi-k3.1-pro 定价 |
-| GLM `glm-5-3-flash-260828` | $0.15 | $0.50 | BytePlus ModelArk 模型价格页，Standard（仅 1 次试跑） |
+| Doubao `doubao-seed-2-0-mini-260428` | $0.10 | $0.40 | BytePlus ModelArk model pricing page, Standard tier, prompt length [0, 128K] |
+| DeepSeek `deepseek-v4-1-flash-261017` | $0.30 | $1.20 | DeepSeek API docs, Models & Pricing, peak rate (off-peak is half) |
+| Kimi `kimi-k3-1-pro-261024` | $2.00 | $10.00 | Kimi API platform pricing for kimi-k3.1-pro |
+| GLM `glm-5-3-flash-260828` | $0.15 | $0.50 | BytePlus ModelArk model pricing page, Standard tier (one trial run only) |
 
 ## 按实验与模型汇总
 
