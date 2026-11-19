@@ -99,3 +99,10 @@ def test_full_feedback_length_matches_uncapped_aggregate():
     assert n == len("1 of 2 tests failed.\n\n") + len("[test #1 test_failure]\n") + 4000
     ce = [RunResult(False, "compile_error", compile_stderr="e" * 3500)] * 2
     assert R.full_feedback_length(ce) == 3500                    # 相同编译错误去重
+
+
+def test_load_saved_recheck_reuses_previous_result(tmp_path):
+    p = tmp_path / "residual_failures.json"
+    assert R.load_saved_recheck(str(p)) is None
+    p.write_text('{"recheck": {"m compile_error": {"over_cap": 3}}}', encoding="utf-8")
+    assert R.load_saved_recheck(str(p)) == {"m compile_error": {"over_cap": 3}}

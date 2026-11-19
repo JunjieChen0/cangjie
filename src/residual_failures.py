@@ -242,7 +242,10 @@ def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict 
           "完整分布见 json 中的 cats。", "",
           "## 固定难题：raw / hint / rag 每次重复都失败的题（`direct` 起点）", "",
           f"“人工归类”取自 `{os.path.relpath(CODING, ROOT)}`（逐题依据见该文件 evidence 列；coder / reviewer 列记录编码人与复核人）。"
-          "修复反馈只给出失败的测试函数名，不给断言内容与期望值。", ""]
+          "修复反馈只给出失败的测试函数名，不给断言内容与期望值。",
+          "两个模型的清单重叠时，归类以 DeepSeek 的失败为准；仅 Kimi 失败的题按 Kimi 轨迹归类。"
+          "例如 67 号：DeepSeek 未实现题面要求的跨方法 count 更新，Kimi 则更早失败于编译错误 "
+          "`undeclared type name 'Dish'`，Kimi 表中该题的归类不表示它未实现扣减库存。", ""]
     for model, rows in hard.items():
         counts = Counter(coding_label(r, coding) or "未归类" for r in rows)
         L += [f"### {model}（{len(rows)} 题）", "",
@@ -274,6 +277,13 @@ def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict 
     return "\n".join(L) + "\n"
 
 
+def load_saved_recheck(path: str) -> dict | None:
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f).get("recheck")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=BASE)
@@ -295,9 +305,14 @@ def main():
             for (kind, at_cap), n in truncation_census(rows.values()).items():
                 census[f"{m} {kind}"]["at_cap" if at_cap else "short"] += n
     hard = {m: hard_problems(runs, m) for m in models}
-    rechecked = recheck(runs, tuple(args.recheck_models.split(",")), args.j) if args.recheck else None
-    os.makedirs(args.out, exist_ok=True)
     stem = os.path.join(args.out, "residual_failures")
+    if args.recheck:
+        rechecked = recheck(runs, tuple(args.recheck_models.split(",")), args.j)
+    else:   # 不重跑时沿用上次保存的复查结果（cjc 输出不确定，重跑会让计数小幅波动）
+        rechecked = load_saved_recheck(stem + ".json")
+        if rechecked is not None:
+            print("沿用已保存的复查结果；要重新复查请加 --recheck")
+    os.makedirs(args.out, exist_ok=True)
     with open(stem + ".json", "w", encoding="utf-8") as f:
         json.dump({"residual": table, "truncation_census": census, "hard_problems": hard, "recheck": rechecked},
                   f, ensure_ascii=False, indent=1)

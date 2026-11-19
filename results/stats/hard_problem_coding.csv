@@ -1,18 +1,18 @@
 id,class,category,subtype,evidence,coder,reviewer
-0,AccessGatewayFilter,隐含规格,功能行为未说明,参考实现中 /api 与 /login 开头的请求不需要 JWT 直接放行，且 level>2 才记录用户；模型按“除登录外都需鉴权”实现，test_filter_* 持续失败,Claude（初稿）,
-4,AssessmentSystem,隐含规格,翻译约定,参考实现用分数 -1 表示“无成绩”（Python 中为 None）并在求平均时跳过；题面未说明，模型写出拼凑公式，get_course_average 测试持续失败,Claude（初稿）,
-16,Calculator,隐含规格,功能行为未说明,参考实现忽略非数字、非运算符的字符，test_calculate_8 要求 "1+2?" 得 3.0；模型对非法字符返回 None,Claude（初稿）,
-17,CalendarUtil,隐含规格,功能行为未说明,参考实现按 60 分钟一档枚举当天可用时段（应得 23 档）；模型返回合并后的空闲区间，test_get_available_slots_2 持续失败,Claude（初稿）,
-23,CombinationCalculator,仓颉语义,整数溢出,count_all 需用位移并对 n=63 特判 Int64.Max、非法输入返回 Int64.Min；模型直接计算 2^n−1 时 Int64 溢出抛异常（仓颉整数溢出不回绕），Int64.Min 约定也未说明,Claude（初稿）,
-36,EmailClient,隐含规格,功能行为未说明,参考实现在地址为空时 clear_inbox 不做任何事，并按收件顺序（不看 time 字段）从第一封开始删到腾出足够空间；模型按 time 字段找最早一封、按容量判断，且未处理空地址，test_clear_inbox 持续失败,Claude（初稿）,
-39,ExpressionCalculator,隐含规格,功能行为未说明,transform 需去掉空白与末尾 "="、把一元负号改为 "~"，compare 把 % 视为 /；题面未说明这些约定，compare / transform / calculate 多个测试失败,Claude（初稿）,
-43,HRManagementSystem,隐含规格,功能行为未说明,update_employee 遇到不在 name/position/department/salary 中的键（如 "Name"）须返回 false；模型直接忽略未知键，test_update_employee_6 持续失败,Claude（初稿）,
-48,IpUtil,基准缺陷,测试不可执行,测试 test_get_hostname_3 调用仓颉标准库中不存在的 gethostname()，其余测试依赖本机网络与 DNS；官方参考答案本身也未通过（82/84 中的一题）,Claude（初稿）,
-53,LongestWord,隐含规格,功能行为未说明,参考实现先转小写并去掉标点再匹配词表；test_find_longest_word_4 要求 "Apple is red." 匹配到 "apple"，模型区分大小写,Claude（初稿）,
-57,MetricsCalculator2,隐含规格,边界或非法输入约定,mrr / map 对空输入须返回 (0.0 和 [0.0])；题面未说明，test_mrr_7 与 test_map_7 持续失败,Claude（初稿）,
-61,MusicPlayer,隐含规格,翻译约定,参考实现只要当前歌曲非空就返回播放列表第一首（不管当前歌曲是否在列表中），并用字符串 "False" 表示 Python 的 False；test_play_4 持续失败,Claude（初稿）,
-65,NumberWordFormatter,隐含规格,功能行为未说明,format("1.23") 须输出参考实现特有的 "ONE AND CENTS TWENTY THREE ONLY"；输出格式只能从参考实现得知，format_4 与 format_string_4 持续失败,Claude（初稿）,
-66,NumericEntityUnescaper,隐含规格,边界或非法输入约定,参考实现遇到不完整的实体（如单独的 "&#"）时提前返回已解析部分，replace("&#") 应得空串；test_replace_6 持续失败,Claude（初稿）,
-67,Order,隐含规格,功能行为未说明,add_dish 成功时须同时扣减菜单中该菜的库存（跨方法状态），测试随后检查菜单数量；模型未扣减或扣减方式不同，test_add_dish_1 持续失败,Claude（初稿）,
-74,Server,隐含规格,边界或非法输入约定,recv 在输入为空或缺少 addr / content 时须返回 -1 且不修改状态；模型返回 false，test_recv_3 持续失败,Claude（初稿）,
-81,Statistics3,隐含规格,边界或非法输入约定,只有一行数据时标准差无定义，参考实现把相关系数记为 0.0；test_correlation_matrix_3 要求得到全 0 矩阵（包括对角线），模型把对角线固定为 1.0,Claude（初稿）,
+0,AccessGatewayFilter,规格歧义,功能行为未说明,参考实现中 /api 与 /login 开头的请求不需要 JWT 直接放行，且 level>2 才记录用户；模型按“除登录外都需鉴权”实现，test_filter_* 持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+4,AssessmentSystem,题意理解,翻译约定,参考实现用分数 -1 表示“无成绩”（Python 中为 None）并在求平均时跳过；题面 get_course_average 的 Tip 已明示 -1，模型仍按 Python None 语义处理，属未遵循明示要求，get_course_average 测试持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核；改分类：题面 Tip 已明示 -1，与 67 号同一标准归为题意理解，子类保留翻译约定）
+16,Calculator,规格歧义,功能行为未说明,"参考实现忽略非数字、非运算符的字符，test_calculate_8 要求 ""1+2?"" 得 3.0；模型对非法字符返回 None",C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+17,CalendarUtil,规格歧义,功能行为未说明,参考实现按 60 分钟一档枚举当天可用时段（应得 23 档）；模型返回合并后的空闲区间，test_get_available_slots_2 持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+23,CombinationCalculator,仓颉语义,整数溢出,count_all 需用位移并对 n=63 特判 Int64.Max、非法输入返回 Int64.Min；模型直接计算 2^n−1 时 Int64 溢出抛异常（仓颉整数溢出不回绕），Int64.Min 约定也未说明,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+36,EmailClient,规格歧义,功能行为未说明,参考实现在地址为空时 clear_inbox 不做任何事，并按收件顺序（不看 time 字段）从第一封开始删到腾出足够空间；模型按 time 字段找最早一封、按容量判断，且未处理空地址，test_clear_inbox 持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+39,ExpressionCalculator,规格歧义,功能行为未说明,"transform 需去掉空白与末尾 ""=""、把一元负号改为 ""~""，compare 把 % 视为 /；题面未说明这些约定，compare / transform / calculate 多个测试失败",C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+43,HRManagementSystem,规格歧义,功能行为未说明,"update_employee 遇到不在 name/position/department/salary 中的键（如 ""Name""）须返回 false；模型直接忽略未知键，test_update_employee_6 持续失败",C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+48,IpUtil,基准缺陷,测试不可执行,测试 test_get_hostname_3 调用仓颉标准库中不存在的 gethostname()，其余测试依赖本机网络与 DNS；官方参考答案本身也未通过（82/84 中的一题）,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+53,LongestWord,基准缺陷,题面与参考实现矛盾,题面明确写“Words are strictly case sensitive”，参考实现却先 toAsciiLower 再匹配；test_find_longest_word_4 要求“Apple is red.”匹配“apple”，模型按题面区分大小写反而失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核；改分类：题面与参考实现矛盾，属基准缺陷）
+57,MetricsCalculator2,规格歧义,边界或非法输入约定,mrr / map 对空输入须返回 (0.0 和 [0.0])；题面未说明，test_mrr_7 与 test_map_7 持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+61,MusicPlayer,规格歧义,功能行为未说明,参考实现只要 current_song 非空就返回 playlist[0]，不检查当前歌曲是否在列表中；test_play_4 设 current_song=“song3”（不在列表）仍期望“song1”，题面未说明；字符串“False”的约定题面已说明,C1（第一作者，AI 辅助初稿）,V1（第二作者复核；改分类：失败点是播放行为，不是 False 翻译）
+65,NumberWordFormatter,规格歧义,功能行为未说明,"format(""1.23"") 须输出参考实现特有的 ""ONE AND CENTS TWENTY THREE ONLY""；输出格式只能从参考实现得知，format_4 与 format_string_4 持续失败",C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+66,NumericEntityUnescaper,规格歧义,边界或非法输入约定,"参考实现遇到不完整的实体（如单独的 ""&#""）时提前返回已解析部分，replace(""&#"") 应得空串；test_replace_6 持续失败",C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+67,Order,题意理解,跨方法状态依赖,题面明确要求成功加入后修改 menu 中该菜的 count；模型未实现该跨方法状态更新，test_add_dish_1 随后检查菜单数量；归类以 DeepSeek 的失败为准；Kimi 在 67 上的失败是编译错误 undeclared type name 'Dish'，原因不同,C1（第一作者，AI 辅助初稿）,V1（第二作者复核；改分类：题面已明示，不属规格歧义）
+74,Server,规格歧义,边界或非法输入约定,recv 在输入为空或缺少 addr / content 时须返回 -1 且不修改状态；模型返回 false，test_recv_3 持续失败,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
+81,Statistics3,规格歧义,边界或非法输入约定,只有一行数据时标准差无定义，参考实现把相关系数记为 0.0；test_correlation_matrix_3 要求得到全 0 矩阵（包括对角线），模型把对角线固定为 1.0,C1（第一作者，AI 辅助初稿）,V1（第二作者复核）
