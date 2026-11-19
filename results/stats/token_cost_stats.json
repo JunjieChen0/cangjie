@@ -1,0 +1,253 @@
+{
+  "usd_price_date": "2026-11-19",
+  "rmb_price_date": "2026-11-17",
+  "usd_prices": {
+    "doubao-seed-2-0-mini-260428": {
+      "input": 0.1,
+      "output": 0.4,
+      "source": "BytePlus ModelArk 模型价格页，Standard，输入长度 [0, 128K]"
+    },
+    "deepseek-v4-1-flash-261017": {
+      "input": 0.3,
+      "output": 1.2,
+      "source": "DeepSeek API 官网 Models & Pricing，高峰价（闲时为一半）"
+    },
+    "kimi-k3-1-pro-261024": {
+      "input": 2.0,
+      "output": 10.0,
+      "source": "Kimi API 官网 kimi-k3.1-pro 定价"
+    },
+    "glm-5-3-flash-260828": {
+      "input": 0.15,
+      "output": 0.5,
+      "source": "BytePlus ModelArk 模型价格页，Standard（仅 1 次试跑）"
+    }
+  },
+  "token_cost": [
+    {
+      "category": "stage3",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 58,
+      "prompt_tokens": 85173296,
+      "completion_tokens": 41044562,
+      "usd": 24.94,
+      "rmb": 99.12
+    },
+    {
+      "category": "stage3",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 48,
+      "prompt_tokens": 13869037,
+      "completion_tokens": 55150688,
+      "usd": 70.34,
+      "rmb": 468.94
+    },
+    {
+      "category": "stage3",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 10,
+      "prompt_tokens": 965612,
+      "completion_tokens": 2776393,
+      "usd": 29.7,
+      "rmb": 201.35
+    },
+    {
+      "category": "stage3",
+      "model": "all",
+      "runs": 116,
+      "prompt_tokens": 100007945,
+      "completion_tokens": 98971643,
+      "usd": 124.97,
+      "rmb": 769.42
+    },
+    {
+      "category": "original30",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 26,
+      "prompt_tokens": 5713867,
+      "completion_tokens": 3729398,
+      "usd": 2.06,
+      "rmb": 8.6
+    },
+    {
+      "category": "original30",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 26,
+      "prompt_tokens": 529172,
+      "completion_tokens": 1643508,
+      "usd": 2.13,
+      "rmb": 14.21
+    },
+    {
+      "category": "original30",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 7,
+      "prompt_tokens": 85478,
+      "completion_tokens": 250810,
+      "usd": 2.68,
+      "rmb": 18.17
+    },
+    {
+      "category": "original30",
+      "model": "all",
+      "runs": 59,
+      "prompt_tokens": 6328517,
+      "completion_tokens": 5623716,
+      "usd": 6.87,
+      "rmb": 40.97
+    },
+    {
+      "category": "rounds10",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 9,
+      "prompt_tokens": 29236286,
+      "completion_tokens": 11331079,
+      "usd": 7.46,
+      "rmb": 28.51
+    },
+    {
+      "category": "rounds10",
+      "model": "all",
+      "runs": 9,
+      "prompt_tokens": 29236286,
+      "completion_tokens": 11331079,
+      "usd": 7.46,
+      "rmb": 28.51
+    },
+    {
+      "category": "pilot",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 84,
+      "prompt_tokens": 8116324,
+      "completion_tokens": 3568922,
+      "usd": 2.24,
+      "rmb": 8.76
+    },
+    {
+      "category": "pilot",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 50,
+      "prompt_tokens": 1246254,
+      "completion_tokens": 3800383,
+      "usd": 4.93,
+      "rmb": 32.9
+    },
+    {
+      "category": "pilot",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 17,
+      "prompt_tokens": 169384,
+      "completion_tokens": 508546,
+      "usd": 5.42,
+      "rmb": 36.78
+    },
+    {
+      "category": "pilot",
+      "model": "all",
+      "runs": 151,
+      "prompt_tokens": 9531962,
+      "completion_tokens": 7877851,
+      "usd": 12.6,
+      "rmb": 78.44
+    },
+    {
+      "category": "early",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 24,
+      "prompt_tokens": 22513707,
+      "completion_tokens": 20974153,
+      "usd": 10.64,
+      "rmb": 46.45
+    },
+    {
+      "category": "early",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 9,
+      "prompt_tokens": 1568206,
+      "completion_tokens": 7112484,
+      "usd": 9.01,
+      "rmb": 60.04
+    },
+    {
+      "category": "early",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 3,
+      "prompt_tokens": 176710,
+      "completion_tokens": 803435,
+      "usd": 8.39,
+      "rmb": 56.93
+    },
+    {
+      "category": "early",
+      "model": "glm-5-3-flash-260828",
+      "runs": 1,
+      "prompt_tokens": 2274,
+      "completion_tokens": 13134,
+      "usd": 0.01,
+      "rmb": 0.0
+    },
+    {
+      "category": "early",
+      "model": "all",
+      "runs": 37,
+      "prompt_tokens": 24260897,
+      "completion_tokens": 28903206,
+      "usd": 28.04,
+      "rmb": 163.42
+    },
+    {
+      "category": "formal",
+      "model": "all",
+      "runs": 184,
+      "prompt_tokens": 135572748,
+      "completion_tokens": 115926438,
+      "usd": 139.3,
+      "rmb": 838.9
+    },
+    {
+      "category": "total",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 201,
+      "prompt_tokens": 150753480,
+      "completion_tokens": 80648114,
+      "usd": 47.33,
+      "rmb": 191.45
+    },
+    {
+      "category": "total",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 133,
+      "prompt_tokens": 17212669,
+      "completion_tokens": 67707063,
+      "usd": 86.41,
+      "rmb": 576.08
+    },
+    {
+      "category": "total",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 37,
+      "prompt_tokens": 1397184,
+      "completion_tokens": 4339184,
+      "usd": 46.19,
+      "rmb": 313.23
+    },
+    {
+      "category": "total",
+      "model": "glm-5-3-flash-260828",
+      "runs": 1,
+      "prompt_tokens": 2274,
+      "completion_tokens": 13134,
+      "usd": 0.01,
+      "rmb": 0.0
+    },
+    {
+      "category": "total",
+      "model": "all",
+      "runs": 372,
+      "prompt_tokens": 169365607,
+      "completion_tokens": 152707495,
+      "usd": 179.94,
+      "rmb": 1080.76
+    }
+  ]
+}

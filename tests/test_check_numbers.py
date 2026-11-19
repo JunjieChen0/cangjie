@@ -37,3 +37,10 @@ def test_unknown_numbers_reported_with_line_number():
     known = C.known_values([STATS])
     text = "第一行 +2.03 正确符号错\n第二行 51.63 ± 1.87\n第三行 p = 0.4851，<0.0001 不检查"
     assert C.check_text(text, known) == [(1, "+2.03"), (2, "51.63 ± 1.87"), (3, "0.4851")]
+
+
+def test_dollar_amounts_checked_against_token_cost():
+    known = C.known_values([{"token_cost": [{"usd": 139.3}, {"usd": 1234.56}],
+                             "usd_prices": {"m": {"input": 0.1, "output": 0.4}}}])
+    assert C.check_text("正式实验 $139.30，全量 US$1,234.56，单价 $0.10 / $0.40", known) == []
+    assert C.check_text("按汇率折算 $125.77", known) == [(1, "$125.77")]

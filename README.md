@@ -124,6 +124,8 @@ python src/stage3_stats.py --matrix original
 python src/residual_failures.py --recheck -j 6
 # 延长修复轮数补充实验（Doubao HumanEval direct，最多 10 轮）→ results/stats/rounds10_stats.{md,json}、results/figures/fig5_rounds10_curve.png
 python src/rounds10_stats.py
+# 全部实验 token 消耗与美元成本（国际站官网标价，DeepSeek 高峰价）→ results/stats/token_cost_stats.{md,json}
+python src/token_cost.py
 
 # 统计、检验、作图、测试
 python src/analyze.py
@@ -134,7 +136,7 @@ python -m pytest tests
 
 ## 数据说明
 - 原始实验输出（`results/exp`、`results/ablation`、`results/reeval`，以及 `results/stage3`、`results/original30` 的 `r0/`、`runs/` 下的 `*.jsonl`，约 145 MB）不进 git，随项目打包的 zip 一起分发；`*.summary.json` 在 git 中。
-- 数字核对：`python src/check_numbers.py <文档>` 检查文档中的差值、置信区间、均值 ± SD 和 p 值能否在 `results/stats/*_stats.json` 中找到。
+- 数字核对：`python src/check_numbers.py <文档>` 检查文档中的差值、置信区间、均值 ± SD、p 值和美元金额能否在 `results/stats/*_stats.json` 中找到。
 - 第 2 阶段起，每条记录额外写入 `model`、`temperature_used`（实际温度），summary 写入 `prompt_version`（2 = blind 提示改为同时覆盖编译失败；此前实验为 1）。`LLM_TIMEOUT` 环境变量可调整单次请求超时（默认 240 秒）。
 - 模型版本：`deepseek-v4-1-flash-261017`、`doubao-seed-2-0-mini-260428`、`kimi-k3-1-pro-261024`。主实验 temperature 为 0；**Kimi-K3.1-Pro 的 API 只允许 1**，由 `llm.py` 自动回退。各组实际参数见汇总报告第二节。
 

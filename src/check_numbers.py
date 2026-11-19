@@ -3,10 +3,11 @@
 用法：
   python src/check_numbers.py docs/实验汇总报告.md paper/main.tex
 
-检查三类数字（其余数字不检查）：
+检查四类数字（其余数字不检查）：
 - 带正负号的两位小数：差值与 95% CI（+16.67、−3.33、[+7.78, +26.67]），以及各组相对第 0 轮的提升（R5 均值 − R0）；
 - 「均值 ± SD」：R5 均值 ± 标准差（44.44 ± 7.70，可带 %）；
-- 4 位小数：p、p(Holm) 与逐次重复 McNemar p 值（0.0192）；「<0.0001」不检查。
+- 4 位小数：p、p(Holm) 与逐次重复 McNemar p 值（0.0192）；「<0.0001」不检查；
+- 美元金额（$139.30、$1,234.56）：须出自 token_cost_stats.json。
 找不到出处的数字连同行号列出，退出码为 1。来自其他实验（如第 2 阶段、pass@6）的数字也会被列出，需人工确认。
 只支持纯文本（.md、.tex、.txt）；Word 文档请先另存为纯文本。
 """
@@ -21,11 +22,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SIGNED = re.compile(r"(?<![\w.])([+\-−])(\d+\.\d{2})(?!\d)")
 MEAN_SD = re.compile(r"(?<![\d.])(\d+\.\d{2})%?\s*±\s*(\d+\.\d{2})(?!\d)")
 P_VALUE = re.compile(r"(?<![\d.<])0\.\d{4}(?!\d)")
+DOLLAR = re.compile(r"\$\s?(\d[\d,]*\.\d{2})(?!\d)")
 
 
 def known_values(stats: list[dict]) -> dict[str, set]:
     """从统计 json 中收集可引用的数值：带号差值/CI、(均值, SD) 对、p 值。"""
-    signed, mean_sd, p = set(), set(), set()
+    signed, mean_sd, p, usd = set(), set(), set(), set()
     for s in stats:
         for r in s.get("summary", []):
             mean_sd.add((round(r["r5_mean"], 2), round(r["r5_sd"], 2)))
@@ -43,7 +45,9 @@ def known_values(stats: list[dict]) -> dict[str, set]:
                      if x is not None)
         for v in s.get("holm_variants", []):
             p.update(round(x, 4) for x in (v.get("p_holm_informative"), v.get("p_holm_by_type")) if x is not None)
-    return {"signed": signed, "mean_sd": mean_sd, "p": p}
+        usd.update(round(r["usd"], 2) for r in s.get("token_cost", []))          # token_cost_stats.json
+        usd.update(round(v[k], 2) for v in s.get("usd_prices", {}).values() for k in ("input", "output"))
+    return {"signed": signed, "mean_sd": mean_sd, "p": p, "usd": usd}
 
 
 def check_text(text: str, known: dict[str, set]) -> list[tuple[int, str]]:
@@ -61,7 +65,10 @@ def check_text(text: str, known: dict[str, set]) -> list[tuple[int, str]]:
         for m in P_VALUE.finditer(line):
             if round(float(m.group(0)), 4) not in known["p"]:
                 found.append((m.start(), m.group(0)))
-        bad += [(no, tok) for _, tok in sorted(found)]
+        for m in DOLLAR.finditer(line):
+            if round(float(m.group(1).replace(",", "")), 2) not in known.get("usd", set()):
+                found.append((m.start(), m.group(0)))
+        bad +=[(no, tok) for _, tok in sorted(found)]
     return bad
 
 
