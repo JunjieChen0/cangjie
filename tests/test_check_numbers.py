@@ -19,6 +19,11 @@ def test_matching_numbers_pass_in_any_minus_and_percent_style():
     assert C.check_text(text, known) == []
 
 
+def test_gain_over_round0_counts_as_known():
+    known = C.known_values([STATS])
+    assert C.check_text("提升 +40.65 pp", known) == []          # 51.63 − 10.98
+
+
 def test_unknown_numbers_reported_with_line_number():
     known = C.known_values([STATS])
     text = "第一行 +2.03 正确符号错\n第二行 51.63 ± 1.87\n第三行 p = 0.4851，<0.0001 不检查"

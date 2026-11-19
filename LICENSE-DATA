@@ -1,0 +1,18 @@
+Data license: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 The cangjie project authors
+
+The following data in this repository and in its archived release are licensed
+under CC BY 4.0:
+
+  - data/original30/   (the Original-30 problem set and its registry)
+  - results/           (experiment outputs, statistics and figures)
+  - docs/              (experiment reports and checklists)
+
+Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Source code (src/, tests/) is licensed under the MIT License; see LICENSE.
+
+Parts of results/ contain or are derived from CangjieBench (problem prompts,
+tests, reference solutions, documentation snippets and published model outputs).
+That material remains under its original MIT License; see THIRD_PARTY_NOTICES.md.
