@@ -20,6 +20,7 @@ import glob
 import json
 import os
 import re
+import statistics as st
 import sys
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -96,10 +97,10 @@ def _full_msg(r) -> str:
     return (r.run_stderr + "\n" + r.run_stdout).strip()
 
 
-def full_feedback_length(results: list) -> int:
-    """与 repair.aggregate_feedback 相同的拼接方式，但不截断，返回总长度。"""
+def full_feedback_text(results: list) -> str:
+    """与 repair.aggregate_feedback 相同的拼接方式，但不截断。"""
     if all(r.passed for r in results):
-        return 0
+        return ""
     compile_errs = [(i, _full_msg(r)) for i, r in enumerate(results) if r.failure_kind == "compile_error"]
     if compile_errs:
         seen, parts = set(), []
@@ -108,11 +109,22 @@ def full_feedback_length(results: list) -> int:
                 seen.add(m)
                 parts.append((i, m))
         if len(parts) == 1:
-            return len(parts[0][1])
-        return len("\n\n".join(f"[with test #{i}]\n{m}" for i, m in parts))
+            return parts[0][1]
+        return "\n\n".join(f"[with test #{i}]\n{m}" for i, m in parts)
     failed = [(i, r) for i, r in enumerate(results) if not r.passed]
     text = "\n\n".join(f"[test #{i} {r.failure_kind}]\n{_full_msg(r)}" for i, r in failed)
-    return len(f"{len(failed)} of {len(results)} tests failed.\n\n") + len(text)
+    return f"{len(failed)} of {len(results)} tests failed.\n\n" + text
+
+
+def full_feedback_length(results: list) -> int:
+    return len(full_feedback_text(results))
+
+
+def error_line_retention(text: str, cap: int = FEEDBACK_CAP) -> tuple[int, int]:
+    """(全文中以 "error:" 开头的行数, 截到前 cap 个字符后仍完整以 "error:" 开头的行数)。"""
+    def count(t: str) -> int:
+        return sum(line.lstrip().startswith("error:") for line in t.splitlines())
+    return count(text), count(text[:cap])
 
 
 def load_runs(base: str, ds: str) -> dict[tuple, list[dict[str, dict]]]:
@@ -148,12 +160,35 @@ def hard_problems(runs: dict[tuple, list], model: str, prompt: str = "direct") -
     return out
 
 
+def summarize_recheck(items: list[tuple[str, int, str]]) -> dict:
+    """items：(“模型 失败类别”, 出现次数, 未截断全文)。按出现次数加权统计：复查次数、去重后的代码数、超过 FEEDBACK_CAP 的次数，
+    超长反馈中 "error:" 行的总数与截断后保留数、报错行全部丢失的次数，以及全文长度的中位数 / 90 分位 / 最大值。"""
+    out: dict = {}
+    for key in sorted({k for k, _, _ in items}):
+        sub = [(w, t) for k, w, t in items if k == key]
+        lengths = sorted(len(t) for w, t in sub for _ in range(w))
+        d = {"checked": len(lengths), "unique_code": len(sub), "over_cap": 0,
+             "error_lines_total": 0, "error_lines_kept": 0, "lost_all_errors": 0,
+             "length_median": st.median(lengths), "length_p90": lengths[int(0.9 * (len(lengths) - 1))],
+             "length_max": lengths[-1]}
+        for w, t in sub:
+            if len(t) <= FEEDBACK_CAP:
+                continue
+            total, kept = error_line_retention(t)
+            d["over_cap"] += w
+            d["error_lines_total"] += w * total
+            d["error_lines_kept"] += w * kept
+            d["lost_all_errors"] += w * (total > 0 and kept == 0)
+        out[key] = d
+    return out
+
+
 def recheck(runs: dict[tuple, list], models: tuple[str, ...], workers: int) -> dict:
-    """重新编译运行存满 STORED_CAP 的那些轮的代码，统计未截断反馈超过 FEEDBACK_CAP 的比例（需要 cjc）。"""
+    """重新编译运行存满 STORED_CAP 的那些轮的代码（同一题同一份代码只跑一次），得到未截断的反馈全文（需要 cjc）。"""
     from reeval_classeval import load_classeval_tests
     from runner import compile_and_run
     tests = load_classeval_tests()
-    jobs = []
+    jobs: Counter = Counter()
     for (model, _, fb), reps in runs.items():
         if model not in models or fb == "blind":
             continue
@@ -161,19 +196,14 @@ def recheck(runs: dict[tuple, list], models: tuple[str, ...], workers: int) -> d
             for i, r in rows.items():
                 for e in (r.get("history") or [])[:-1]:
                     if len(e.get("feedback", "")) >= STORED_CAP:
-                        jobs.append((model, e["failure_kind"], e["code"], tests[i]["tests"]))
+                        jobs[(f"{model} {e['failure_kind']}", i, e["code"])] += 1
 
     def run(job):
-        model, kind, code, ts = job
-        return model, kind, full_feedback_length([compile_and_run(code + "\n" + t) for t in ts])
+        key, i, code = job
+        return key, jobs[job], full_feedback_text([compile_and_run(code + "\n" + t) for t in tests[i]["tests"]])
 
-    out: dict = defaultdict(lambda: {"checked": 0, "over_cap": 0})
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        for model, kind, n in ex.map(run, jobs):
-            d = out[f"{model} {kind}"]
-            d["checked"] += 1
-            d["over_cap"] += n > FEEDBACK_CAP
-    return dict(out)
+        return summarize_recheck(list(ex.map(run, list(jobs))))
 
 
 def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict | None) -> str:
@@ -208,8 +238,15 @@ def write_markdown(table: list[dict], census: dict, hard: dict, rechecked: dict 
         L.append(f"| {model} | {kind} | {census[key].get('short', 0)} | {census[key].get('at_cap', 0)} |")
     if rechecked is not None:
         L += ["", f"### 重新运行存满的反馈（未截断长度是否超过 {FEEDBACK_CAP} 字符）", "",
-              "| 模型 与 失败类别 | 复查条数 | 超过上限（被截断） |", "|---|---|---|"]
-        L += [f"| {k} | {v['checked']} | {v['over_cap']} |" for k, v in sorted(rechecked.items())]
+              "同一题同一份代码只重新运行一次，再按出现次数加权。报错行 = 以 `error:` 开头的行；"
+              f"“保留”指截到前 {FEEDBACK_CAP} 个字符后该行开头仍在。长度为存满的那些反馈的未截断全文长度（字符）。", "",
+              "| 模型 与 失败类别 | 复查条数（去重后代码） | 超过上限（被截断） | 被截断者的报错行保留 | 报错行全部丢失 | 长度中位数 / 90 分位 / 最大 |",
+              "|---|---|---|---|---|---|"]
+        for k, v in sorted(rechecked.items()):
+            kept = (f"{v['error_lines_kept']} / {v['error_lines_total']}"
+                    f"（{100 * v['error_lines_kept'] / v['error_lines_total']:.1f}%）") if v["error_lines_total"] else "—"
+            L.append(f"| {k} | {v['checked']}（{v['unique_code']}） | {v['over_cap']} | {kept} | {v['lost_all_errors']} | "
+                     f"{v['length_median']:g} / {v['length_p90']} / {v['length_max']} |")
     return "\n".join(L) + "\n"
 
 
@@ -219,7 +256,7 @@ def main():
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--models", default="ds_v41f,kimik31p", help="剩余失败分析的模型（逗号分隔）")
     ap.add_argument("--recheck", action="store_true", help="重新运行存满的反馈（需要 cjc）")
-    ap.add_argument("--recheck-models", default="ds_v41f,kimik31p")
+    ap.add_argument("--recheck-models", default="ds_v41f,kimik31p,doubao_mini")
     ap.add_argument("-j", type=int, default=4)
     args = ap.parse_args()
     runs = load_runs(args.base, "ce")

@@ -57,6 +57,30 @@ def test_truncation_census_only_counts_feedback_shown_to_model():
     assert c == {("compile_error", True): 1, ("test_failure", True): 1, ("test_failure", False): 1}
 
 
+def test_error_line_retention_counts_error_lines_kept_before_cap():
+    text = "error: a\n  ==> x\n" + "y" * 20 + "\nerror: b\nerror: c\n"
+    total, kept = R.error_line_retention(text, cap=len("error: a\n  ==> x\n") + 30)   # 截到 "error: b" 之后
+    assert (total, kept) == (3, 2)
+    assert R.error_line_retention(text, cap=len("error: a\n  ==> x\n") + 25) == (3, 1)   # "error: b" 被截成 "erro"
+    assert R.error_line_retention("1 of 2 tests failed.", cap=5) == (0, 0)
+
+
+def test_full_feedback_text_is_uncapped():
+    ce = [RunResult(False, "compile_error", compile_stderr="error: x\n" + "e" * 4000)]
+    assert R.full_feedback_text(ce).startswith("error: x") and len(R.full_feedback_text(ce)) == 4009
+
+
+def test_summarize_recheck_weights_duplicates_and_counts_retention():
+    long_ce = "error: a\n" + "x" * 3100 + "\nerror: b\n"          # 超过 3000，保留 1/2 条报错行
+    lost = "y" * 3100 + "\nerror: c\n"                            # 超过 3000，报错行全部丢失
+    items = [("m compile_error", 2, long_ce), ("m compile_error", 1, lost), ("m compile_error", 1, "error: d")]
+    s = R.summarize_recheck(items)["m compile_error"]
+    assert (s["checked"], s["over_cap"], s["unique_code"]) == (4, 3, 3)
+    assert (s["error_lines_total"], s["error_lines_kept"], s["lost_all_errors"]) == (5, 2, 1)
+    assert s["length_median"] == (len(lost) + len(long_ce)) / 2          # 按次数加权：短、lost、long、long
+    assert s["length_max"] == len(long_ce)
+
+
 def test_full_feedback_length_matches_uncapped_aggregate():
     ok = RunResult(True, "passed")
     bad = RunResult(False, "test_failure", run_stdout="z" * 4000)

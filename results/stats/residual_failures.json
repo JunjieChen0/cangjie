@@ -746,25 +746,93 @@
   ]
  },
  "recheck": {
+  "doubao_mini compile_error": {
+   "checked": 1496,
+   "unique_code": 964,
+   "over_cap": 329,
+   "error_lines_total": 7295,
+   "error_lines_kept": 4217,
+   "lost_all_errors": 0,
+   "length_median": 1981.0,
+   "length_p90": 5016,
+   "length_max": 13882
+  },
+  "doubao_mini runtime_exception": {
+   "checked": 1,
+   "unique_code": 1,
+   "over_cap": 0,
+   "error_lines_total": 0,
+   "error_lines_kept": 0,
+   "lost_all_errors": 0,
+   "length_median": 1800,
+   "length_p90": 1800,
+   "length_max": 1800
+  },
+  "doubao_mini test_failure": {
+   "checked": 3,
+   "unique_code": 3,
+   "over_cap": 0,
+   "error_lines_total": 0,
+   "error_lines_kept": 0,
+   "lost_all_errors": 0,
+   "length_median": 1780,
+   "length_p90": 1780,
+   "length_max": 2442
+  },
   "ds_v41f compile_error": {
    "checked": 150,
-   "over_cap": 48
-  },
-  "ds_v41f test_failure": {
-   "checked": 1,
-   "over_cap": 0
+   "unique_code": 64,
+   "over_cap": 48,
+   "error_lines_total": 980,
+   "error_lines_kept": 625,
+   "lost_all_errors": 0,
+   "length_median": 2109.0,
+   "length_p90": 6698,
+   "length_max": 13578
   },
   "ds_v41f runtime_exception": {
    "checked": 1,
-   "over_cap": 0
+   "unique_code": 1,
+   "over_cap": 0,
+   "error_lines_total": 0,
+   "error_lines_kept": 0,
+   "lost_all_errors": 0,
+   "length_median": 2595,
+   "length_p90": 2595,
+   "length_max": 2595
+  },
+  "ds_v41f test_failure": {
+   "checked": 1,
+   "unique_code": 1,
+   "over_cap": 0,
+   "error_lines_total": 0,
+   "error_lines_kept": 0,
+   "lost_all_errors": 0,
+   "length_median": 1728,
+   "length_p90": 1728,
+   "length_max": 1728
   },
   "kimik31p compile_error": {
    "checked": 13,
-   "over_cap": 3
+   "unique_code": 8,
+   "over_cap": 3,
+   "error_lines_total": 60,
+   "error_lines_kept": 46,
+   "lost_all_errors": 0,
+   "length_median": 2026,
+   "length_p90": 3412,
+   "length_max": 4386
   },
   "kimik31p runtime_exception": {
    "checked": 1,
-   "over_cap": 0
+   "unique_code": 1,
+   "over_cap": 0,
+   "error_lines_total": 0,
+   "error_lines_kept": 0,
+   "lost_all_errors": 0,
+   "length_median": 1949,
+   "length_p90": 1949,
+   "length_max": 1949
   }
  }
 }
