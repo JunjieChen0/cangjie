@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "syntax",
+    "feedback": "blind",
+    "rounds": 5,
+    "init": "E:\\cangjie\\results\\stage3\\r0\\ds_v41f_he_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "E:\\cangjie\\results\\stage3\\runs\\ds_v41f_he_syntax_blind_rep1.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "deepseek-v4-1-flash-261017",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    89.63,
+    95.12,
+    97.56,
+    97.56,
+    98.17,
+    98.17
+  ],
+  "round0_compile_rate": 92.07,
+  "total_prompt_tokens": 107093,
+  "total_completion_tokens": 294835,
+  "errors": 0
+}

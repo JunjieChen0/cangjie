@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": "E:\\cangjie\\results\\stage3\\r0\\ds_v41f_ce_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 5,
+    "output": "E:\\cangjie\\results\\stage3\\runs\\ds_v41f_ce_direct_raw_rep1.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "deepseek-v4-1-flash-261017",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    25.0,
+    50.0,
+    61.9,
+    64.29,
+    65.48,
+    66.67
+  ],
+  "round0_compile_rate": 44.05,
+  "total_prompt_tokens": 785220,
+  "total_completion_tokens": 3728739,
+  "errors": 0
+}
