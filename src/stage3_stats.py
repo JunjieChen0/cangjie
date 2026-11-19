@@ -190,10 +190,11 @@ def write_markdown(summary: list[dict], comps: list[dict], title: str, sens: lis
                  f"{r['diff']:+.2f} [{r['ci_lo']:+.2f}, {r['ci_hi']:+.2f}] | {fmt_p(r['p'])} | {fmt_p(r['p_holm'])} | "
                  f"{', '.join(fmt_p(p) for p in r['mcnemar_per_rep'])} |")
     if sens:
+        flaky = sorted((ds, ids) for ds, ids in FLAKY.items() if ds in {r["ds"] for r in comps})
+        flaky_note = ("去掉 " + "、".join(f"{ds} 第 {', '.join(sorted(ids))} 题" for ds, ids in flaky)
+                      + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释）；并且") if flaky else ""
         L += ["", "## 敏感性分析：去掉判定不稳定的题和超时的题", "",
-              "去掉 " + "、".join(f"{ds} 第 {', '.join(sorted(ids))} 题" for ds, ids in sorted(FLAKY.items()))
-              + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释）；"
-              "并且每个比较中，两组任一次重复里 API 超时的题从两组同时去掉（只有 "
+              flaky_note + "每个比较中，两组任一次重复里 API 超时的题从两组同时去掉（只有 "
               + "、".join(sorted(TIMEOUT_AS_FAIL)) + " 有超时）。然后重新计算两两比较与 Holm 校正。", "",
               "| 模型 | 数据集 | 起点 | A vs B | 差值（全部题） | p(Holm)（全部题） | 题数 | 差值（去掉后） | p(Holm)（去掉后） |",
               "|---|---|---|---|---|---|---|---|---|"]

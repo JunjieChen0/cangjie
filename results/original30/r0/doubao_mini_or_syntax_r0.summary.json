@@ -1,0 +1,31 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "syntax",
+    "feedback": "raw",
+    "rounds": 0,
+    "init": null,
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "E:\\cangjie\\results\\original30\\r0\\doubao_mini_or_syntax_r0.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-0-mini-260428",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    46.67
+  ],
+  "round0_compile_rate": 46.67,
+  "total_prompt_tokens": 79025,
+  "total_completion_tokens": 101198,
+  "errors": 0
+}

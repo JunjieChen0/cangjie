@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": "E:\\cangjie\\results\\original30\\r0\\ds_v41f_or_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "E:\\cangjie\\results\\original30\\runs\\ds_v41f_or_direct_raw_rep3.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "deepseek-v4-1-flash-261017",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    53.33,
+    93.33,
+    96.67,
+    96.67,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 53.33,
+  "total_prompt_tokens": 18863,
+  "total_completion_tokens": 69311,
+  "errors": 0
+}

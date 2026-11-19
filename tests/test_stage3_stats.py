@@ -115,6 +115,16 @@ def test_compare_excludes_flaky_problems_in_sensitivity(tmp_path):
     assert S.FLAKY == {"he": frozenset({"20"}), "ce": frozenset({"58"})}
 
 
+def test_sensitivity_note_lists_flaky_only_for_compared_datasets():
+    comp = {"model": "m", "ds": "or", "prompt": "direct", "a": "hint", "b": "raw", "n": 30, "diff": 0.0,
+            "p_holm": 1.0}
+    md = S.write_markdown([], [comp | {"ci_lo": 0.0, "ci_hi": 0.0, "p": 1.0, "mcnemar_per_rep": []}], "t", [comp])
+    assert "第 20 题" not in md and "第 58 题" not in md
+    comp_he = comp | {"ds": "he"}
+    md = S.write_markdown([], [comp_he | {"ci_lo": 0.0, "ci_hi": 0.0, "p": 1.0, "mcnemar_per_rep": []}], "t", [comp_he])
+    assert "he 第 20 题" in md and "第 58 题" not in md
+
+
 def test_summarize_reports_mean_sd_and_cost(tmp_path):
     for r, k in ((1, 2), (2, 3), (3, 4)):
         _write_group(tmp_path, f"doubao_mini_or_direct_raw_rep{r}", {i: i < k for i in range(10)},
