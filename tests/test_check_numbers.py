@@ -24,6 +24,15 @@ def test_gain_over_round0_counts_as_known():
     assert C.check_text("提升 +40.65 pp", known) == []          # 51.63 − 10.98
 
 
+def test_rounds10_stats_layout_is_known():
+    r10 = {"feedback": [{"r0": 10.98, "r5_mean": 53.86, "r5_sd": 1.27, "r10_mean": 70.73, "r10_sd": 2.2}],
+           "comparisons_r10": [{"diff": 19.31, "ci_lo": 14.63, "ci_hi": 24.19, "p": 0.0001, "p_holm": 0.0003,
+                                "mcnemar_per_rep": []}]}
+    known = C.known_values([r10])
+    text = "R5 53.86 ± 1.27，R10 70.73 ± 2.20（+59.75），hint vs raw +19.31 [+14.63, +24.19]，p(Holm) 0.0003"
+    assert C.check_text(text, known) == []
+
+
 def test_unknown_numbers_reported_with_line_number():
     known = C.known_values([STATS])
     text = "第一行 +2.03 正确符号错\n第二行 51.63 ± 1.87\n第三行 p = 0.4851，<0.0001 不检查"

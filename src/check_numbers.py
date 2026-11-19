@@ -30,10 +30,19 @@ def known_values(stats: list[dict]) -> dict[str, set]:
         for r in s.get("summary", []):
             mean_sd.add((round(r["r5_mean"], 2), round(r["r5_sd"], 2)))
             signed.add(round(round(r["r5_mean"], 2) - round(r["r0"], 2), 2))   # 相对第 0 轮的提升
-        for r in s.get("comparisons", []) + s.get("sensitivity_excl_flaky", []):
+        for r in s.get("feedback", []):                                        # rounds10_stats.json
+            for m, sd in (("r5_mean", "r5_sd"), ("r10_mean", "r10_sd")):
+                mean_sd.add((round(r[m], 2), round(r[sd], 2)))
+                signed.add(round(round(r[m], 2) - round(r["r0"], 2), 2))
+            signed.update(round(g, 2) for g in r.get("gains", []))             # 逐轮增量
+        for r in s.get("summary", []) + s.get("feedback", []):                 # 4 位小数的成本（元）
+            p.update(round(r[k], 4) for k in ("yuan_per_pass", "yuan_per_solve_with_r0") if r.get(k) is not None)
+        for r in s.get("comparisons", []) + s.get("sensitivity_excl_flaky", []) + s.get("comparisons_r10", []):
             signed.update(round(r[k], 2) for k in ("diff", "ci_lo", "ci_hi") if k in r)
             p.update(round(x, 4) for x in [r.get("p"), r.get("p_holm"), *r.get("mcnemar_per_rep", [])]
                      if x is not None)
+        for v in s.get("holm_variants", []):
+            p.update(round(x, 4) for x in (v.get("p_holm_informative"), v.get("p_holm_by_type")) if x is not None)
     return {"signed": signed, "mean_sd": mean_sd, "p": p}
 
 

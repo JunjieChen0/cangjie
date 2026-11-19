@@ -122,6 +122,8 @@ python src/stage3_stats.py
 python src/stage3_stats.py --matrix original
 # ClassEval 剩余失败与反馈截断检查 → results/stats/residual_failures.{md,json}（--recheck 需要 cjc）
 python src/residual_failures.py --recheck -j 6
+# 延长修复轮数补充实验（Doubao HumanEval direct，最多 10 轮）→ results/stats/rounds10_stats.{md,json}、results/figures/fig5_rounds10_curve.png
+python src/rounds10_stats.py
 
 # 统计、检验、作图、测试
 python src/analyze.py

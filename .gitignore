@@ -13,3 +13,5 @@ results/stage3/**/*.jsonl
 results/original30/pilot/
 results/original30/logs/
 results/original30/**/*.jsonl
+results/rounds10/logs/
+results/rounds10/**/*.jsonl

@@ -1,0 +1,186 @@
+{
+ "feedback": [
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "feedback": "hint",
+   "reps": 3,
+   "r0": 10.98,
+   "r5_mean": 53.86,
+   "r5_sd": 1.27,
+   "r10_mean": 70.73,
+   "r10_sd": 2.2,
+   "curve_mean": [
+    10.98,
+    18.29,
+    31.91,
+    40.44,
+    47.56,
+    53.86,
+    57.52,
+    61.99,
+    65.24,
+    68.7,
+    70.73
+   ],
+   "gains": [
+    7.31,
+    13.62,
+    8.53,
+    7.12,
+    6.3,
+    3.66,
+    4.47,
+    3.25,
+    3.46,
+    2.03
+   ],
+   "repair_tokens_mean": 3395837,
+   "run_yuan_with_r0": 3.556,
+   "yuan_per_solve_with_r0": 0.030655172413793105
+  },
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "feedback": "rag",
+   "reps": 3,
+   "r0": 10.98,
+   "r5_mean": 50.2,
+   "r5_sd": 2.47,
+   "r10_mean": 69.1,
+   "r10_sd": 2.14,
+   "curve_mean": [
+    10.98,
+    16.87,
+    27.03,
+    34.56,
+    43.09,
+    50.2,
+    55.69,
+    60.16,
+    62.6,
+    66.26,
+    69.1
+   ],
+   "gains": [
+    5.89,
+    10.16,
+    7.53,
+    8.53,
+    7.11,
+    5.49,
+    4.47,
+    2.44,
+    3.66,
+    2.84
+   ],
+   "repair_tokens_mean": 6168526,
+   "run_yuan_with_r0": 4.144,
+   "yuan_per_solve_with_r0": 0.036564705882352944
+  },
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "feedback": "raw",
+   "reps": 3,
+   "r0": 10.98,
+   "r5_mean": 38.01,
+   "r5_sd": 0.93,
+   "r10_mean": 51.42,
+   "r10_sd": 3.47,
+   "curve_mean": [
+    10.98,
+    15.04,
+    22.36,
+    28.86,
+    34.76,
+    38.01,
+    40.24,
+    42.68,
+    46.54,
+    49.39,
+    51.42
+   ],
+   "gains": [
+    4.06,
+    7.32,
+    6.5,
+    5.9,
+    3.25,
+    2.23,
+    2.44,
+    3.86,
+    2.85,
+    2.03
+   ],
+   "repair_tokens_mean": 3958092,
+   "run_yuan_with_r0": 4.163,
+   "yuan_per_solve_with_r0": 0.049363636363636366
+  }
+ ],
+ "comparisons_r10": [
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "a": "hint",
+   "b": "raw",
+   "n": 164,
+   "n_discordant": 70,
+   "reps": "3/3",
+   "diff": 19.31,
+   "ci_lo": 14.63,
+   "ci_hi": 24.19,
+   "p": 9.999000099990002e-05,
+   "mcnemar_per_rep": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "p_holm": 0.00029997000299970003
+  },
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "a": "rag",
+   "b": "raw",
+   "n": 164,
+   "n_discordant": 77,
+   "reps": "3/3",
+   "diff": 17.68,
+   "ci_lo": 13.01,
+   "ci_hi": 22.56,
+   "p": 9.999000099990002e-05,
+   "mcnemar_per_rep": [
+    0.0,
+    0.0015,
+    0.0
+   ],
+   "p_holm": 0.00029997000299970003
+  },
+  {
+   "model": "doubao_mini",
+   "ds": "he",
+   "prompt": "direct",
+   "a": "rag",
+   "b": "hint",
+   "n": 164,
+   "n_discordant": 56,
+   "reps": "3/3",
+   "diff": -1.63,
+   "ci_lo": -5.89,
+   "ci_hi": 2.64,
+   "p": 0.5291470852914708,
+   "mcnemar_per_rep": [
+    1.0,
+    0.1755,
+    1.0
+   ],
+   "p_holm": 0.5291470852914708
+  }
+ ]
+}
