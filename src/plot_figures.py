@@ -1,150 +1,203 @@
-"""生成论文插图（输出到 results/figures/）：
-1. fig1_rounds_curve.png   — 各模型 × 反馈模式的 Pass@1 随修复轮数（0–5）变化曲线
-2. fig2_cost_pareto.png    — 总 Token 消耗 vs 最终 Pass@1（与 CangjieBench Agent 基线对比）
-3. fig3_error_repair.png   — 按第 0 轮错误类别的修复成功率对比（blind / raw / hint）
+"""生成论文插图（第 3 阶段数据，英文标注，输出到 results/figures/）：
+1. fig1_rounds_curve.png           — HumanEval：各模型 × 起点下四种反馈的 0–5 轮 Pass@1（3 次重复均值 ± SD）
+2. fig2_cost_pareto.png            — 每次完整运行的成本（元）vs R5 通过率（HumanEval / ClassEval）
+3. fig3_error_repair.png           — Doubao HumanEval direct：按第 0 轮错误类别的修复成功率
+4. fig4_rounds_curve_classeval.png — ClassEval（全部测试口径）：0–5 轮 Pass@1
 
+数据来自 results/stage3/（与 stage3_stats.py 同一筛选口径：完整且 errors = 0，Kimi 超时按失败计）。
 用法：python src/plot_figures.py
 """
 from __future__ import annotations
 
-import glob
 import json
 import os
+import statistics as st
 import sys
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from analyze import error_breakdown, load_exp, summarize_file  # noqa: E402
+from analyze import classify_error  # noqa: E402
 from data import ROOT  # noqa: E402
+from extra_stats import cost_yuan, model_key  # noqa: E402
+from stage3_stats import load_groups  # noqa: E402
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-
+BASE = os.path.join(ROOT, "results", "stage3")
 OUT_DIR = os.path.join(ROOT, "results", "figures")
+MODELS = {"ds_v41f": "DeepSeek-V4.1-Flash", "doubao_mini": "Doubao-Seed-2.0-Mini", "kimik31p": "Kimi-K3.1-Pro"}
+MODEL_COLOR = {"ds_v41f": "#1f77b4", "doubao_mini": "#d62728", "kimik31p": "#2ca02c"}
+FEEDBACKS = ("blind", "raw", "hint", "rag")
+FB_NAME = {"blind": "Blind", "raw": "Raw", "hint": "Hint", "rag": "RAG"}
+FB_STYLE = {"blind": (":", "x", "#7f7f7f"), "raw": ("--", "^", "#ff7f0e"),
+            "hint": ("-", "s", "#1f77b4"), "rag": ("-", "o", "#2ca02c")}
+ERROR_CATS = (("foreign_syntax", "Foreign syntax"), ("api_or_undeclared", "API / undeclared"),
+              ("other", "Other"))
+MIN_CAT_SIZE = 10   # 题数少于此的类别并入 Other，避免小样本类别的比例误导
+plt.rcParams.update({"font.family": "DejaVu Sans", "axes.unicode_minus": False})
 
 
-HE_GROUPS = [
-    ("DeepSeek-V4.1-Flash", [
-        ("ds_v41f_syntax_hint_r5", "Syntax + Hint", "-o", "#2ca02c"),
-        ("ds_v41f_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
-        ("ds_v41f_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
-        ("ds_v41f_direct_blind_r5","Direct + Blind",":x", "#7f7f7f"),
-    ]),
-    ("Doubao-Seed-2.0-Mini (轻量模型)", [
-        ("doubao_mini_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
-        ("doubao_mini_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
-        ("doubao_mini_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
-        ("doubao_mini_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
-        ("doubao_mini_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
-    ]),
-    ("Kimi-K3.1-Pro", [
-        ("kimik31p_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
-        ("kimik31p_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
-    ]),
-]
-
-CE_GROUPS = [
-    ("DeepSeek-V4.1-Flash", [
-        ("ds_v41f_ce_direct_hint_r5", "Direct + Hint", "-s", "#1f77b4"),
-        ("ds_v41f_ce_direct_raw_r5",  "Direct + Raw",  "--^", "#ff7f0e"),
-    ]),
-    ("Doubao-Seed-2.0-Mini (轻量模型)", [
-        ("doubao_mini_ce_syntax_hint_r5",  "Syntax + Hint",  "-o", "#2ca02c"),
-        ("doubao_mini_ce_syntax_raw_r5",   "Syntax + Raw",   "--d", "#9467bd"),
-        ("doubao_mini_ce_direct_hint_r5",  "Direct + Hint",  "-s", "#1f77b4"),
-        ("doubao_mini_ce_direct_raw_r5",   "Direct + Raw",   "--^", "#ff7f0e"),
-        ("doubao_mini_ce_direct_blind_r5", "Direct + Blind", ":x", "#7f7f7f"),
-    ]),
-]
+def curve_band(reps: dict[int, dict]) -> tuple[list[float], list[float]]:
+    """各轮通过率在重复间的均值与标准差（只有 1 次重复时标准差为 0）。"""
+    curves = [reps[r]["curve"] for r in sorted(reps)]
+    mean = [st.mean(c[k] for c in curves) for k in range(len(curves[0]))]
+    sd = [st.stdev(c[k] for c in curves) if len(curves) > 1 else 0.0 for k in range(len(curves[0]))]
+    return mean, sd
 
 
-def plot_curves(summaries: dict[str, dict], groups=HE_GROUPS,
-                suptitle="不同反馈粒度下的多轮编译反馈修复曲线 (HumanEval-Cangjie, N=164)",
-                filename="fig1_rounds_curve.png", doubao_legend_loc="center right"):
-    fig, axes = plt.subplots(1, len(groups), figsize=(5.6 * len(groups), 4.6), sharey=True)
-    xs = list(range(6))
-    for ax, (title, items) in zip(axes, groups):
-        for key, label, fmt, color in items:
-            if key not in summaries:
+def run_cost(reps: dict[int, dict], r0_tokens: tuple[int, int], model: str) -> float:
+    """一次完整运行的成本（元，取最高价档）：共享第 0 轮 + 修复阶段在各次重复上的平均。"""
+    pin = r0_tokens[0] + st.mean(reps[r]["tokens"][0] for r in reps)
+    pout = r0_tokens[1] + st.mean(reps[r]["tokens"][1] for r in reps)
+    return max(cost_yuan(pin, pout, model_key(model)).values())
+
+
+def error_repair_rates(cats: dict[str, str], reps: dict[int, dict]) -> dict[str, tuple[int, float, float]]:
+    """cats：{题号: 第 0 轮错误类别}（来自共享第 0 轮）。返回 {类别: (题数, 修复成功率均值 %, 标准差)}。"""
+    out = {}
+    for cat in sorted(set(cats.values())):
+        ids = [i for i, c in cats.items() if c == cat]
+        rates = [100 * sum(reps[r]["passed"].get(i, False) for i in ids) / len(ids) for r in sorted(reps)]
+        out[cat] = (len(ids), st.mean(rates), st.stdev(rates) if len(rates) > 1 else 0.0)
+    return out
+
+
+def merge_small_categories(cats: dict[str, str], min_size: int = MIN_CAT_SIZE) -> dict[str, str]:
+    """题数少于 min_size 的错误类别统一改为 "other"。"""
+    sizes = {c: sum(1 for v in cats.values() if v == c) for c in set(cats.values())}
+    return {i: (c if sizes[c] >= min_size else "other") for i, c in cats.items()}
+
+
+def load_r0(name: str) -> tuple[dict, list[dict]]:
+    stem = os.path.join(BASE, "r0", name + "_r0")
+    with open(stem + ".summary.json", encoding="utf-8") as f:
+        s = json.load(f)
+    with open(stem + ".jsonl", encoding="utf-8") as f:
+        rows = [json.loads(line) for line in f if line.strip()]
+    return s, rows
+
+
+def _plot_panel(ax, groups, model, ds, prompt, title):
+    for fb in FEEDBACKS:
+        reps = groups.get((model, ds, prompt, fb))
+        if not reps:
+            continue
+        mean, sd = curve_band(reps)
+        ls, mk, col = FB_STYLE[fb]
+        xs = range(len(mean))
+        ax.plot(xs, mean, linestyle=ls, marker=mk, color=col, linewidth=1.8, markersize=5,
+                label=f"{FB_NAME[fb]} ({mean[-1]:.1f}%)")
+        if any(sd):
+            ax.fill_between(xs, [m - s for m, s in zip(mean, sd)], [m + s for m, s in zip(mean, sd)],
+                            color=col, alpha=0.15, linewidth=0)
+    ax.set_title(title, fontsize=10.5)
+    ax.set_xticks(range(6))
+    ax.set_ylim(0, 102)
+    ax.grid(True, linestyle="--", alpha=0.4)
+    ax.legend(loc="best", fontsize=8)
+
+
+def plot_he_curves(groups):
+    fig, axes = plt.subplots(2, 3, figsize=(13, 7.4), sharex=True, sharey=True)
+    for row, prompt in enumerate(("direct", "syntax")):
+        for col, model in enumerate(MODELS):
+            ax = axes[row][col]
+            if (model, "he", prompt, "raw") not in groups:
+                ax.axis("off")
+                ax.text(0.5, 0.5, f"{MODELS[model]}\n'{prompt}' start not run", ha="center", va="center",
+                        transform=ax.transAxes, color="#7f7f7f")
                 continue
-            ys = summaries[key]["curve"]
-            ax.plot(xs, ys, fmt, color=color, linewidth=2.0, markersize=6, label=f"{label} ({ys[-1]:.1f}%)")
-        ax.set_title(title, fontsize=12)
-        ax.set_xlabel("修复轮数 (Round)")
-        ax.set_xticks(xs)
-        ax.set_ylim(0, 105)
-        ax.grid(True, linestyle="--", alpha=0.4)
-        ax.legend(loc=doubao_legend_loc if "Doubao" in title else "lower right", fontsize=9)
-    axes[0].set_ylabel("Pass@1 (%)")
-    fig.suptitle(suptitle, fontsize=13)
+            reps = "1 run" if len(groups[(model, "he", prompt, "raw")]) == 1 else "3 runs"
+            _plot_panel(ax, groups, model, "he", prompt, f"{MODELS[model]}\n{prompt} start ({reps})")
+        axes[row][0].set_ylabel("Pass@1 (%)")
+    for ax in axes[1]:
+        ax.set_xlabel("Repair round")
+    axes[0][2].set_xlabel("Repair round")
+    axes[0][2].xaxis.set_tick_params(labelbottom=True)
+    fig.suptitle("Pass@1 over repair rounds on HumanEval-Cangjie (N = 164, shared round 0, mean ± SD)",
+                 fontsize=12.5)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT_DIR, filename), dpi=200)
+    fig.savefig(os.path.join(OUT_DIR, "fig1_rounds_curve.png"), dpi=200)
     plt.close(fig)
 
 
-def plot_pareto(summaries: dict[str, dict]):
-    fig, ax = plt.subplots(figsize=(7.5, 4.8))
-    labels = {
-        "ds_v41f_syntax_hint_r5": ("DS-V4.1F Syntax+Hint", "#2ca02c", "o"),
-        "ds_v41f_direct_hint_r5": ("DS-V4.1F Direct+Hint", "#1f77b4", "s"),
-        "ds_v41f_direct_raw_r5":  ("DS-V4.1F Direct+Raw",  "#ff7f0e", "^"),
-        "ds_v41f_direct_blind_r5":("DS-V4.1F Direct+Blind","#7f7f7f", "x"),
-        "doubao_mini_syntax_hint_r5":  ("Doubao-Mini Syntax+Hint",  "#9467bd", "o"),
-        "doubao_mini_syntax_raw_r5":   ("Doubao-Mini Syntax+Raw",   "#e377c2", "d"),
-        "doubao_mini_direct_hint_r5":  ("Doubao-Mini Direct+Hint",  "#17becf", "s"),
-        "doubao_mini_direct_raw_r5":   ("Doubao-Mini Direct+Raw",   "#bcbd22", "^"),
-        "doubao_mini_direct_blind_r5": ("Doubao-Mini Direct+Blind", "#8c564b", "x"),
-        "kimik31p_direct_hint_r5": ("Kimi-K3.1P Direct+Hint", "#d62728", "s"),
-        "kimik31p_direct_raw_r5":  ("Kimi-K3.1P Direct+Raw",  "#ff9896", "^"),
-    }
-    for key, (lbl, col, mk) in labels.items():
-        if key not in summaries:
-            continue
-        s = summaries[key]
-        x = s["total_tokens"] / 1e6
-        y = s["curve"][-1]
-        ax.scatter(x, y, color=col, marker=mk, s=90, label=f"{lbl} ({x:.2f}M, {y:.1f}%)")
-    ax.set_xlabel("总 Token 消耗（百万 tokens，N=164）")
-    ax.set_ylabel("最终 Pass@1 (%)")
-    ax.set_title("成本—效果对比：总 Token 消耗 vs 最终通过率")
-    ax.grid(True, linestyle="--", alpha=0.4)
-    ax.legend(loc="lower left", fontsize=8.5)
+def plot_ce_curves(groups):
+    panels = [(m, p) for m in MODELS for p in ("direct", "syntax") if (m, "ce", p, "raw") in groups]
+    fig, axes = plt.subplots(1, len(panels), figsize=(4.4 * len(panels), 4.3), sharey=True)
+    for ax, (model, prompt) in zip(axes, panels):
+        reps = "1 run" if len(groups[(model, "ce", prompt, "raw")]) == 1 else "3 runs"
+        _plot_panel(ax, groups, model, "ce", prompt, f"{MODELS[model]}\n{prompt} start ({reps})")
+        ax.set_xlabel("Repair round")
+    axes[0].set_ylabel("Pass@1, all tests (%)")
+    fig.suptitle("Pass@1 over repair rounds on ClassEval-Cangjie (N = 84, all-tests protocol)", fontsize=12.5)
     fig.tight_layout()
+    fig.savefig(os.path.join(OUT_DIR, "fig4_rounds_curve_classeval.png"), dpi=200)
+    plt.close(fig)
+
+
+def plot_cost(groups):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.8))
+    r0_cache = {}
+    for ax, (ds, title) in zip(axes, (("he", "HumanEval-Cangjie (N = 164)"), ("ce", "ClassEval-Cangjie (N = 84)"))):
+        for (model, d, prompt, fb), reps in sorted(groups.items()):
+            if d != ds or fb not in FEEDBACKS:
+                continue
+            key = f"{model}_{ds}_{prompt}"
+            if key not in r0_cache:
+                s, _ = load_r0(key)
+                r0_cache[key] = (s["total_prompt_tokens"], s["total_completion_tokens"])
+            x = run_cost(reps, r0_cache[key], model)
+            r5 = [reps[r]["curve"][-1] for r in sorted(reps)]
+            y, err = st.mean(r5), (st.stdev(r5) if len(r5) > 1 else 0.0)
+            col = MODEL_COLOR[model]
+            ax.errorbar(x, y, yerr=err, fmt=FB_STYLE[fb][1], markersize=8, color=col, capsize=2,
+                        markerfacecolor=col if prompt == "direct" else "white", markeredgewidth=1.5)
+        ax.set_xscale("log")
+        ax.xaxis.set_major_locator(LogLocator(subs=(1, 2, 5)))
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
+        ax.xaxis.set_minor_formatter(NullFormatter())
+        ax.set_title(title, fontsize=11)
+        ax.set_xlabel("Cost of one full run (CNY, log scale)")
+        ax.set_ylim(0, 102)
+        ax.grid(True, which="both", linestyle="--", alpha=0.35)
+    axes[0].set_ylabel("Pass@1 after 5 rounds (%)")
+    handles = [Line2D([], [], color=c, marker="o", linestyle="", label=MODELS[m]) for m, c in MODEL_COLOR.items()]
+    handles += [Line2D([], [], color="black", marker=FB_STYLE[f][1], linestyle="", label=FB_NAME[f]) for f in FEEDBACKS]
+    handles += [Line2D([], [], color="black", marker="o", linestyle="", label="direct start"),
+                Line2D([], [], color="black", marker="o", markerfacecolor="white", linestyle="", label="syntax start")]
+    fig.legend(handles=handles, loc="lower center", ncol=9, fontsize=8.5, frameon=False)
+    fig.suptitle("Cost vs. effectiveness (shared round 0 + repair, list price, mean ± SD)", fontsize=12.5)
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
     fig.savefig(os.path.join(OUT_DIR, "fig2_cost_pareto.png"), dpi=200)
     plt.close(fig)
 
 
-def plot_error_repair(data: dict[str, list[dict]]):
-    cats = ["foreign_syntax", "api_or_undeclared", "type_or_mutability", "test_failure"]
-    cat_names = ["外来语法", "API/标识符缺失", "类型/可变性", "逻辑/测试失败"]
-    targets = [
-        ("doubao_mini_direct_blind_r5", "Doubao Blind", "#7f7f7f"),
-        ("doubao_mini_direct_raw_r5",   "Doubao Raw",   "#ff7f0e"),
-        ("doubao_mini_direct_hint_r5",  "Doubao Hint",  "#1f77b4"),
-    ]
-    avail = [(k, lbl, c) for k, lbl, c in targets if k in data]
-    if not avail:
-        return
-    fig, ax = plt.subplots(figsize=(8.2, 4.5))
-    w = 0.25
-    xs = list(range(len(cats)))
-    for idx, (key, lbl, col) in enumerate(avail):
-        bd = error_breakdown(data[key])
-        ys = [100 * bd[c][1] / bd[c][0] if c in bd and bd[c][0] > 0 else 0 for c in cats]
-        pos = [x + (idx - (len(avail) - 1) / 2) * w for x in xs]
-        bars = ax.bar(pos, ys, width=w, color=col, label=lbl)
-        for b, y in zip(bars, ys):
-            ax.text(b.get_x() + b.get_width() / 2, y + 1.5, f"{y:.0f}%", ha="center", va="bottom", fontsize=8)
-    ax.set_xticks(xs)
-    ax.set_xticklabels(cat_names)
+def plot_error_repair(groups):
+    _, rows = load_r0("doubao_mini_he_direct")
+    cats = {str(r["id"]): classify_error(r["history"][0]) for r in rows if r.get("history")}
+    cats = merge_small_categories({i: c for i, c in cats.items() if c != "passed"})
+    fig, ax = plt.subplots(figsize=(8, 4.6))
+    w = 0.2
+    for k, fb in enumerate(FEEDBACKS):
+        rates = error_repair_rates(cats, groups[("doubao_mini", "he", "direct", fb)])
+        xs = [j + (k - 1.5) * w for j in range(len(ERROR_CATS))]
+        ys = [rates.get(c, (0, 0.0, 0.0))[1] for c, _ in ERROR_CATS]
+        es = [rates.get(c, (0, 0.0, 0.0))[2] for c, _ in ERROR_CATS]
+        bars = ax.bar(xs, ys, width=w, yerr=es, capsize=2, color=FB_STYLE[fb][2], label=FB_NAME[fb])
+        for b, y, e in zip(bars, ys, es):
+            ax.text(b.get_x() + b.get_width() / 2, y + e + 1.5, f"{y:.0f}", ha="center", va="bottom", fontsize=7.5)
+    counts = {c: sum(1 for v in cats.values() if v == c) for c, _ in ERROR_CATS}
+    ax.set_xticks(range(len(ERROR_CATS)))
+    ax.set_xticklabels([f"{name}\n(n = {counts[c]})" for c, name in ERROR_CATS])
     ax.set_ylim(0, 110)
-    ax.set_ylabel("修复成功率 (%)")
-    ax.set_title("Doubao-Seed-2.0-Mini 按第 0 轮错误类别的修复成功率")
+    ax.set_ylabel("Repaired within 5 rounds (%)")
+    ax.set_title("Doubao-Seed-2.0-Mini, HumanEval direct start: repair rate by round-0 error category\n"
+                 "(mean ± SD of 3 runs; categories from the shared round 0)", fontsize=10.5)
     ax.grid(True, axis="y", linestyle="--", alpha=0.4)
-    ax.legend()
+    ax.legend(ncol=4, fontsize=9)
     fig.tight_layout()
     fig.savefig(os.path.join(OUT_DIR, "fig3_error_repair.png"), dpi=200)
     plt.close(fig)
@@ -152,25 +205,11 @@ def plot_error_repair(data: dict[str, list[dict]]):
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
-    exp_dir = os.path.join(ROOT, "results", "exp")
-    paths = sorted(p for p in glob.glob(os.path.join(exp_dir, "*.jsonl")) if not p.endswith(".records.jsonl"))
-    summaries, data = {}, {}
-    for p in paths:
-        s = summarize_file(p)
-        summaries[s["name"]] = s
-        data[s["name"]] = load_exp(p)
-    plot_curves(summaries)
-    # ClassEval 用全部测试口径（官方 pass_rate），数据来自 src/reeval_classeval.py
-    ce_summaries = {}
-    for p in glob.glob(os.path.join(ROOT, "results", "reeval", "*.alltests.summary.json")):
-        with open(p, encoding="utf-8") as f:
-            s = json.load(f)
-        ce_summaries[s["name"]] = {"curve": s["curve_all"]}
-    plot_curves(ce_summaries, CE_GROUPS,
-                "不同反馈粒度下的多轮编译反馈修复曲线 (ClassEval-Cangjie, N=84, 全部测试口径)",
-                "fig4_rounds_curve_classeval.png", doubao_legend_loc="upper left")
-    plot_pareto(summaries)
-    plot_error_repair(data)
+    groups = load_groups(BASE)
+    plot_he_curves(groups)
+    plot_ce_curves(groups)
+    plot_cost(groups)
+    plot_error_repair(groups)
     print(f"Figures saved to {OUT_DIR}")
 
 
