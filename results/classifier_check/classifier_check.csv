@@ -1,0 +1,1388 @@
+﻿no,feedback,human_category,note
+1,"error: 'max' is not accessible in package 'std.math'
+ ==> main.cj:2:8:
+  | 
+2 | import std.math.{max, min}
+  |        ^^^^^^^^^^^^^ 
+  | 
+
+error: 'min' is not accessible in package 'std.math'
+ ==> main.cj:2:8:
+  | 
+2 | import std.math.{max, min}
+  |        ^^^^^^^^^^^^^^^^^^ 
+  | 
+
+2 errors generated, 2 errors printed.
+",,
+2,"error: the expression for numeric type conversion must have a numeric type
+ ==> main.cj:3:23:
+  | 
+3 |     let base = UInt32('a')
+  |                       ^ 
+  | 
+
+error: invalid binary operator '>=' on type 'UInt8' and 'Struct-String'
+ ==> main.cj:6:16:
+  | 
+6 |         if (ch >= 'a' && ch <= 'z') {
+  |                ^^ 
+  | 
+  # note: you may want to implement 'operator func >=(right: Struct-String)' for type 'UInt8'
+
+error: type incompatible in this compound assignment expression
+ ==> main.cj:8:13:
+  | 
+8 |             result += Rune(base + offset).toString()
+  |             ^ 
+  | 
+
+3 errors generated, 3 errors printed.
+",,
+3,"error: 'repeat' is non-static member, cannot access by type name
+ ==> main.cj:4:36:
+  | 
+4 |     let buckets = ArrayList<Int64>(Array.repeat(0, numBuckets))
+  |                                    ^ 
+  | 
+
+1 error generated, 1 error printed.
+",,
+4,"error: expected operator or end of expression, found ':'
+ ==> main.cj:3:25:
+  | 
+3 |     let isInteger = (num: Float64): Bool => num % 1.0 == 0.0
+  |                         ^ expected operator or end of expression
+  | 
+
+error: unclosed delimiter: '('
+ ==> main.cj:3:62:
+  | 
+3 |     let isInteger = (num: Float64): Bool => num % 1.0 == 0.0
+  |                     ~                                        ^ expected ')' here
+  |                     |
+  |                     to match this opening '('
+  | 
+
+warning: possibly confusing line terminator
+ ==> main.cj:5:57:
+  | 
+5 |       return isInteger(x) && isInteger(y) && isInteger(z) 
+  |                                                         ~ ^ 
+  |  _______________________________________________________|
+6 | |         && (x == y + z || y == x + z || z == x + y)
+  | |_________~ possibly confusing line terminator between ')' and '&&'
+  | 
+  # note: this warning can be suppressed by setting the compiler option `-Woff parser`
+
+2 errors generated, 2 errors printed.
+1 warning generated, 1 warning printed.
+",,
+5,"error: 'len' is not a member of struct 'String'
+ ==> main.cj:2:25:
+  | 
+2 |     return Int64(string.len())
+  |                         ^^^ 
+  | 
+
+1 error generated, 1 error printed.
+",,
+6,"error: expected '{', found ''
+   ==> main.cj:119:49:
+    | 
+119 |             return if (player_val > dealer_val) ""Player wins"" else ""Dealer wins""
+    |                                                 ^^^^^^^^^^^^^ expected '{' here
+    | 
+
+error: expected expression or declaration, found '}'
+   ==> main.cj:120:9:
+    | 
+120 |         } else {
+    |         ^ expected expression or declaration here
+    | 
+
+error: expected '{', found ''
+   ==> main.cj:121:49:
+    | 
+121 |             return if (player_val < dealer_val) ""Player wins"" else ""Dealer wins""
+    |                                                 ^^^^^^^^^^^^^ expected '{' here
+    | 
+
+error: expected expression or declaration, found '}'
+   ==> main.cj:122:9:
+    | 
+122 |         }
+    |         ^ expected expression or declaration here
+    | 
+
+4 errors generated, 4 errors printed.
+",,
+7,"error: invalid left-hand expression of assignment '='
+  ==> main.cj:22:36:
+   | 
+22 |     for (i in (size - 1)..-1: step = -1) {
+   |               ~~~~~~~~~~~~~~~~~~~~ ^ 
+   |               |
+   |               cannot assign to this expression
+   | 
+
+1 error generated, 1 error printed.
+",,
+8,"error: can not find package 'std.text'
+ ==> main.cj:4:8:
+  | 
+4 | import std.text.StringBuilder
+  |        ^^^^^^^^ 
+  | 
+  # help: check if the .cjo file of the package exists in CANGJIE_PATH or CANGJIE_HOME, or use '--import-path' to specify the .cjo file path
+
+1 error generated, 1 error printed.
+",,
+9,"error: mismatched types
+  ==> main.cj:20:32:
+   | 
+20 |         if (is_word_whitespace(ch)) {
+   |                                ^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:23:16:
+   | 
+23 |         if (ch == r',') {
+   |                ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: mismatched types
+  ==> main.cj:36:51:
+   | 
+36 |                 is_separator = is_word_whitespace(ch)
+   |                                                   ^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:38:35:
+   | 
+38 |                 is_separator = ch == r','
+   |                                   ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: mismatched types
+  ==> main.cj:59:36:
+   | 
+59 |         if (has_odd_alphabet_order(ch)) {
+   |                                    ^^ expected 'Rune', found 'UInt8'
+   | 
+
+5 errors generated, 5 errors printed.
+",,
+10,"error: unclosed delimiter: '('
+ ==> main.cj:4:41:
+  | 
+4 |     let sum1 = lst1.foldLeft(0, (acc, s) => acc + s.length())
+  |                             ~           ^ expected ')' here
+  |                             |
+  |                             to match this opening '('
+  | 
+
+error: expected ';' or '<NL>', found '=>'
+ ==> main.cj:4:42:
+  | 
+4 |     let sum1 = lst1.foldLeft(0, (acc, s) => acc + s.length())
+  |                                          ^^ expected ';' or '<NL>' here
+  | 
+
+error: unclosed delimiter: '('
+ ==> main.cj:5:41:
+  | 
+5 |     let sum2 = lst2.foldLeft(0, (acc, s) => acc + s.length())
+  |                             ~           ^ expected ')' here
+  |                             |
+  |                             to match this opening '('
+  | 
+
+error: expected ';' or '<NL>', found '=>'
+ ==> main.cj:5:42:
+  | 
+5 |     let sum2 = lst2.foldLeft(0, (acc, s) => acc + s.length())
+  |                                          ^^ expected ';' or '<NL>' here
+  | 
+
+error: expected '{', found 'lst1'
+ ==> main.cj:6:23:
+  | 
+6 |     if (sum1 <= sum2) lst1 else lst2
+  |                       ^^^^ expected '{' here
+  | 
+
+error: expected expression or declaration, found '}'
+ ==> main.cj:7:1:
+  | 
+7 | }
+  | ^ expected expression or declaration here
+  | 
+
+6 errors generated, 6 errors printed.
+",,
+11,"error: expected identifier or pattern after 'let', found keyword 'mut'
+  ==> main.cj:34:13:
+   | 
+34 |         let mut new_expr = String()
+   |         ~~~ ^^^ expected identifier or pattern here
+   | 
+help: escape the keyword `mut` to use it as an identifier:
+   | 
+34 |         let `mut` new_expr = String()
+   |             ~~~~~ 
+   | 
+
+1 error generated, 1 error printed.
+",,
+12,"error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+ ==> main.cj:4:15:
+  | 
+4 |         if (c >= r'0' && c <= r'9') {
+  |               ^^ 
+  | 
+  # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+  ==> main.cj:18:15:
+   | 
+18 |         if (c >= r'0' && c <= r'9') {
+   |               ^^ 
+   | 
+   # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+2 errors generated, 2 errors printed.
+",,
+13,"[with test #0]
+error: unclosed delimiter: '('
+  ==> main.cj:41:38:
+   | 
+41 |         if (this.current_song is Some(_)) {
+   |            ~                         ^ expected ')' here
+   |            |
+   |            to match this opening '('
+   | 
+
+error: expected '{', found keyword 'return'
+  ==> main.cj:65:31:
+   | 
+65 |         if (currentIdx == -1) return false
+   |                               ^^^^^^ expected '{' here
+   | 
+
+error: expected '{', found keyword 'return'
+  ==> main.cj:91:31:
+   | 
+91 |         if (currentIdx == -1) return false
+   |                               ^^^^^^ expected '{' here
+   | 
+
+error: expected '=>' in lambda expression, found '('
+   ==> main.cj:113:27:
+    | 
+113 |         let randomKey = { (song: String) => random.nextInt() }
+    |                           ^ expected '=>' here
+    | 
+
+error: expected operator or end of expression, found ':'
+   ==> main.cj:113:32:
+    | 
+113 |         let randomKey = { (song: String) => random.nextInt() }
+    |                                ^ expected operator or end of expression
+    | 
+
+error: unclosed delimiter: '('
+   ==> main.cj:113:64:
+    | 
+113 |         let randomKey = { (song: String) => random.nextInt() }
+    |                           ~                                    ^ expected ')' here
+    |                           |
+    |                           to match this opening '('
+    | 
+
+error: unexpected main function in class body
+   ==> main.cj:173:1:
+    | 
+5   | class MusicPlayer {
+  ",,
+14,"error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+ ==> main.cj:8:16:
+  | 
+8 |         if (ch >= r'a' && ch <= r'z') {
+  |                ^^ 
+  | 
+  # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+error: undeclared identifier 'toUInt32'
+ ==> main.cj:9:26:
+  | 
+9 |             ch = Rune(ch.toUInt32() - 32)
+  |                          ^^^^^^^^ 
+  | 
+
+error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+  ==> main.cj:10:23:
+   | 
+10 |         } else if (ch >= r'A' && ch <= r'Z') {
+   |                       ^^ 
+   | 
+   # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+error: undeclared identifier 'toUInt32'
+  ==> main.cj:11:26:
+   | 
+11 |             ch = Rune(ch.toUInt32() + 32)
+   |                          ^^^^^^^^ 
+   | 
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:15:16:
+   | 
+15 |         if (ch == r'A' || ch == r'E' || ch == r'I' || ch == r'O' || ch == r'U' ||
+   |                ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: undeclared identifier 'toUInt32'
+  ==> main.cj:17:26:
+   | 
+17 |             ch = Rune(ch.toUInt32() + 2)
+   |                          ^^^^^^^^ 
+   | 
+
+6 errors generated, 6 errors printed.
+",,
+15,"error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:12:20:
+   | 
+12 |             result.append(factorial)
+   |                    ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:16:20:
+   | 
+16 |             result.append(sum)
+   |                    ^^^^^^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+16,"error: mismatched types
+   ==> main.cj:133:23:
+    | 
+133 |             chars.add(c)
+    |                       ^ expected 'Rune', found 'UInt8'
+    | 
+
+1 error generated, 1 error printed.
+",,
+17,"error: expected '(' after 'if', found 'parts'
+  ==> main.cj:30:12:
+   | 
+30 |         if parts.size() != 4 {
+   |         ~~ ^^^^^ expected '(' here
+   |         |
+   |         after this
+   | 
+
+error: expected '(', found 'part'
+  ==> main.cj:33:13:
+   | 
+33 |         for part in parts {
+   |             ^^^^ expected '(' here
+   | 
+
+error: expected '(' after 'if', found '!'
+  ==> main.cj:61:12:
+   | 
+61 |         if !is_valid() {
+   |         ~~ ^ expected '(' here
+   |         |
+   |         after this
+   | 
+
+error: expected '(' after 'if', found '!'
+  ==> main.cj:75:12:
+   | 
+75 |         if !is_valid() {
+   |         ~~ ^ expected '(' here
+   |         |
+   |         after this
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:79:41:
+   | 
+79 |         let binaryParts = parts.map(part => {
+   |                                    ~    ^ expected ')' here
+   |                                    |
+   |                                    to match this opening '('
+   | 
+
+error: expected ';' or '<NL>', found '=>'
+  ==> main.cj:79:42:
+   | 
+79 |         let binaryParts = parts.map(part => {
+   |                                          ^^ expected ';' or '<NL>' here
+   | 
+
+6 errors generated, 6 errors printed.
+",,
+18,"error: mismatched types
+  ==> main.cj:56:45:
+   | 
+56 |             let deciphered = shiftCharacter(characters[index], shift)
+   |                                             ^^^^^^^^^^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+  ==> main.cj:87:28:
+   | 
+87 |             if ((character >= r'a' && character <= r'z') ||
+   |                            ^^ 
+   | 
+   # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
+  ==> main.cj:91:34:
+   | 
+91 |                 if (keyCharacter >= r'A' && keyCharacter <= r'Z') {
+   |                                  ^^ 
+   | 
+   # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
+
+error: mismatched types
+  ==> main.cj:92:36:
+   | 
+92 |                     keyCharacter = Rune(UInt32(keyCharacter) + UInt32(32))
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected 'UInt8', found 'Rune'
+   | 
+
+error: mismatched types
+  ==> main.cj:96:49:
+   | 
+96 |                 let deciphered = shiftCharacter(character, keyShift)
+   |                                                 ^^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+   ==> main.cj:131:20:
+    | 
+131 |             counts.append(0)
+    |                    ^^^^^^ 
+    | 
+
+error: 'append' is not a member of class 'Arra",,
+19,"error: undeclared identifier 'Random'
+  ==> main.cj:36:13:
+   | 
+36 |     let r = Random(42)
+   |             ^ 
+   | 
+
+error: type incompatible in this compound assignment expression
+  ==> main.cj:41:13:
+   | 
+41 |             str += Rune(r.nextInt64(26) + 97).toString()
+   |             ^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+20,"error: invalid binary operator '-' on type 'Int64' and 'Float64'
+  ==> main.cj:79:37:
+   | 
+79 |             let interp_z = z00 * (1 - dx) * (1 - dy) + 
+   |                                     ^ 
+   | 
+   # note: you may want to implement 'operator func -(right: Float64)' for type 'Int64'
+
+1 error generated, 1 error printed.
+",,
+21,"error: expected '{', found '-'
+ ==> main.cj:7:27:
+  | 
+7 |     let sign = if (a < 0) -1 else 1
+  |                           ^ expected '{' here
+  | 
+
+error: expected ';' or '<NL>', found keyword 'else'
+ ==> main.cj:7:30:
+  | 
+7 |     let sign = if (a < 0) -1 else 1
+  |                              ^^^^ expected ';' or '<NL>' here
+  | 
+
+2 errors generated, 2 errors printed.
+",,
+22,"error: 'get' is not a member of enum 'Option<Class-ArrayList<Class-Message>>'
+   ==> main.cj:149:36:
+    | 
+149 |         let senderMsgs = senderOpt.get()
+    |                                    ^^^ 
+    | 
+
+error: 'get' is not a member of enum 'Option<Class-ArrayList<Class-Message>>'
+   ==> main.cj:169:32:
+    | 
+169 |             return userMsgsOpt.get()
+    |                                ^^^ 
+    | 
+
+2 errors generated, 2 errors printed.
+",,
+23,"error: unclosed delimiter: '('
+  ==> main.cj:18:55:
+   | 
+18 |         let currentInSystem = (if (serverFreeTime > t) 1 else 0) + waiting.size().toInt64()
+   |                               ~                       ^ expected ')' here
+   |                               |
+   |                               to match this opening '('
+   | 
+
+error: expected '{', found literal '1'
+  ==> main.cj:18:56:
+   | 
+18 |         let currentInSystem = (if (serverFreeTime > t) 1 else 0) + waiting.size().toInt64()
+   |                                                        ^ expected '{' here
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+24,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:27:20:
+   | 
+27 |             if (ch == r'0' || ch == r'1') {
+   |                    ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:44:20:
+   | 
+44 |             if (ch == r'0') {
+   |                    ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:46:27:
+   | 
+46 |             } else if (ch == r'1') {
+   |                           ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: unknown named argument prefix 'item:'
+  ==> main.cj:68:46:
+   | 
+68 |         let bytes = Array<UInt8>(byte_count, item: 0)
+   |                                              ^ 
+   | 
+
+warning: unused import 'std.convert.RadixConvertible'
+ ==> main.cj:2:1:
+  | 
+2 | import std.convert.RadixConvertible
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unused import
+  | 
+  # note: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+4 errors generated, 4 errors printed.
+1 warning generated, 1 warning printed.
+",,
+25,"error: expected operator or end of expression, found ':'
+ ==> main.cj:2:17:
+  | 
+2 |     var even = 0: Int64
+  |                 ^ expected operator or end of expression
+  | 
+
+error: expected operator or end of expression, found ':'
+ ==> main.cj:3:16:
+  | 
+3 |     var odd = 0: Int64
+  |                ^ expected operator or end of expression
+  | 
+
+error: expected '(', found 'c'
+ ==> main.cj:5:9:
+  | 
+5 |     for c in absNum.toString().chars() {
+  |         ^ expected '(' here
+  | 
+
+3 errors generated, 3 errors printed.
+",,
+26,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+ ==> main.cj:8:19:
+  | 
+8 |             if (c == prev1 || c == prev2 || prev1 == prev2) {
+  |                   ^^ 
+  | 
+  # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: mismatched types
+  ==> main.cj:13:17:
+   | 
+13 |         prev1 = c
+   |                 ^ expected 'Rune', found 'UInt8'
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+27,"error: unknown start of token: \
+  ==> main.cj:13:44:
+   | 
+13 |         let words = trimmedSentence.split
+   |                                            ^ unknown start of token: \
+   | 
+
+1 error generated, 1 error printed.
+",,
+28,"error: expected operator or end of expression, found ':'
+ ==> main.cj:5:19:
+  | 
+5 |     result.sort((a: Int64, b: Int64): Int32 => {
+  |                   ^ expected operator or end of expression
+  | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:13:8:
+   | 
+5  |     result.sort((a: Int64, b: Int64): Int32 => {
+   |                 ~ to match this opening '('
+6  |         let countA = a.bitCount()
+   | ...
+13 |     })
+   |        ^ expected ')' here
+   | 
+
+error: unclosed delimiter: '('
+  ==> main.cj:14:19:
+   | 
+5  |     result.sort((a: Int64, b: Int64): Int32 => {
+   |                ~ to match this opening '('
+6  |         let countA = a.bitCount()
+   | ...
+14 |     return result
+   |                   ^ expected ')' here
+   | 
+
+3 errors generated, 3 errors printed.
+",,
+29,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:14:34:
+   | 
+14 |             let isVowel = letter == r'a' || letter == r'e' ||
+   |                                  ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+1 error generated, 1 error printed.
+",,
+30,"error: undeclared identifier 'isAsciiDigit'
+ ==> main.cj:8:57:
+  | 
+8 |             if (previous.isAsciiLowerCase() || previous.isAsciiDigit()) {
+  |                                                         ^^^^^^^^^^^^ 
+  | 
+
+error: mismatched types
+  ==> main.cj:15:20:
+   | 
+15 |         previous = ch
+   |                    ^^ expected 'Rune', found 'UInt8'
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+31,"error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Float64, Float64>' is not supported
+  ==> main.cj:50:9:
+   | 
+50 |     if (find_closest_elements(ArrayList<Float64>([1.0, 2.0, 5.9, 4.0, 5.0])) != (5.0, 5.9)) {
+   |         ^ 
+   | 
+
+error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Float64, Float64>' is not supported
+  ==> main.cj:53:9:
+   | 
+53 |     if (find_closest_elements(ArrayList<Float64>([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])) != (2.0, 2.2)) {
+   |         ^ 
+   | 
+
+error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Float64, Float64>' is not supported
+  ==> main.cj:56:9:
+   | 
+56 |     if (find_closest_elements(ArrayList<Float64>([1.0, 2.0, 3.0, 4.0, 5.0, 2.0])) != (2.0, 2.0)) {
+   |         ^ 
+   | 
+
+error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Float64, Float64>' is not supported
+  ==> main.cj:59:9:
+   | 
+59 |     if (find_closest_elements(ArrayList<Float64>([1.1, 2.2, 3.1, 4.1, 5.1])) != (2.2, 3.1)) {
+   |         ^ 
+   | 
+
+4 errors generated, 4 errors printed.
+",,
+32,"error: unknown suffix 'L' for number literal
+ ==> main.cj:3:20:
+  | 
+3 |     var largest = 1L
+  |                    ^ unknown suffix 'L'
+  | 
+
+error: unknown suffix 'L' for number literal
+ ==> main.cj:7:20:
+  | 
+7 |         largest = 2L
+  |                    ^ unknown suffix 'L'
+  | 
+
+2 errors generated, 2 errors printed.
+",,
+33,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+ ==> main.cj:6:20:
+  | 
+6 |         if (result == r'W') {
+  |                    ^^ 
+  | 
+  # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+ ==> main.cj:9:27:
+  | 
+9 |         } else if (result == r'D') {
+  |                           ^^ 
+  | 
+  # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+2 errors generated, 2 errors printed.
+",,
+34,"error: 'toLower' is not a member of struct 'String'
+  ==> main.cj:11:28:
+   | 
+11 |         let lowerKey = key.toLower()
+   |                            ^^^^^^^ 
+   | 
+
+error: 'toUpper' is not a member of struct 'String'
+  ==> main.cj:12:28:
+   | 
+12 |         let upperKey = key.toUpper()
+   |                            ^^^^^^^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+35,"error: unrecognized escape '\(' in string literal
+  ==> main.cj:72:49:
+   | 
+72 |         return ""Normal Guitar Playing -- Chord: \(key), Play Tune: \(value)""
+   |                ~                                ^^ unrecognized escape
+   |                |
+   |                because it is in string literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+1 error generated, 1 error printed.
+",,
+36,"error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
+   ==> main.cj:100:19:
+    | 
+100 |         if (users.containsKey(username)) {
+    |                   ^^^^^^^^^^^ 
+    | 
+
+error: 'put' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
+   ==> main.cj:103:15:
+    | 
+103 |         users.put(username, ArrayList<Message>())
+    |               ^^^ 
+    | 
+
+error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
+   ==> main.cj:138:20:
+    | 
+138 |         if (!users.containsKey(sender) || !users.containsKey(receiver)) {
+    |                    ^^^^^^^^^^^ 
+    | 
+
+error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
+   ==> main.cj:138:50:
+    | 
+138 |         if (!users.containsKey(sender) || !users.containsKey(receiver)) {
+    |                                                  ^^^^^^^^^^^ 
+    | 
+
+error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
+   ==> main.cj:160:19:
+    | 
+160 |         if (users.containsKey(username)) {
+    |                   ^^^^^^^^^^^ 
+    | 
+
+5 errors generated, 5 errors printed.
+",,
+37,"error: interface 'Map' can not be instantiated
+ ==> main.cj:5:16:
+  | 
+5 |     let freq = Map<Int64, Int64>()
+  |                ^ 
+  | 
+
+1 error generated, 1 error printed.
+",,
+38,"error: rune literal may only contain one character
+ ==> main.cj:8:29:
+  | 
+8 |         let pattern = Regex(r""([^.!?]+[.!?])"")
+  |                             ^^^^^^^^^^^^^^^^^ may only contain one character
+  | 
+help: if you intended to write a string literal, use '""':
+  | 
+8 |         let pattern = Regex(""([^.!?]+[.!?])"")
+  |                             ~~~~~~~~~~~~~~~~ 
+  | 
+
+error: unrecognized escape '\s' in rune literal
+  ==> main.cj:21:36:
+   | 
+21 |         let splitPattern = Regex(r""\s+"")
+   |                                  ~ ^^ unrecognized escape
+   |                                  |
+   |                                  because it is in rune literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in rune literal
+
+2 errors generated, 2 errors printed.
+",,
+39,"error: cannot convert an integer literal to type 'Float64'
+ ==> main.cj:7:25:
+  | 
+7 |         return 18 * pow(10, n - 2)
+  |                         ^ 
+  | 
+
+1 error generated, 1 error printed.
+",,
+40,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:19:15:
+   | 
+19 |         if (c == r' ') {
+   |               ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:29:19:
+   | 
+29 |             if (c == r'(') {
+   |                   ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+  ==> main.cj:34:26:
+   | 
+34 |             } else if (c == r')') {
+   |                          ^^ 
+   | 
+   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+3 errors generated, 3 errors printed.
+",,
+41,"error: 'gethostname' is not accessible in package 'std.posix'
+ ==> main.cj:2:8:
+  | 
+2 | import std.posix.gethostname
+  |        ^^^^^^^^^^^^^^^^^^^^^ 
+  | 
+
+1 error generated, 1 error printed.
+",,
+42,"error: invalid binary operator '<' on type 'UInt8' and 'Struct-String'
+  ==> main.cj:38:24:
+   | 
+38 |                 if (ch < '0' || ch > '9') {
+   |                        ^ 
+   | 
+   # note: you may want to implement 'operator func <(right: Struct-String)' for type 'UInt8'
+
+warning: unused import 'std.convert.Formattable'
+ ==> main.cj:2:1:
+  | 
+2 | import std.convert.Formattable
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unused import
+  | 
+  # note: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+1 error generated, 1 error printed.
+1 warning generated, 1 warning printed.
+",,
+43,"error: expected expression after '..', found '<'
+ ==> main.cj:6:18:
+  | 
+6 |     for (i in 0..<count) {
+  |                  ^ expected expression here
+  | 
+
+1 error generated, 1 error printed.
+",,
+44,"error: unrecognized escape '\(' in string literal
+  ==> main.cj:95:42:
+   | 
+95 |         println(""Access logged for user: \(name)"")
+   |                 ~                        ^^ unrecognized escape
+   |                 |
+   |                 because it is in string literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+1 error generated, 1 error printed.
+",,
+45,"error: no matching function for operator '()' function call
+ ==> main.cj:3:13:
+  | 
+3 |     let n = s.size()
+  |             ^ 
+  | 
+
+error: 'substring' is not a member of struct 'String'
+ ==> main.cj:7:26:
+  | 
+7 |             reversed = s.substring(i, i + 1) + reversed
+  |                          ^^^^^^^^^ 
+  | 
+
+error: 'substring' is not a member of struct 'String'
+  ==> main.cj:12:14:
+   | 
+12 |     return s.substring(n - k, n) + s.substring(0, n - k)
+   |              ^^^^^^^^^ 
+   | 
+
+error: 'substring' is not a member of struct 'String'
+  ==> main.cj:12:38:
+   | 
+12 |     return s.substring(n - k, n) + s.substring(0, n - k)
+   |                                      ^^^^^^^^^ 
+   | 
+
+4 errors generated, 4 errors printed.
+",,
+46,"error: rune literal may only contain one character
+  ==> main.cj:15:38:
+   | 
+15 |         let non_letter_regex = Regex(r""[^a-zA-Z ]"")
+   |                                      ^^^^^^^^^^^^^ may only contain one character
+   | 
+help: if you intended to write a string literal, use '""':
+   | 
+15 |         let non_letter_regex = Regex(""[^a-zA-Z ]"")
+   |                                      ~~~~~~~~~~~~ 
+   | 
+
+1 error generated, 1 error printed.
+",,
+47,"error: unclosed delimiter: '('
+ ==> main.cj:9:16:
+  | 
+9 |     for (i in 2 until sortedNumbers.length()) {
+  |         ~      ^ expected ')' here
+  |         |
+  |         to match this opening '('
+  | 
+
+1 error generated, 1 error printed.
+",,
+48,"error: invalid left-hand expression of assignment '='
+  ==> main.cj:19:31:
+   | 
+19 |     for (L in 1..(n + 1): step=1) {
+   |               ~~~~~~~~~~~~~~~~^ 
+   |               |
+   |               cannot assign to this expression
+   | 
+
+1 error generated, 1 error printed.
+",,
+49,"error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:30:32:
+   | 
+30 |                         target.append(i)
+   |                                ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:31:32:
+   | 
+31 |                         target.append(j)
+   |                                ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Class-ArrayList<Int64>>'
+  ==> main.cj:32:38:
+   | 
+32 |                         this.targets.append(target)
+   |                                      ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:36:29:
+   | 
+36 |                         box.append(i)
+   |                             ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:37:29:
+   | 
+37 |                         box.append(j)
+   |                             ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Class-ArrayList<Int64>>'
+  ==> main.cj:38:36:
+   | 
+38 |                         this.boxes.append(box)
+   |                                    ^^^^^^ 
+   | 
+
+6 errors generated, 6 errors printed.
+",,
+50,"error: mismatched types
+  ==> main.cj:13:29:
+   | 
+13 |         if (vowels.contains(currentChar)) {
+   |                             ^^^^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: mismatched types
+  ==> main.cj:16:34:
+   | 
+16 |             if (!vowels.contains(leftChar) && !vowels.contains(rightChar)) {
+   |                                  ^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: mismatched types
+  ==> main.cj:16:64:
+   | 
+16 |             if (!vowels.contains(leftChar) && !vowels.contains(rightChar)) {
+   |                                                                ^^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+error: mismatched types
+  ==> main.cj:17:32:
+   | 
+17 |                 return String([currentChar])
+   |                                ^^^^^^^^^^^ expected 'Rune', found 'UInt8'
+   | 
+
+warning: unused import 'std.unicode.UnicodeStringExtension'
+ ==> main.cj:2:1:
+  | 
+2 | import std.unicode.UnicodeStringExtension
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unused import
+  | 
+  # note: this warning can be suppressed by setting the compiler option `-Woff unused`
+
+4 errors generated, 4 errors printed.
+1 warning generated, 1 warning printed.
+",,
+51,"error: undeclared identifier 'parse'
+  ==> main.cj:14:19:
+   | 
+14 |     return (Int64.parse(parts[0]), Int64.parse(parts[1]))
+   |                   ^^^^^ 
+   | 
+
+error: undeclared identifier 'parse'
+  ==> main.cj:14:42:
+   | 
+14 |     return (Int64.parse(parts[0]), Int64.parse(parts[1]))
+   |                                          ^^^^^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+52,"error: unknown suffix 'L' for number literal
+ ==> main.cj:7:22:
+  | 
+7 |     var evenCount = 0L
+  |                      ^ unknown suffix 'L'
+  | 
+
+error: unknown suffix 'L' for number literal
+ ==> main.cj:8:21:
+  | 
+8 |     var oddCount = 0L
+  |                     ^ unknown suffix 'L'
+  | 
+
+error: unknown suffix 'L' for number literal
+  ==> main.cj:10:19:
+   | 
+10 |     for (var i = 1L; i <= n; i = i + 1) {
+   |                   ^ unknown suffix 'L'
+   | 
+
+3 errors generated, 3 errors printed.
+",,
+53,"[with test #0]
+error: invalid subscript operator [] on type 'Enum-Option<Class-ArrayList<Class-ArrayList<Int64>>>' with index type 'Enum-Option<Int64>'
+  ==> main.cj:43:25:
+   | 
+43 |                     if (seats[row][col] != 0) {
+   |                         ^^^^^^^^^^ 
+   | 
+   # note: you may want to implement 'operator func [](index0: Enum-Option<Int64>)' for type 'Enum-Option<Class-ArrayList<Class-ArrayList<Int64>>>'
+
+error: invalid subscript operator [] on type 'Enum-Option<Class-ArrayList<Class-ArrayList<Int64>>>' with index type 'Enum-Option<Int64>'
+  ==> main.cj:52:25:
+   | 
+52 |                         seats[row][col] = 1
+   |                         ^^^^^^^^^^ 
+   | 
+   # note: you may want to implement 'operator func [](index0: Enum-Option<Int64>)' for type 'Enum-Option<Class-ArrayList<Class-ArrayList<Int64>>>'
+
+error: invalid binary operator '>=' on type 'Enum-Option<Struct-DateTime>' and 'Struct-DateTime'
+  ==> main.cj:70:28:
+   | 
+70 |             if (movieStart >= inputStart && movieEnd <= inputEnd) {
+   |                            ^^ 
+   | 
+   # note: you may want to implement 'operator func >=(right: Struct-DateTime)' for type 'Enum-Option<Struct-DateTime>'
+
+error: mismatched types
+  ==> main.cj:72:28:
+   | 
+72 |                 result.add(name)
+   |                            ^^^^ expected 'Struct-String', found 'Enum-Option<Struct-String>'
+   | 
+
+4 errors generated, 4 errors printed.
+
+
+[with test #1]
+error: invalid subscript operator [] on type 'Enum-Opt",,
+54,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+ ==> main.cj:5:15:
+  | 
+5 |         if (c == r'(') {
+  |               ^^ 
+  | 
+  # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+error: invalid binary operator '==' on type 'UInt8' and 'Rune'
+ ==> main.cj:7:22:
+  | 
+7 |         } else if (c == r')') {
+  |                      ^^ 
+  | 
+  # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
+
+2 errors generated, 2 errors printed.
+",,
+55,"error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:12:20:
+   | 
+12 |             result.append(factorial)
+   |                    ^^^^^^ 
+   | 
+
+error: 'append' is not a member of class 'ArrayList<Int64>'
+  ==> main.cj:14:20:
+   | 
+14 |             result.append(i * (i + 1) / 2)
+   |                    ^^^^^^ 
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+56,"error: invalid named arguments prefix 'format:', target is not a named parameter
+  ==> main.cj:94:57:
+   | 
+94 |         let check_datetime = DateTime.parse(check_time, format: ""yyyy/MM/dd HH:mm"")
+   |                                                         ^ 
+   | 
+
+error: invalid named arguments prefix 'format:', target is not a named parameter
+  ==> main.cj:97:68:
+   | 
+97 |             let start_datetime = DateTime.parse(course.start_time, format: ""yyyy/MM/dd HH:mm"")
+   |                                                                    ^ 
+   | 
+
+error: invalid named arguments prefix 'format:', target is not a named parameter
+  ==> main.cj:98:64:
+   | 
+98 |             let end_datetime = DateTime.parse(course.end_time, format: ""yyyy/MM/dd HH:mm"")
+   |                                                                ^ 
+   | 
+
+error: invalid named arguments prefix 'format:', target is not a named parameter
+   ==> main.cj:112:63:
+    | 
+112 |         let new_start = DateTime.parse(new_course.start_time, format: ""yyyy/MM/dd HH:mm"")
+    |                                                               ^ 
+    | 
+
+error: invalid named arguments prefix 'format:', target is not a named parameter
+   ==> main.cj:113:59:
+    | 
+113 |         let new_end = DateTime.parse(new_course.end_time, format: ""yyyy/MM/dd HH:mm"")
+    |                                                           ^ 
+    | 
+
+error: invalid named arguments prefix 'format:', target is not a named parameter
+   ==> main.cj:",,
+57,"error: unclosed delimiter: '('
+ ==> main.cj:2:29:
+  | 
+2 |     let hasLetters = s.any(c => c.isLetter())
+  |                           ~ ^ expected ')' here
+  |                           |
+  |                           to match this opening '('
+  | 
+
+error: expected ';' or '<NL>', found '=>'
+ ==> main.cj:2:30:
+  | 
+2 |     let hasLetters = s.any(c => c.isLetter())
+  |                              ^^ expected ';' or '<NL>' here
+  | 
+
+error: unclosed delimiter: '('
+ ==> main.cj:6:23:
+  | 
+6 |         return s.map(c => {
+  |                     ~ ^ expected ')' here
+  |                     |
+  |                     to match this opening '('
+  | 
+
+error: expected ';' or '<NL>', found '=>'
+ ==> main.cj:6:24:
+  | 
+6 |         return s.map(c => {
+  |                        ^^ expected ';' or '<NL>' here
+  | 
+
+error: expected expression or declaration, found '}'
+  ==> main.cj:13:5:
+   | 
+13 |     }
+   |     ^ expected expression or declaration here
+   | 
+
+5 errors generated, 5 errors printed.
+",,
+58,"error: undeclared identifier 'do_algebra'
+ ==> main.cj:4:9:
+  | 
+4 |     if (do_algebra(ArrayList<String>([""**"", ""*"", ""+""]), ArrayList<Int64>([2, 3, 4, 5])) != 37) {
+  |         ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:4:20:
+  | 
+4 |     if (do_algebra(ArrayList<String>([""**"", ""*"", ""+""]), ArrayList<Int64>([2, 3, 4, 5])) != 37) {
+  |                    ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:4:57:
+  | 
+4 |     if (do_algebra(ArrayList<String>([""**"", ""*"", ""+""]), ArrayList<Int64>([2, 3, 4, 5])) != 37) {
+  |                                                         ^ 
+  | 
+
+error: undeclared identifier 'do_algebra'
+ ==> main.cj:7:9:
+  | 
+7 |     if (do_algebra(ArrayList<String>([""+"", ""*"", ""-""]), ArrayList<Int64>([2, 3, 4, 5])) != 9) {
+  |         ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:7:20:
+  | 
+7 |     if (do_algebra(ArrayList<String>([""+"", ""*"", ""-""]), ArrayList<Int64>([2, 3, 4, 5])) != 9) {
+  |                    ^ 
+  | 
+
+error: undeclared identifier 'ArrayList'
+ ==> main.cj:7:56:
+  | 
+7 |     if (do_algebra(ArrayList<String>([""+"", ""*"", ""-""]), ArrayList<Int64>([2, 3, 4, 5])) != 9) {
+  |                                                        ^ 
+  | 
+
+error: undeclared identifier 'do_algebra'
+  ==> main.cj:10:9:
+   | 
+10 |     if (do_algebra(ArrayList<String>([""//"", ""*""]), ArrayList<Int64>([7, 3, 4])) != 8) {
+   |         ^ 
+   | 
+
+error: undeclared identifier 'ArrayList'
+  ==> main.cj:10:20:
+   | 
+10 |     if (do",,
+59,"error: mismatched types
+  ==> main.cj:27:32:
+   | 
+27 |         this.white_list.remove(addr)
+   |                                ^^^^ expected 'Struct-Range<Int64>', found 'Int64'
+   | 
+
+error: mismatched types
+  ==> main.cj:42:50:
+   | 
+42 |                     if (this.white_list.contains(addr)) {
+   |                                                  ^^^^ expected 'Int64', found 'Enum-Option<Int64>'
+   | 
+
+2 errors generated, 2 errors printed.
+",,
+60,"error: unrecognized escape '\(' in string literal
+ ==> main.cj:8:33:
+  | 
+8 |         let baseQuery = ""SELECT \(columnsStr) FROM \(table)""
+  |                         ~       ^^ unrecognized escape
+  |                         |
+  |                         because it is in string literal
+  | 
+  # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+error: unrecognized escape '\(' in string literal
+  ==> main.cj:12:74:
+   | 
+12 |                 let conditionParts = conditions.entries().map((k, v) => ""\(k)='\(v)'"").toList()
+   |                                                                         ~^^ unrecognized escape
+   |                                                                         |
+   |                                                                         because it is in string literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+error: unrecognized escape '\(' in string literal
+  ==> main.cj:13:18:
+   | 
+13 |                 ""\(baseQuery) WHERE \(String.join("" AND "", conditionParts))""
+   |                 ~^^ unrecognized escape
+   |                 |
+   |                 because it is in string literal
+   | 
+   # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
+
+error: unrecognized escape '\(' in string literal
+  =",,

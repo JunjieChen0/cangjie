@@ -22,10 +22,10 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from extra_stats import fmt_p, holm  # noqa: E402
+from extra_stats import bootstrap_ci, fmt_p, holm  # noqa: E402
 from run_matrix import AGENT_ARMS, N_TASKS, NEW_MODELS, PILOT_LIMIT, expand_matrix  # noqa: E402
 from stage3_stats import (FLAKY, PAIRS, compare, load_groups, load_r0_tokens, parse_name,  # noqa: E402
-                          summarize)
+                          sign_flip_p, summarize)
 
 from data import ROOT  # noqa: E402
 
@@ -75,6 +75,35 @@ def run_families(groups: dict[tuple, dict], **kw) -> list[dict]:
         rows += [{**r, "family": fam} for r in compare(family_groups(groups, fam), pairs=pairs, **kw)]
     for r, ph in zip(rows, holm([r["p"] for r in rows])):
         r["p_holm_all"] = ph
+    return rows
+
+
+def _means(reps: dict[int, dict]) -> dict[str, float]:
+    ids = set.intersection(*(set(reps[r]["passed"]) for r in reps))
+    return {i: st.mean(reps[r]["passed"][i] for r in reps) for i in ids}
+
+
+def interaction(groups: dict[tuple, dict]) -> list[dict]:
+    """syntax × hint 交互（方案第六节）：每题 I = (hint − raw)_direct − (hint − raw)_syntax（单位：百分点）。
+    REUSE_R0 模型的数据已看过，记为探索性（family "I-explore"）；其余为验证性族 "I"。两族各自 Holm。"""
+    rows = []
+    for model, ds in sorted({k[:2] for k in groups}):
+        arms = [groups.get((model, ds, p, fb)) for p in ("direct", "syntax") for fb in ("hint", "raw")]
+        if not all(arms):
+            continue
+        m = [_means(a) for a in arms]
+        ids = sorted(set.intersection(*(set(x) for x in m)))
+        diffs = [(m[0][i] - m[1][i]) - (m[2][i] - m[3][i]) for i in ids]
+        mean, lo, hi = bootstrap_ci(diffs)
+        rows.append({"family": "I-explore" if model in REUSE_R0 else "I", "model": model, "ds": ds, "n": len(ids),
+                     "hint_gain_direct": round(100 * st.mean(m[0][i] - m[1][i] for i in ids), 2),
+                     "hint_gain_syntax": round(100 * st.mean(m[2][i] - m[3][i] for i in ids), 2),
+                     "interaction": round(mean, 2), "ci_lo": round(lo, 2), "ci_hi": round(hi, 2),
+                     "p": sign_flip_p(diffs)})
+    for fam in ("I", "I-explore"):
+        sub = [r for r in rows if r["family"] == fam]
+        for r, ph in zip(sub, holm([r["p"] for r in sub])):
+            r["p_holm"] = ph
     return rows
 
 
@@ -143,6 +172,15 @@ def write_markdown(res: dict, pilot: bool) -> str:
         rows = [(r, s) for r, s in zip(res["comparisons"], res["sensitivity_excl_flaky"]) if r["family"] == fam]
         L += ["", f"## 族 {fam}：{title}（{len(rows)} 个比较，Holm 在族内校正）", ""]
         L += _cmp_table([r for r, _ in rows], [s for _, s in rows]) if rows else ["（暂无可比较的组）"]
+    L += ["", "## syntax × hint 交互效应", "",
+          "I = (hint − raw)<sub>direct</sub> − (hint − raw)<sub>syntax</sub>（百分点，按题计算）；I > 0 表示有语法手册时 hint 的增益更小。"
+          "族 I 为验证性（族内 Holm）；I-explore 的数据已在第 3 阶段看过，只作探索性参考（单独 Holm）。", "",
+          "| 族 | 模型 | 数据集 | 题数 | hint 增益（direct） | hint 增益（syntax） | 交互 I [95% CI] | p | p(Holm) |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for r in res.get("interaction", []):
+        L.append(f"| {r['family']} | {r['model']} | {r['ds']} | {r['n']} | {r['hint_gain_direct']:+.2f} | "
+                 f"{r['hint_gain_syntax']:+.2f} | {r['interaction']:+.2f} [{r['ci_lo']:+.2f}, {r['ci_hi']:+.2f}] | "
+                 f"{fmt_p(r['p'])} | {fmt_p(r['p_holm'])} |")
     L += ["", "## Agent 行为（描述性）", "",
           "| 模型 | 数据集 | 起点 | 组 | 题次 | 每题检索次数 | 至少检索一次 | 无效动作 | 平均步数 |",
           "|---|---|---|---|---|---|---|---|---|"]
@@ -162,6 +200,7 @@ def main():
     res = {"summary": summarize(groups, load_all_r0(review, olds)),
            "comparisons": run_families(groups),
            "sensitivity_excl_flaky": run_families(groups, exclude=FLAKY, drop_timeouts=True),
+           "interaction": interaction(groups),
            "agent_behavior": agent_behavior(groups, review),
            "missing": [] if args.pilot else missing_groups(groups)}
     out = os.path.join(review, "stats") if args.pilot else os.path.join(RESULTS, "stats")

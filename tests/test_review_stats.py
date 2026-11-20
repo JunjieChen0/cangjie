@@ -52,6 +52,20 @@ def test_family_g_only_new_models_kimi_and_ds_ce_syntax(tmp_path):
     assert fam_g == {("glm53f", "he"), ("ds_v41f", "ce")}       # doubao_mini 的 hint vs raw 已在第 3 阶段比较过
 
 
+def test_interaction_is_hint_gain_direct_minus_syntax(tmp_path):
+    review = str(tmp_path / "review")
+    for model in ("glm53f", "doubao_mini"):
+        _arm(review, f"{model}_he_direct_hint", 4)
+        _arm(review, f"{model}_he_direct_raw", 2)
+        _arm(review, f"{model}_he_syntax_hint", 3)
+        _arm(review, f"{model}_he_syntax_raw", 3)
+    rows = {r["model"]: r for r in R.interaction(R.load_all(review, [], {"he": N}))}
+    g = rows["glm53f"]
+    assert (g["family"], g["n"], g["hint_gain_direct"], g["hint_gain_syntax"]) == ("I", N, 33.33, 0.0)
+    assert g["interaction"] == 33.33 and "p_holm" in g
+    assert rows["doubao_mini"]["family"] == "I-explore"
+
+
 def test_markdown_lists_each_family():
     res = {"missing": ["u2f_he_direct_rag2（0/3）"], "summary": [], "comparisons": [],
            "sensitivity_excl_flaky": [], "agent_behavior": []}

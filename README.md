@@ -136,6 +136,9 @@ python src/run_matrix.py --matrix review --dry-run
 python src/retrieval_eval.py --export-check                          # 导出判定盲评表 manual_check.csv（各分数档 10 条）
 python src/manual_check_agreement.py                                 # 盲评与 LLM 判定一致性 → manual_check_agreement.md
 python src/review_stats.py [--pilot]                                 # 补充实验统计（方案见 docs/补充实验统计方案.md）
+python src/sensitivity_report.py                                     # 不稳定题 / 超时题敏感性分析汇总
+python src/classifier_check.py [--export]                            # 第 0 轮错误分类器人工盲评（说明见 docs/第0轮分类器人工复核.md）
+python src/reproduce_offline.py                                      # 离线复现验收：不调用 API 重建全部统计输出并逐一比对
 .venv-retrieval/Scripts/python.exe src/retrieval_server.py          # rag2 运行期间保持开启
 # 典型修复案例素材（按固定规则自动挑选）→ results/case_examples.md
 python src/case_examples.py
