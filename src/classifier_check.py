@@ -93,6 +93,12 @@ def agreement(human: list[str], pred: list[str]) -> dict:
             "confusion": {f"{p} → {h}": k for (p, h), k in sorted(Counter(zip(pred, human)).items()) if p != h}}
 
 
+def weighted_accuracy(per_class: dict, pool_counts: dict[str, int]) -> float:
+    """按分类器类别分层抽样的总体准确率估计：Σ 各类在总体中的占比 × 该类的精确率（人工判定与分类器一致的比例）。"""
+    total = sum(pool_counts.values())
+    return sum(pool_counts[c] / total * (per_class[c]["precision"] or 0.0) for c in pool_counts if pool_counts[c])
+
+
 def load_scored(out: str = OUT) -> tuple[list[str], list[str]]:
     with open(os.path.join(out, "classifier_check.csv"), encoding="utf-8-sig", newline="") as f:
         human = {int(r["no"]): r[HUMAN_COL].strip() for r in csv.DictReader(f)}
@@ -108,10 +114,13 @@ def load_scored(out: str = OUT) -> tuple[list[str], list[str]]:
 def write_markdown(res: dict, path: str) -> None:
     md = ["# 第 0 轮编译错误分类器：人工盲评复核", "",
           f"共 {res['n']} 条（按分类器类别分层抽样，每类最多 {PER_CLASS} 条，评分时看不到分类器结果）。", "",
-          f"完全一致 {res['exact']}/{res['n']}（{100 * res['exact'] / res['n']:.1f}%），Cohen κ = {res['kappa']}。", "",
-          "| 类别 | 分类器判为 | 人工判为 | 精确率 | 召回率 |", "|---|---:|---:|---:|---:|"]
+          f"样本内完全一致 {res['exact']}/{res['n']}（{100 * res['exact'] / res['n']:.1f}%），Cohen κ = {res['kappa']}。",
+          f"按各类别在全部 {sum(res['pool_counts'].values())} 条第 0 轮编译错误中的占比加权，"
+          f"估计分类器总体准确率为 **{100 * res['weighted_accuracy']:.1f}%**（分层抽样的标准估计）。", "",
+          "| 类别 | 总体条数 | 分类器判为（样本） | 人工判为（样本） | 精确率 | 召回率（样本内） |", "|---|---:|---:|---:|---:|---:|"]
     for c, v in res["per_class"].items():
-        md.append(f"| {c} | {v['predicted']} | {v['human']} | {v['precision'] if v['precision'] is not None else '—'} | "
+        md.append(f"| {c} | {res['pool_counts'].get(c, 0)} | {v['predicted']} | {v['human']} | "
+                  f"{v['precision'] if v['precision'] is not None else '—'} | "
                   f"{v['recall'] if v['recall'] is not None else '—'} |")
     md += ["", "不一致（分类器 → 人工：条数）：" + ("；".join(f"{k}：{v}" for k, v in res["confusion"].items()) or "无"), "",
            "注：分层抽样使各类别等量出现，精确率可直接解读；召回率与总体一致率受抽样比例影响，只作参考。", ""]
@@ -127,6 +136,8 @@ def main():
         print(f"→ {export()}")
         return
     res = agreement(*load_scored())
+    res["pool_counts"] = dict(Counter(x["predicted"] for x in load_pool()))
+    res["weighted_accuracy"] = round(weighted_accuracy(res["per_class"], res["pool_counts"]), 3)
     with open(os.path.join(OUT, "classifier_check_agreement.json"), "w", encoding="utf-8") as f:
         json.dump(res, f, ensure_ascii=False, indent=2)
     write_markdown(res, os.path.join(OUT, "classifier_check_agreement.md"))

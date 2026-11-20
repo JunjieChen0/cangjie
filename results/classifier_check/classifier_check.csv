@@ -14,7 +14,7 @@ error: 'min' is not accessible in package 'std.math'
   | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 2,"error: the expression for numeric type conversion must have a numeric type
  ==> main.cj:3:23:
   | 
@@ -38,7 +38,7 @@ error: type incompatible in this compound assignment expression
   | 
 
 3 errors generated, 3 errors printed.
-",,
+",type_or_mutability,
 3,"error: 'repeat' is non-static member, cannot access by type name
  ==> main.cj:4:36:
   | 
@@ -47,7 +47,7 @@ error: type incompatible in this compound assignment expression
   | 
 
 1 error generated, 1 error printed.
-",,
+",other_compile,
 4,"error: expected operator or end of expression, found ':'
  ==> main.cj:3:25:
   | 
@@ -77,7 +77,7 @@ warning: possibly confusing line terminator
 
 2 errors generated, 2 errors printed.
 1 warning generated, 1 warning printed.
-",,
+",foreign_syntax,
 5,"error: 'len' is not a member of struct 'String'
  ==> main.cj:2:25:
   | 
@@ -86,7 +86,7 @@ warning: possibly confusing line terminator
   | 
 
 1 error generated, 1 error printed.
-",,
+",api_or_undeclared,
 6,"error: expected '{', found ''
    ==> main.cj:119:49:
     | 
@@ -116,7 +116,7 @@ error: expected expression or declaration, found '}'
     | 
 
 4 errors generated, 4 errors printed.
-",,
+",foreign_syntax,
 7,"error: invalid left-hand expression of assignment '='
   ==> main.cj:22:36:
    | 
@@ -127,7 +127,7 @@ error: expected expression or declaration, found '}'
    | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 8,"error: can not find package 'std.text'
  ==> main.cj:4:8:
   | 
@@ -137,7 +137,7 @@ error: expected expression or declaration, found '}'
   # help: check if the .cjo file of the package exists in CANGJIE_PATH or CANGJIE_HOME, or use '--import-path' to specify the .cjo file path
 
 1 error generated, 1 error printed.
-",,
+",api_or_undeclared,
 9,"error: mismatched types
   ==> main.cj:20:32:
    | 
@@ -176,7 +176,7 @@ error: mismatched types
    | 
 
 5 errors generated, 5 errors printed.
-",,
+",type_or_mutability,
 10,"error: unclosed delimiter: '('
  ==> main.cj:4:41:
   | 
@@ -224,7 +224,7 @@ error: expected expression or declaration, found '}'
   | 
 
 6 errors generated, 6 errors printed.
-",,
+",foreign_syntax,
 11,"error: expected identifier or pattern after 'let', found keyword 'mut'
   ==> main.cj:34:13:
    | 
@@ -238,7 +238,7 @@ help: escape the keyword `mut` to use it as an identifier:
    | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 12,"error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
  ==> main.cj:4:15:
   | 
@@ -256,7 +256,7 @@ error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
    # note: you may want to implement 'operator func >=(right: Rune)' for type 'UInt8'
 
 2 errors generated, 2 errors printed.
-",,
+",type_or_mutability,
 13,"[with test #0]
 error: unclosed delimiter: '('
   ==> main.cj:41:38:
@@ -308,7 +308,7 @@ error: unexpected main function in class body
    ==> main.cj:173:1:
     | 
 5   | class MusicPlayer {
-  ",,
+  ",foreign_syntax,
 14,"error: invalid binary operator '>=' on type 'UInt8' and 'Rune'
  ==> main.cj:8:16:
   | 
@@ -355,7 +355,7 @@ error: undeclared identifier 'toUInt32'
    | 
 
 6 errors generated, 6 errors printed.
-",,
+",type_or_mutability,
 15,"error: 'append' is not a member of class 'ArrayList<Int64>'
   ==> main.cj:12:20:
    | 
@@ -371,7 +371,7 @@ error: 'append' is not a member of class 'ArrayList<Int64>'
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 16,"error: mismatched types
    ==> main.cj:133:23:
     | 
@@ -380,7 +380,7 @@ error: 'append' is not a member of class 'ArrayList<Int64>'
     | 
 
 1 error generated, 1 error printed.
-",,
+",type_or_mutability,
 17,"error: expected '(' after 'if', found 'parts'
   ==> main.cj:30:12:
    | 
@@ -432,7 +432,7 @@ error: expected ';' or '<NL>', found '=>'
    | 
 
 6 errors generated, 6 errors printed.
-",,
+",foreign_syntax,
 18,"error: mismatched types
   ==> main.cj:56:45:
    | 
@@ -477,7 +477,7 @@ error: 'append' is not a member of class 'ArrayList<Int64>'
     |                    ^^^^^^ 
     | 
 
-error: 'append' is not a member of class 'Arra",,
+error: 'append' is not a member of class 'Arra",type_or_mutability,
 19,"error: undeclared identifier 'Random'
   ==> main.cj:36:13:
    | 
@@ -493,7 +493,7 @@ error: type incompatible in this compound assignment expression
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 20,"error: invalid binary operator '-' on type 'Int64' and 'Float64'
   ==> main.cj:79:37:
    | 
@@ -503,7 +503,7 @@ error: type incompatible in this compound assignment expression
    # note: you may want to implement 'operator func -(right: Float64)' for type 'Int64'
 
 1 error generated, 1 error printed.
-",,
+",type_or_mutability,
 21,"error: expected '{', found '-'
  ==> main.cj:7:27:
   | 
@@ -519,7 +519,7 @@ error: expected ';' or '<NL>', found keyword 'else'
   | 
 
 2 errors generated, 2 errors printed.
-",,
+",foreign_syntax,
 22,"error: 'get' is not a member of enum 'Option<Class-ArrayList<Class-Message>>'
    ==> main.cj:149:36:
     | 
@@ -535,7 +535,7 @@ error: 'get' is not a member of enum 'Option<Class-ArrayList<Class-Message>>'
     | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 23,"error: unclosed delimiter: '('
   ==> main.cj:18:55:
    | 
@@ -553,7 +553,7 @@ error: expected '{', found literal '1'
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",foreign_syntax,
 24,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   ==> main.cj:27:20:
    | 
@@ -595,7 +595,7 @@ warning: unused import 'std.convert.RadixConvertible'
 
 4 errors generated, 4 errors printed.
 1 warning generated, 1 warning printed.
-",,
+",type_or_mutability,
 25,"error: expected operator or end of expression, found ':'
  ==> main.cj:2:17:
   | 
@@ -618,7 +618,7 @@ error: expected '(', found 'c'
   | 
 
 3 errors generated, 3 errors printed.
-",,
+",foreign_syntax,
 26,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
  ==> main.cj:8:19:
   | 
@@ -635,7 +635,7 @@ error: mismatched types
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",type_or_mutability,
 27,"error: unknown start of token: \
   ==> main.cj:13:44:
    | 
@@ -644,7 +644,7 @@ error: mismatched types
    | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,疑似 JS/Python 正则或转义写法，源码行在 split 后被截断；按外来语法记。
 28,"error: expected operator or end of expression, found ':'
  ==> main.cj:5:19:
   | 
@@ -675,7 +675,7 @@ error: unclosed delimiter: '('
    | 
 
 3 errors generated, 3 errors printed.
-",,
+",foreign_syntax,
 29,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   ==> main.cj:14:34:
    | 
@@ -685,7 +685,7 @@ error: unclosed delimiter: '('
    # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
 
 1 error generated, 1 error printed.
-",,
+",type_or_mutability,
 30,"error: undeclared identifier 'isAsciiDigit'
  ==> main.cj:8:57:
   | 
@@ -701,7 +701,7 @@ error: mismatched types
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 31,"error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Float64, Float64>' is not supported
   ==> main.cj:50:9:
    | 
@@ -731,7 +731,7 @@ error: operator '!=' between tuple type 'Tuple<Float64, Float64>' and 'Tuple<Flo
    | 
 
 4 errors generated, 4 errors printed.
-",,
+",type_or_mutability,
 32,"error: unknown suffix 'L' for number literal
  ==> main.cj:3:20:
   | 
@@ -747,7 +747,7 @@ error: unknown suffix 'L' for number literal
   | 
 
 2 errors generated, 2 errors printed.
-",,
+",foreign_syntax,
 33,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
  ==> main.cj:6:20:
   | 
@@ -765,7 +765,7 @@ error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
 
 2 errors generated, 2 errors printed.
-",,
+",type_or_mutability,
 34,"error: 'toLower' is not a member of struct 'String'
   ==> main.cj:11:28:
    | 
@@ -781,7 +781,7 @@ error: 'toUpper' is not a member of struct 'String'
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 35,"error: unrecognized escape '\(' in string literal
   ==> main.cj:72:49:
    | 
@@ -793,7 +793,7 @@ error: 'toUpper' is not a member of struct 'String'
    # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 36,"error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-ArrayList<Class-Message>>'
    ==> main.cj:100:19:
     | 
@@ -830,7 +830,7 @@ error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-Arra
     | 
 
 5 errors generated, 5 errors printed.
-",,
+",api_or_undeclared,
 37,"error: interface 'Map' can not be instantiated
  ==> main.cj:5:16:
   | 
@@ -839,7 +839,7 @@ error: 'containsKey' is not a member of class 'HashMap<Struct-String, Class-Arra
   | 
 
 1 error generated, 1 error printed.
-",,
+",type_or_mutability,Map 是接口，不能直接实例化；按类型/可实例化性归入 type_or_mutability。
 38,"error: rune literal may only contain one character
  ==> main.cj:8:29:
   | 
@@ -863,7 +863,7 @@ error: unrecognized escape '\s' in rune literal
    # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in rune literal
 
 2 errors generated, 2 errors printed.
-",,
+",foreign_syntax,
 39,"error: cannot convert an integer literal to type 'Float64'
  ==> main.cj:7:25:
   | 
@@ -872,7 +872,7 @@ error: unrecognized escape '\s' in rune literal
   | 
 
 1 error generated, 1 error printed.
-",,
+",type_or_mutability,
 40,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   ==> main.cj:19:15:
    | 
@@ -898,7 +898,7 @@ error: invalid binary operator '==' on type 'UInt8' and 'Rune'
    # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
 
 3 errors generated, 3 errors printed.
-",,
+",type_or_mutability,
 41,"error: 'gethostname' is not accessible in package 'std.posix'
  ==> main.cj:2:8:
   | 
@@ -907,7 +907,7 @@ error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   | 
 
 1 error generated, 1 error printed.
-",,
+",api_or_undeclared,
 42,"error: invalid binary operator '<' on type 'UInt8' and 'Struct-String'
   ==> main.cj:38:24:
    | 
@@ -926,7 +926,7 @@ warning: unused import 'std.convert.Formattable'
 
 1 error generated, 1 error printed.
 1 warning generated, 1 warning printed.
-",,
+",type_or_mutability,
 43,"error: expected expression after '..', found '<'
  ==> main.cj:6:18:
   | 
@@ -935,7 +935,7 @@ warning: unused import 'std.convert.Formattable'
   | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 44,"error: unrecognized escape '\(' in string literal
   ==> main.cj:95:42:
    | 
@@ -947,7 +947,7 @@ warning: unused import 'std.convert.Formattable'
    # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 45,"error: no matching function for operator '()' function call
  ==> main.cj:3:13:
   | 
@@ -977,7 +977,7 @@ error: 'substring' is not a member of struct 'String'
    | 
 
 4 errors generated, 4 errors printed.
-",,
+",api_or_undeclared,
 46,"error: rune literal may only contain one character
   ==> main.cj:15:38:
    | 
@@ -991,7 +991,7 @@ help: if you intended to write a string literal, use '""':
    | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 47,"error: unclosed delimiter: '('
  ==> main.cj:9:16:
   | 
@@ -1002,7 +1002,7 @@ help: if you intended to write a string literal, use '""':
   | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 48,"error: invalid left-hand expression of assignment '='
   ==> main.cj:19:31:
    | 
@@ -1013,7 +1013,7 @@ help: if you intended to write a string literal, use '""':
    | 
 
 1 error generated, 1 error printed.
-",,
+",foreign_syntax,
 49,"error: 'append' is not a member of class 'ArrayList<Int64>'
   ==> main.cj:30:32:
    | 
@@ -1057,7 +1057,7 @@ error: 'append' is not a member of class 'ArrayList<Class-ArrayList<Int64>>'
    | 
 
 6 errors generated, 6 errors printed.
-",,
+",api_or_undeclared,
 50,"error: mismatched types
   ==> main.cj:13:29:
    | 
@@ -1096,7 +1096,7 @@ warning: unused import 'std.unicode.UnicodeStringExtension'
 
 4 errors generated, 4 errors printed.
 1 warning generated, 1 warning printed.
-",,
+",type_or_mutability,
 51,"error: undeclared identifier 'parse'
   ==> main.cj:14:19:
    | 
@@ -1112,7 +1112,7 @@ error: undeclared identifier 'parse'
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 52,"error: unknown suffix 'L' for number literal
  ==> main.cj:7:22:
   | 
@@ -1135,7 +1135,7 @@ error: unknown suffix 'L' for number literal
    | 
 
 3 errors generated, 3 errors printed.
-",,
+",foreign_syntax,
 53,"[with test #0]
 error: invalid subscript operator [] on type 'Enum-Option<Class-ArrayList<Class-ArrayList<Int64>>>' with index type 'Enum-Option<Int64>'
   ==> main.cj:43:25:
@@ -1172,7 +1172,7 @@ error: mismatched types
 
 
 [with test #1]
-error: invalid subscript operator [] on type 'Enum-Opt",,
+error: invalid subscript operator [] on type 'Enum-Opt",type_or_mutability,
 54,"error: invalid binary operator '==' on type 'UInt8' and 'Rune'
  ==> main.cj:5:15:
   | 
@@ -1190,7 +1190,7 @@ error: invalid binary operator '==' on type 'UInt8' and 'Rune'
   # note: you may want to implement 'operator func ==(right: Rune)' for type 'UInt8'
 
 2 errors generated, 2 errors printed.
-",,
+",type_or_mutability,
 55,"error: 'append' is not a member of class 'ArrayList<Int64>'
   ==> main.cj:12:20:
    | 
@@ -1206,7 +1206,7 @@ error: 'append' is not a member of class 'ArrayList<Int64>'
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",api_or_undeclared,
 56,"error: invalid named arguments prefix 'format:', target is not a named parameter
   ==> main.cj:94:57:
    | 
@@ -1243,7 +1243,7 @@ error: invalid named arguments prefix 'format:', target is not a named parameter
     | 
 
 error: invalid named arguments prefix 'format:', target is not a named parameter
-   ==> main.cj:",,
+   ==> main.cj:",api_or_undeclared,DateTime.parse 没有 format 命名参数；属 API 调用签名错误，归入 api_or_undeclared。
 57,"error: unclosed delimiter: '('
  ==> main.cj:2:29:
   | 
@@ -1284,7 +1284,7 @@ error: expected expression or declaration, found '}'
    | 
 
 5 errors generated, 5 errors printed.
-",,
+",foreign_syntax,
 58,"error: undeclared identifier 'do_algebra'
  ==> main.cj:4:9:
   | 
@@ -1337,7 +1337,7 @@ error: undeclared identifier 'do_algebra'
 error: undeclared identifier 'ArrayList'
   ==> main.cj:10:20:
    | 
-10 |     if (do",,
+10 |     if (do",api_or_undeclared,
 59,"error: mismatched types
   ==> main.cj:27:32:
    | 
@@ -1353,7 +1353,7 @@ error: mismatched types
    | 
 
 2 errors generated, 2 errors printed.
-",,
+",type_or_mutability,
 60,"error: unrecognized escape '\(' in string literal
  ==> main.cj:8:33:
   | 
@@ -1385,4 +1385,4 @@ error: unrecognized escape '\(' in string literal
    # note: found 12 possible escapes: '\r', '\f', '\v', '\n', '\t', '\b', '\0', '\\', '\'', '\""', '\u{__}', '\$' in string literal
 
 error: unrecognized escape '\(' in string literal
-  =",,
+  =",foreign_syntax,

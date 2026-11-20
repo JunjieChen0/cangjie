@@ -21,3 +21,5 @@ def test_agreement_precision_recall_and_kappa():
     assert r["confusion"] == {"foreign_syntax → other_compile": 1}
     # po = 0.75，pe = (1*2 + 2*2) / 16 = 0.375 → κ = 0.6
     assert abs(r["kappa"] - 0.6) < 1e-9
+    # 总体中 foreign 30 条（精确率 0.5）、api 10 条（精确率 1.0）→ 0.75*0.5 + 0.25*1.0 = 0.625
+    assert abs(C.weighted_accuracy(r["per_class"], {"foreign_syntax": 30, "api_or_undeclared": 10}) - 0.625) < 1e-9

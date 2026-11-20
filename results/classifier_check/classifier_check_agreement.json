@@ -1,0 +1,50 @@
+{
+  "n": 60,
+  "exact": 44,
+  "kappa": 0.644,
+  "per_class": {
+    "foreign_syntax": {
+      "predicted": 15,
+      "human": 23,
+      "precision": 1.0,
+      "recall": 0.652
+    },
+    "api_or_undeclared": {
+      "predicted": 15,
+      "human": 16,
+      "precision": 0.867,
+      "recall": 0.812
+    },
+    "type_or_mutability": {
+      "predicted": 15,
+      "human": 20,
+      "precision": 1.0,
+      "recall": 0.75
+    },
+    "duplicate_main": {
+      "predicted": 0,
+      "human": 0,
+      "precision": null,
+      "recall": null
+    },
+    "other_compile": {
+      "predicted": 15,
+      "human": 1,
+      "precision": 0.067,
+      "recall": 1.0
+    }
+  },
+  "confusion": {
+    "api_or_undeclared → type_or_mutability": 2,
+    "other_compile → api_or_undeclared": 3,
+    "other_compile → foreign_syntax": 8,
+    "other_compile → type_or_mutability": 3
+  },
+  "pool_counts": {
+    "foreign_syntax": 297,
+    "other_compile": 20,
+    "api_or_undeclared": 215,
+    "type_or_mutability": 77
+  },
+  "weighted_accuracy": 0.922
+}
