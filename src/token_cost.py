@@ -4,7 +4,8 @@
   python src/token_cost.py            # 输出 results/stats/token_cost_stats.{md,json}
 
 口径（与论文全文、图 2、成本表相同，见 pricing.py）：
-- 所有模型取国内官方按量计费牌价（人民币），按统一汇率折成美元；DeepSeek 取高峰价（偏保守）；
+- 国产模型取国内官方按量计费牌价（人民币），按统一汇率折成美元；DeepSeek 取高峰价（偏保守）；
+- Claude Haiku 5.5、GPT-6 Luna、MiniMax-M3.1-Flash 直接取各家官方美元牌价；
 - 未计缓存命中折扣（偏高）；超时、中断而未写出 summary 的请求未计入（偏低）；检索评估中的改写与判定调用不写 summary，也未计入；
 - 实验实际通过订阅调用，以上均为等价折算，不是实际支出。
 """
@@ -14,14 +15,16 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from pricing import CNY_PRICE_DATE, CNY_PRICES, FX_DATE, FX_RATE, SOURCE_EN, cny_cost, usd_cost, usd_prices  # noqa: E402
+from pricing import (CNY_PRICE_DATE, CNY_PRICES, FX_DATE, FX_RATE, PRICED_MODELS, SOURCE_EN, USD_PRICE_DATE,  # noqa: E402
+                     USD_PRICES, cny_cost, usd_cost, usd_prices)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "results", "stats")
 
 SHORT = {"doubao-seed-2-0-mini-260428": "Doubao", "deepseek-v4-1-flash-261017": "DeepSeek",
          "kimi-k3-1-pro-261024": "Kimi", "glm-5-3-flash-260828": "GLM-5.3-Flash",
-         "doubao-seed-2-1-lite-260915": "Doubao-2.1-lite", "u2-flash": "U2-Flash"}
+         "doubao-seed-2-1-lite-260915": "Doubao-2.1-lite", "u2-flash": "U2-Flash",
+         "claude-haiku-5.5": "Claude-Haiku-5.5", "gpt-6-luna": "GPT-6-Luna", "minimax-m3.1-flash": "MiniMax-M3.1-Flash"}
 CATEGORIES = [("stage3", "第 3 阶段正式实验"), ("original30", "Original-30 正式实验"),
               ("rounds10", "10 轮扩展"), ("review", "审稿后补充实验"), ("pilot", "预实验（pilot）"),
               ("early", "早期探索（exp / ablation / try）")]
@@ -51,8 +54,8 @@ def load_usage(root: str = ROOT) -> list[dict]:
         if pin + pout == 0:
             continue
         model = s.get("model_resolved") or s.get("config", {}).get("model")
-        if model not in CNY_PRICES:
-            raise SystemExit(f"{p}：模型 {model} 没有单价，请先补进 pricing.CNY_PRICES")
+        if model not in PRICED_MODELS:
+            raise SystemExit(f"{p}：模型 {model} 没有单价，请先补进 pricing.CNY_PRICES 或 USD_PRICES")
         rel, cat = os.path.relpath(p, root).replace(os.sep, "/"), category(os.path.relpath(os.path.dirname(p), root))
         rows.append({"path": rel, "model": model, "category": cat, "prompt_tokens": pin, "completion_tokens": pout})
         rw_in, rw_out = s.get("total_rewrite_prompt_tokens") or 0, s.get("total_rewrite_completion_tokens") or 0
@@ -79,11 +82,11 @@ def aggregate(rows: list[dict]) -> list[dict]:
         if not items:
             continue
         out += [_line(c, m, [r for r in items if r["model"] == m])
-                for m in CNY_PRICES if any(r["model"] == m for r in items)]
+                for m in PRICED_MODELS if any(r["model"] == m for r in items)]
         out.append(_line(c, "all", items))
     out.append(_line("formal", "all", [r for r in rows if r["category"] in FORMAL]))
     out += [_line("total", m, [r for r in rows if r["model"] == m])
-            for m in CNY_PRICES if any(r["model"] == m for r in rows)]
+            for m in PRICED_MODELS if any(r["model"] == m for r in rows)]
     out.append(_line("total", "all", rows))
     return out
 
@@ -91,8 +94,9 @@ def aggregate(rows: list[dict]) -> list[dict]:
 def write_markdown(lines: list[dict], path: str) -> None:
     names = dict(CATEGORIES, formal="**正式实验小计**", total="**合计**")
     md = ["# Token 消耗与美元成本核算", "",
-          f"所有模型取国内官方按量计费牌价（{CNY_PRICE_DATE}，DeepSeek 取高峰价），按 {FX_RATE} 元/美元（{FX_DATE}）"
-          "折成美元；与论文正文、图 2、成本表同一口径（见 pricing.py）。",
+          f"国产模型取国内官方按量计费牌价（{CNY_PRICE_DATE}，DeepSeek 取高峰价），按 {FX_RATE} 元/美元（{FX_DATE}）"
+          f"折成美元；Claude Haiku 5.5、GPT-6 Luna、MiniMax-M3.1-Flash 取各家官方美元牌价（{USD_PRICE_DATE}），"
+          "人民币列按同一汇率反算；与论文正文、图 2、成本表同一口径（见 pricing.py）。",
           "未计缓存命中折扣（偏高）；超时、中断而未写出 summary 的请求未计入（偏低）；"
           "实验实际通过订阅调用，均为等价折算，不是实际支出。", "",
           "## 单价（每百万 tokens）", "", "| 模型 | 输入（元） | 输出（元） | 输入（美元） | 输出（美元） | 来源 |",
@@ -100,6 +104,8 @@ def write_markdown(lines: list[dict], path: str) -> None:
     for m, (a, b, src) in CNY_PRICES.items():
         ua, ub = usd_prices(m)
         md.append(f"| {SHORT[m]} `{m}` | ¥{a:.2f} | ¥{b:.2f} | ${ua:.4f} | ${ub:.4f} | {src} |")
+    for m, (ua, ub, src) in USD_PRICES.items():
+        md.append(f"| {SHORT[m]} `{m}` | — | — | ${ua:.4f} | ${ub:.4f} | {src} |")
     md += ["", "## 按实验与模型汇总", "",
            "| 类别 | 模型 | 运行数 | 输入 tokens | 输出 tokens | 美元 | 人民币 |", "|---|---|---:|---:|---:|---:|---:|"]
     for r in lines:
@@ -117,7 +123,9 @@ def main():
     for m, (a, b, _) in CNY_PRICES.items():
         ua, ub = usd_prices(m)
         prices[m] = {"input": ua, "output": ub, "cny_input": a, "cny_output": b, "source": SOURCE_EN[m]}
-    res = {"cny_price_date": CNY_PRICE_DATE, "fx_rate": FX_RATE, "fx_date": FX_DATE, "usd_prices": prices,
+    for m, (ua, ub, _) in USD_PRICES.items():
+        prices[m] = {"input": ua, "output": ub, "cny_input": None, "cny_output": None, "source": SOURCE_EN[m]}
+    res = {"cny_price_date": CNY_PRICE_DATE, "usd_price_date": USD_PRICE_DATE, "fx_rate": FX_RATE, "fx_date": FX_DATE, "usd_prices": prices,
            "token_cost": lines}
     with open(os.path.join(OUT, "token_cost_stats.json"), "w", encoding="utf-8") as f:
         json.dump(res, f, ensure_ascii=False, indent=2)

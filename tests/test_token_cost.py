@@ -25,6 +25,16 @@ def test_usd_is_domestic_list_price_converted_at_one_rate():
     assert T.cny_cost("u2-flash", 1_000_000, 0) == 1.0                   # 云知声原价
 
 
+def test_overseas_models_use_official_usd_list_price():
+    assert T.usd_cost("claude-haiku-5.5", 1_000_000, 1_000_000) == 0.10 + 0.50      # ≤100K 档
+    assert T.usd_cost("gpt-6-luna", 1_000_000, 1_000_000) == 0.10 + 0.50            # Standard 短上下文
+    assert T.usd_cost("minimax-m3.1-flash", 1_000_000, 1_000_000) == 0.15 + 0.60
+    assert T.usd_prices("gpt-6-luna") == (0.10, 0.50)
+    assert abs(T.cny_cost("minimax-m3.1-flash", 1_000_000, 0) - 0.15 * 6.67) < 1e-12  # 人民币列按同一汇率反算
+    assert set(T.PRICED_MODELS) == set(T.CNY_PRICES) | set(T.USD_PRICES)
+    assert all(m in T.SOURCE_EN and m in T.SHORT for m in T.PRICED_MODELS)
+
+
 def _summary(path, model, pin, pout):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
