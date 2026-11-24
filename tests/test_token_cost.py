@@ -55,6 +55,18 @@ def test_load_and_aggregate_skip_empty_and_selftest(tmp_path):
     assert lines[("pilot", DS)]["completion_tokens"] == 1_000_000
 
 
+def test_channel_aliases_are_costed_and_merged_as_the_same_model(tmp_path):
+    r = tmp_path / "results/review/runs"
+    _summary(str(r / "a.summary.json"), "u2-flash", 1_000_000, 0)
+    _summary(str(r / "b.summary.json"), "u2-flash-charge", 1_000_000, 0)            # 云知声付费档，同一模型
+    _summary(str(r / "c.summary.json"), "MiniMax-M3.1-Flash", 1_000_000, 0)         # MiniMax 官方直连
+    rows = T.load_usage(str(tmp_path))
+    assert sorted(x["model"] for x in rows) == ["minimax-m3.1-flash", "u2-flash", "u2-flash"]
+    lines = {(x["category"], x["model"]): x for x in T.aggregate(rows)}
+    assert lines[("review", "u2-flash")]["runs"] == 2 and lines[("review", "u2-flash")]["cny"] == 2.0
+    assert lines[("review", "minimax-m3.1-flash")]["usd"] == 0.15
+
+
 def test_rag2_rewrite_tokens_are_costed_at_rewriter_price(tmp_path):
     p = tmp_path / "results/review/runs/x.summary.json"
     os.makedirs(p.parent)

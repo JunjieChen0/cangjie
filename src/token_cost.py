@@ -42,6 +42,12 @@ def category(rel_dir: str) -> str:
     return "early"
 
 
+MODEL_ALIASES = {
+    "MiniMax-M3.1-Flash": "minimax-m3.1-flash",
+    "u2-flash-charge": "u2-flash",
+}
+
+
 def load_usage(root: str = ROOT) -> list[dict]:
     """每个有 token 记录的 summary 一行；跳过自测与无 token 的记录（如只重新评测的 reeval）。"""
     rows = []
@@ -54,6 +60,7 @@ def load_usage(root: str = ROOT) -> list[dict]:
         if pin + pout == 0:
             continue
         model = s.get("model_resolved") or s.get("config", {}).get("model")
+        model = MODEL_ALIASES.get(model, model)
         if model not in PRICED_MODELS:
             raise SystemExit(f"{p}：模型 {model} 没有单价，请先补进 pricing.CNY_PRICES 或 USD_PRICES")
         rel, cat = os.path.relpath(p, root).replace(os.sep, "/"), category(os.path.relpath(os.path.dirname(p), root))
