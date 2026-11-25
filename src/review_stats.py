@@ -24,13 +24,16 @@ from collections import Counter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from extra_stats import bootstrap_ci, fmt_p, holm  # noqa: E402
 from run_matrix import AGENT_ARMS, N_TASKS, NEW_MODELS, PILOT_LIMIT, expand_matrix  # noqa: E402
-from stage3_stats import (FLAKY, PAIRS, compare, load_groups, load_r0_tokens, parse_name,  # noqa: E402
-                          sign_flip_p, summarize)
+from stage3_stats import (FLAKY, PAIRS, TIMEOUT_AS_FAIL, compare, load_groups, load_r0_tokens,  # noqa: E402
+                          parse_name, sign_flip_p, summarize)
 
 from data import ROOT  # noqa: E402
 
 RESULTS = os.path.join(ROOT, "results")
 REUSE_R0 = ("ds_v41f", "doubao_mini")           # 复用第 3 阶段 / Original-30 第 0 轮的模型
+# 只用于 review 的组：GLM-5.3-Flash 在 ClassEval 上输出极长，超时的题续跑补一次后仍超时即按未通过计入分母
+# （2026-11-24 定，见 docs/补充实验统计方案.md 第八节）；第 3 阶段与 Original-30 仍用 TIMEOUT_AS_FAIL。
+REVIEW_TIMEOUT_AS_FAIL = TIMEOUT_AS_FAIL | {"glm53f"}
 FAMILIES = {
     "G": ("推广到其他模型", PAIRS),
     "A": ("Agent 基线", (("agent", "rag"), ("agent15", "agent"))),
@@ -46,7 +49,7 @@ def bases(pilot: bool) -> tuple[str, list[str]]:
 
 def load_all(review: str, olds: list[str], n_tasks: dict[str, int]) -> dict[tuple, dict[int, dict]]:
     """review 的组 + 原有矩阵中 REUSE_R0 模型的组（review 中已有的键以 review 为准）。"""
-    groups = load_groups(review, n_tasks)
+    groups = load_groups(review, n_tasks, REVIEW_TIMEOUT_AS_FAIL)
     for base in olds:
         for key, reps in load_groups(base, n_tasks).items():
             if key[0] in REUSE_R0 and key not in groups:

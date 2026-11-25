@@ -11,7 +11,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from extra_stats import fmt_p  # noqa: E402
-from stage3_stats import FLAKY, TIMEOUT_AS_FAIL  # noqa: E402
+from review_stats import REVIEW_TIMEOUT_AS_FAIL  # noqa: E402
+from stage3_stats import FLAKY  # noqa: E402
 
 from data import ROOT  # noqa: E402
 
@@ -50,7 +51,7 @@ def write_markdown(res: dict, path: str) -> None:
          "去掉的题：" + "；".join(f"{ds} 第 {', '.join(sorted(ids))} 题" for ds, ids in sorted(FLAKY.items()))
          + "（参考答案重复运行时判定不稳定，原因见 stage3_stats.py 中 FLAKY 的注释）；"
          "并且每个比较中，两组任一次重复里 API 超时的题从两组同时去掉（超时只出现在 "
-         + "、".join(sorted(TIMEOUT_AS_FAIL)) + "，主分析中按未通过计入分母，不过滤）。", "",
+         + "、".join(sorted(REVIEW_TIMEOUT_AS_FAIL)) + "，主分析中按未通过计入分母，不过滤）。", "",
          f"「结论改变」= Holm 校正后的显著性（α = {ALPHA}）改变，或差值正负号改变。", ""]
     for key, title in SOURCES:
         s = res.get(key)

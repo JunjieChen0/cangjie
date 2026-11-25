@@ -66,6 +66,35 @@ def test_interaction_is_hint_gain_direct_minus_syntax(tmp_path):
     assert rows["doubao_mini"]["family"] == "I-explore"
 
 
+def _group_with_errors(base, name, errors):
+    """前 N−len(errors) 题通过；后几题各带一个 error（未通过）。"""
+    runs = os.path.join(base, "runs")
+    os.makedirs(runs, exist_ok=True)
+    with open(os.path.join(runs, name + ".jsonl"), "w", encoding="utf-8") as f:
+        for i in range(N):
+            row = {"id": i, "passed": i < N - len(errors), "history": []}
+            if i >= N - len(errors):
+                row["error"] = errors[i - (N - len(errors))]
+            f.write(json.dumps(row) + "\n")
+    with open(os.path.join(runs, name + ".summary.json"), "w", encoding="utf-8") as f:
+        json.dump({"n": N, "errors": len(errors), "pass@1_by_round": [0.0, 50.0],
+                   "total_prompt_tokens": 10, "total_completion_tokens": 10}, f)
+
+
+def test_glm_timeouts_count_as_fail_only_in_review(tmp_path):
+    review, stage3 = str(tmp_path / "review"), str(tmp_path / "stage3")
+    timeout = "APITimeoutError('Request timed out.')"
+    _group_with_errors(review, "glm53f_ce_syntax_rag_rep1", [timeout])                      # 只有超时：收进来
+    _group_with_errors(review, "glm53f_ce_syntax_hint_rep1", [timeout, "RateLimitError(429)"])  # 有非超时错误：跳过
+    _group_with_errors(review, "doubao21l_ce_syntax_rag_rep1", [timeout])                   # 其他模型仍要求 errors = 0
+    _group_with_errors(stage3, "ds_v41f_ce_syntax_rag_rep1", [timeout])                     # 第 3 阶段口径不变
+    groups = R.load_all(review, [stage3], {"ce": N})
+    assert list(groups) == [("glm53f", "ce", "syntax", "rag")]
+    rep = groups[("glm53f", "ce", "syntax", "rag")][1]
+    assert rep["timeouts"] == 1 and rep["passed"]["5"] is False and sum(rep["passed"].values()) == N - 1
+    assert R.REVIEW_TIMEOUT_AS_FAIL == {"kimik31p", "glm53f"}
+
+
 def test_markdown_lists_each_family():
     res = {"missing": ["u2f_he_direct_rag2（0/3）"], "summary": [], "comparisons": [],
            "sensitivity_excl_flaky": [], "agent_behavior": []}
