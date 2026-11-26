@@ -32,7 +32,12 @@ _load_dotenv()
 
 
 # 不走默认服务商的模型：模型名前缀 → (base_url 环境变量, api_key 环境变量)
-PROVIDERS = {"u2-": ("UNISOUND_BASE_URL", "UNISOUND_API_KEY")}
+PROVIDERS = {
+    "u2-": ("UNISOUND_BASE_URL", "UNISOUND_API_KEY"),
+    "minimax-": ("MINIMAX_BASE_URL", "MINIMAX_API_KEY"),
+    "claude-": ("AMR_BASE_URL", "AMR_API_KEY"),
+    "gpt-6": ("AMR_BASE_URL", "AMR_API_KEY"),
+}
 _other_clients: dict[str, object] = {}
 
 

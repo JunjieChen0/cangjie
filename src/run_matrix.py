@@ -27,14 +27,17 @@ MODELS = {
     "ds_v41f": "deepseek-v4-1-flash-261017",
     "doubao_mini": "doubao-seed-2-0-mini-260428",
     "kimik31p": "kimi-k3-1-pro-261024",
-    "glm53f": "glm-5-3-flash-260828",            # 以下三个为审稿意见后的补充实验（review 矩阵）
+    "glm53f": "glm-5-3-flash-260828",            # 以下为审稿意见后的补充实验（review 矩阵）
     "doubao21l": "doubao-seed-2-1-lite-260915",
-    "u2f": "u2-flash",                           # 云知声，走 UNISOUND_* 接口（见 llm.PROVIDERS），限流 20 RPM
+    "u2f": "u2-flash",                           # 云知声，走 UNISOUND_* 接口（见 llm.PROVIDERS）
+    "mm31f": "minimax-m3.1-flash",               # 走 MINIMAX_* 接口（见 llm.PROVIDERS）
+    "haiku55": "claude-haiku-5.5",               # 走 AMR_* 接口（见 llm.PROVIDERS）
+    "gpt6l": "gpt-6-luna",                       # 走 AMR_* 接口（见 llm.PROVIDERS）
 }
 N_TASKS = {"he": 164, "ce": 84, "or": 30}
 DATASET_ARG = {"he": "humaneval", "ce": "classeval", "or": "original"}
 OUT_SUBDIR = {"stage3": "stage3", "original": "original30", "review": "review"}
-NEW_MODELS = ("glm53f", "doubao21l", "u2f")
+NEW_MODELS = ("glm53f", "doubao21l", "u2f", "mm31f", "haiku55", "gpt6l")
 KIMI_REVIEW_TIMEOUT = "1800"
 PILOT_LIMIT = 10
 TEMP = 0.3
@@ -114,19 +117,19 @@ def _full(model: str, temp: float = TEMP, env: dict | None = None) -> list[Job]:
 
 def _review_repairs() -> list[Job]:
     """审稿意见后的补充实验（results/review/），协议同第 3 阶段，结果单独成族报告：
-    三个新模型与 Kimi（超时放宽到 1800 秒、全新一套）各跑完整矩阵；补齐 DeepSeek ClassEval syntax。"""
+    新模型与 Kimi（超时放宽到 1800 秒、全新一套）各跑完整矩阵；补齐 DeepSeek ClassEval syntax。"""
     rep = []
     for m in NEW_MODELS:
-        rep += _full(m, env={"LLM_TIMEOUT": "600"})
+        rep += _full(m, env={"LLM_TIMEOUT": "1800"})
     rep += _full("kimik31p", temp=KIMI_TEMP, env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT})
     rep += _repairs("ds_v41f", "ce", "syntax", FOUR, env={"LLM_TIMEOUT": "600"})
     return rep + _arm_jobs(tuple(AGENT_ARMS)) + _arm_jobs(("rag2",))
 
 
 def _arm_jobs(arms: tuple[str, ...]) -> list[Job]:
-    """在全部 6 个模型上补跑新增的反馈组（agent / agent15 / rag2）。新模型与 Kimi 用 review 自己的第 0 轮；
+    """在全部模型上补跑新增的反馈组（agent / agent15 / rag2）。新模型与 Kimi 用 review 自己的第 0 轮；
     DeepSeek / Doubao 复用第 3 阶段与 Original-30 的共享第 0 轮，以便与原有修复组逐题配对。"""
-    env, rep = {"LLM_TIMEOUT": "600"}, []
+    env, rep = {"LLM_TIMEOUT": "1800"}, []
     for m in NEW_MODELS + ("kimik31p",):
         temp = KIMI_TEMP if m == "kimik31p" else TEMP
         menv = {"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT} if m == "kimik31p" else env
