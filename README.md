@@ -40,7 +40,7 @@ src/
   postprocess.py       零成本后处理实验
 tests/                 单元测试（pytest）
 data/original30/       新写的 30 道题（控制数据污染），含登记表与检查记录，见其中 README.md
-external/CangjieBench/ 数据集与公开结果（MIT 许可，git clone 而来，不进 git）
+external/CangjieBench/ 数据集与公开结果（MIT 许可，不进 git，也不在复现包内；获取方式见「快速开始」第 0 步）
 results/
   exp/                 18 组主实验（*.summary.json 进 git，原始 *.jsonl 不进 git）
   ablation/            9 组补强实验
@@ -62,6 +62,10 @@ docs/
 ## 快速开始
 ```powershell
 pip install -r requirements.txt
+
+# 0. 获取 CangjieBench（本研究使用的版本：提交 68ed8f1cd96d5139a10de8da55561dcf7fd82dc3）
+git clone https://github.com/cjhCoder7/CangjieBench.git external/CangjieBench
+git -C external/CangjieBench checkout 68ed8f1cd96d5139a10de8da55561dcf7fd82dc3
 
 # 1. 环境自检：官方参考答案应 164/164 通过
 python src/evaluate.py --reference
@@ -129,7 +133,7 @@ python src/token_cost.py
 # 英文补充材料（Table S1–S16）→ results/supporting_information/，并打包 supporting_information.zip（投稿上传用，不进 git）
 python src/make_supporting_info.py
 
-# 审稿意见后的补充实验（新模型、Kimi 重跑、Agent 基线、rag2），步骤见 docs/补充实验清单.md → results/review/
+# 扩展实验（内部模拟审稿后设计：九个模型、Kimi 重跑、Agent 基线、rag2），步骤见 docs/补充实验清单.md → results/review/
 python src/run_matrix.py --matrix review --dry-run
 # 检索方案离线评估与 rag2 检索服务（需在 .venv-retrieval 中运行：torch + sentence-transformers + bge-m3 / bge-reranker-v2-m3）
 .venv-retrieval/Scripts/python.exe src/retrieval_eval.py            # → results/retrieval_eval/report.md
