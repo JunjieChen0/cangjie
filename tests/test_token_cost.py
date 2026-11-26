@@ -47,6 +47,7 @@ def test_load_and_aggregate_skip_empty_and_selftest(tmp_path):
     _summary(str(r / "stage3/pilot/runs/a.summary.json"), DS, 0, 1_000_000)
     _summary(str(r / "reeval/x.summary.json"), DB, 0, 0)                       # 只重新评测，无 token
     _summary(str(r / "try/stage3_selftest/runs/b.summary.json"), DB, 5, 5)     # 自测
+    _summary(str(r / "snapshot_20261123/review/runs/c.summary.json"), DB, 5, 5)  # 备份副本，不重复计入
     rows = T.load_usage(str(tmp_path))
     assert sorted((x["category"], x["model"]) for x in rows) == [("pilot", DS), ("stage3", DB)]
     lines = {(x["category"], x["model"]): x for x in T.aggregate(rows)}

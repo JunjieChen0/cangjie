@@ -95,6 +95,17 @@ def test_glm_timeouts_count_as_fail_only_in_review(tmp_path):
     assert R.REVIEW_TIMEOUT_AS_FAIL == {"kimik31p", "glm53f"}
 
 
+def test_r0_split_group_is_summarized_but_never_compared(tmp_path):
+    review = str(tmp_path / "review")
+    for fb, k in (("agent15", 5), ("agent", 3), ("rag", 2)):
+        _arm(review, f"glm53f_ce_syntax_{fb}", k)
+        _arm(review, f"glm53f_ce_direct_{fb}", k)
+    groups = R.load_all(review, [], {"ce": N})
+    assert ("glm53f", "ce", "syntax", "agent15") in groups                 # 仍进描述表
+    pairs = {(r["prompt"], r["a"], r["b"]) for r in R.run_families(groups)}
+    assert pairs == {("direct", "agent", "rag"), ("direct", "agent15", "agent"), ("syntax", "agent", "rag")}
+
+
 def test_markdown_lists_each_family():
     res = {"missing": ["u2f_he_direct_rag2（0/3）"], "summary": [], "comparisons": [],
            "sensitivity_excl_flaky": [], "agent_behavior": []}

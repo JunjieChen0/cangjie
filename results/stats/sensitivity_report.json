@@ -1,0 +1,231 @@
+{
+ "stage3": {
+  "comparisons": 33,
+  "significant_all": 9,
+  "significant_after": 9,
+  "max_abs_diff_shift": 0.75,
+  "changed": [],
+  "timeouts": [
+   {
+    "model": "kimik31p",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "hint",
+    "reps": 1,
+    "timeouts": 7
+   },
+   {
+    "model": "kimik31p",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "raw",
+    "reps": 1,
+    "timeouts": 11
+   },
+   {
+    "model": "kimik31p",
+    "ds": "he",
+    "prompt": "direct",
+    "feedback": "hint",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "kimik31p",
+    "ds": "he",
+    "prompt": "direct",
+    "feedback": "raw",
+    "reps": 3,
+    "timeouts": 4
+   }
+  ]
+ },
+ "original30": {
+  "comparisons": 17,
+  "significant_all": 2,
+  "significant_after": 2,
+  "max_abs_diff_shift": 1.11,
+  "changed": [],
+  "timeouts": [
+   {
+    "model": "kimik31p",
+    "ds": "or",
+    "prompt": "direct",
+    "feedback": "hint",
+    "reps": 3,
+    "timeouts": 1
+   }
+  ]
+ },
+ "review": {
+  "comparisons": 346,
+  "significant_all": 40,
+  "significant_after": 40,
+  "max_abs_diff_shift": 3.55,
+  "changed": [
+   {
+    "family": "G",
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "a": "rag",
+    "b": "hint",
+    "diff_all": -1.59,
+    "p_holm_all": 1.0,
+    "n_after": 68,
+    "diff_after": 1.96,
+    "p_holm_after": 1.0
+   },
+   {
+    "family": "A",
+    "model": "ds_v41f",
+    "ds": "ce",
+    "prompt": "direct",
+    "a": "agent15",
+    "b": "agent",
+    "diff_all": 8.73,
+    "p_holm_all": 0.0375962403759624,
+    "n_after": 83,
+    "diff_after": 8.43,
+    "p_holm_after": 0.07279272072792721
+   },
+   {
+    "family": "A",
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "a": "agent",
+    "b": "rag",
+    "diff_all": 0.79,
+    "p_holm_all": 1.0,
+    "n_after": 79,
+    "diff_after": -1.27,
+    "p_holm_after": 1.0
+   },
+   {
+    "family": "A",
+    "model": "u2f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "a": "agent15",
+    "b": "agent",
+    "diff_all": 8.33,
+    "p_holm_all": 0.054594540545945404,
+    "n_after": 83,
+    "diff_after": 8.84,
+    "p_holm_after": 0.045995400459954004
+   },
+   {
+    "family": "R",
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "a": "rag2",
+    "b": "rag",
+    "diff_all": 0.79,
+    "p_holm_all": 1.0,
+    "n_after": 68,
+    "diff_after": -0.49,
+    "p_holm_after": 1.0
+   }
+  ],
+  "timeouts": [
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "agent",
+    "reps": 3,
+    "timeouts": 2
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "agent15",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "hint",
+    "reps": 3,
+    "timeouts": 3
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "rag",
+    "reps": 3,
+    "timeouts": 21
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "direct",
+    "feedback": "rag2",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "agent15",
+    "reps": 3,
+    "timeouts": 13
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "blind",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "reps": 3,
+    "timeouts": 1
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "rag",
+    "reps": 3,
+    "timeouts": 4
+   },
+   {
+    "model": "glm53f",
+    "ds": "ce",
+    "prompt": "syntax",
+    "feedback": "raw",
+    "reps": 3,
+    "timeouts": 3
+   },
+   {
+    "model": "glm53f",
+    "ds": "he",
+    "prompt": "direct",
+    "feedback": "hint",
+    "reps": 3,
+    "timeouts": 1
+   }
+  ]
+ }
+}

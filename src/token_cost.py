@@ -52,7 +52,7 @@ def load_usage(root: str = ROOT) -> list[dict]:
     """每个有 token 记录的 summary 一行；跳过自测与无 token 的记录（如只重新评测的 reeval）。"""
     rows = []
     for p in sorted(glob.glob(os.path.join(root, "results", "**", "*.summary.json"), recursive=True)):
-        if "selftest" in p:
+        if "selftest" in p or "snapshot_" in p:   # snapshot_* 是已有结果的备份副本，计入会重复
             continue
         with open(p, encoding="utf-8") as f:
             s = json.load(f)

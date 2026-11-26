@@ -1,5 +1,6 @@
 {
   "cny_price_date": "2026-11-19",
+  "usd_price_date": "2026-11-23",
   "fx_rate": 6.67,
   "fx_date": "2026-11-17",
   "usd_prices": {
@@ -44,6 +45,27 @@
       "cny_input": 1.0,
       "cny_output": 2.0,
       "source": "Unisound MaaS list price (before promotional discount)"
+    },
+    "claude-haiku-5.5": {
+      "input": 0.1,
+      "output": 0.5,
+      "cny_input": null,
+      "cny_output": null,
+      "source": "Anthropic official USD list price, prompts up to 100K tokens"
+    },
+    "gpt-6-luna": {
+      "input": 0.1,
+      "output": 0.5,
+      "cny_input": null,
+      "cny_output": null,
+      "source": "OpenAI official USD list price, Standard tier, short context"
+    },
+    "minimax-m3.1-flash": {
+      "input": 0.15,
+      "output": 0.6,
+      "cny_input": null,
+      "cny_output": null,
+      "source": "MiniMax official USD pay-as-you-go list price"
     }
   },
   "token_cost": [
@@ -138,49 +160,166 @@
       "cny": 28.51
     },
     {
+      "category": "review",
+      "model": "doubao-seed-2-0-mini-260428",
+      "runs": 213,
+      "prompt_tokens": 157363835,
+      "completion_tokens": 46858318,
+      "usd": 18.77,
+      "cny": 125.19
+    },
+    {
+      "category": "review",
+      "model": "deepseek-v4-1-flash-261017",
+      "runs": 67,
+      "prompt_tokens": 62023908,
+      "completion_tokens": 106190474,
+      "usd": 145.96,
+      "cny": 973.57
+    },
+    {
+      "category": "review",
+      "model": "kimi-k3-1-pro-261024",
+      "runs": 141,
+      "prompt_tokens": 46544580,
+      "completion_tokens": 75736589,
+      "usd": 862.84,
+      "cny": 5755.17
+    },
+    {
+      "category": "review",
+      "model": "glm-5-3-flash-260828",
+      "runs": 141,
+      "prompt_tokens": 61847755,
+      "completion_tokens": 628249321,
+      "usd": 271.15,
+      "cny": 1808.58
+    },
+    {
+      "category": "review",
+      "model": "doubao-seed-2-1-lite-260915",
+      "runs": 141,
+      "prompt_tokens": 154663592,
+      "completion_tokens": 167352471,
+      "usd": 86.29,
+      "cny": 575.58
+    },
+    {
+      "category": "review",
+      "model": "u2-flash",
+      "runs": 141,
+      "prompt_tokens": 84344643,
+      "completion_tokens": 193561055,
+      "usd": 70.68,
+      "cny": 471.47
+    },
+    {
+      "category": "review",
+      "model": "claude-haiku-5.5",
+      "runs": 141,
+      "prompt_tokens": 134834705,
+      "completion_tokens": 38101100,
+      "usd": 32.53,
+      "cny": 217.0
+    },
+    {
+      "category": "review",
+      "model": "gpt-6-luna",
+      "runs": 141,
+      "prompt_tokens": 85403352,
+      "completion_tokens": 27505185,
+      "usd": 22.29,
+      "cny": 148.69
+    },
+    {
+      "category": "review",
+      "model": "minimax-m3.1-flash",
+      "runs": 141,
+      "prompt_tokens": 85948650,
+      "completion_tokens": 129234247,
+      "usd": 90.43,
+      "cny": 603.19
+    },
+    {
+      "category": "review",
+      "model": "all",
+      "runs": 1267,
+      "prompt_tokens": 872975020,
+      "completion_tokens": 1412788760,
+      "usd": 1600.97,
+      "cny": 10678.44
+    },
+    {
       "category": "pilot",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 84,
-      "prompt_tokens": 8116324,
-      "completion_tokens": 3568922,
-      "usd": 1.31,
-      "cny": 8.76
+      "runs": 85,
+      "prompt_tokens": 8157037,
+      "completion_tokens": 3584702,
+      "usd": 1.32,
+      "cny": 8.8
     },
     {
       "category": "pilot",
       "model": "deepseek-v4-1-flash-261017",
-      "runs": 50,
-      "prompt_tokens": 1246254,
-      "completion_tokens": 3800383,
+      "runs": 51,
+      "prompt_tokens": 1248795,
+      "completion_tokens": 3801383,
       "usd": 4.93,
-      "cny": 32.9
+      "cny": 32.91
     },
     {
       "category": "pilot",
       "model": "kimi-k3-1-pro-261024",
-      "runs": 17,
-      "prompt_tokens": 169384,
-      "completion_tokens": 508546,
-      "usd": 5.51,
-      "cny": 36.78
+      "runs": 20,
+      "prompt_tokens": 206658,
+      "completion_tokens": 535387,
+      "usd": 5.86,
+      "cny": 39.09
+    },
+    {
+      "category": "pilot",
+      "model": "glm-5-3-flash-260828",
+      "runs": 3,
+      "prompt_tokens": 27820,
+      "completion_tokens": 57904,
+      "usd": 0.03,
+      "cny": 0.18
+    },
+    {
+      "category": "pilot",
+      "model": "doubao-seed-2-1-lite-260915",
+      "runs": 2,
+      "prompt_tokens": 27076,
+      "completion_tokens": 49646,
+      "usd": 0.02,
+      "cny": 0.16
+    },
+    {
+      "category": "pilot",
+      "model": "u2-flash",
+      "runs": 7,
+      "prompt_tokens": 101738,
+      "completion_tokens": 217397,
+      "usd": 0.08,
+      "cny": 0.54
     },
     {
       "category": "pilot",
       "model": "all",
-      "runs": 151,
-      "prompt_tokens": 9531962,
-      "completion_tokens": 7877851,
-      "usd": 11.76,
-      "cny": 78.44
+      "runs": 168,
+      "prompt_tokens": 9769124,
+      "completion_tokens": 8246419,
+      "usd": 12.25,
+      "cny": 81.68
     },
     {
       "category": "early",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 25,
-      "prompt_tokens": 22548730,
-      "completion_tokens": 20995945,
-      "usd": 6.97,
-      "cny": 46.5
+      "runs": 27,
+      "prompt_tokens": 22566834,
+      "completion_tokens": 21010644,
+      "usd": 6.98,
+      "cny": 46.53
     },
     {
       "category": "early",
@@ -212,65 +351,110 @@
     {
       "category": "early",
       "model": "all",
-      "runs": 38,
-      "prompt_tokens": 24295920,
-      "completion_tokens": 28924998,
-      "usd": 24.51,
-      "cny": 163.51
+      "runs": 40,
+      "prompt_tokens": 24314024,
+      "completion_tokens": 28939697,
+      "usd": 24.52,
+      "cny": 163.54
     },
     {
       "category": "formal",
       "model": "all",
-      "runs": 184,
-      "prompt_tokens": 135572748,
-      "completion_tokens": 115926438,
-      "usd": 125.77,
-      "cny": 838.9
+      "runs": 1451,
+      "prompt_tokens": 1008547768,
+      "completion_tokens": 1528715198,
+      "usd": 1726.74,
+      "cny": 11517.34
     },
     {
       "category": "total",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 202,
-      "prompt_tokens": 150788503,
-      "completion_tokens": 80669906,
-      "usd": 28.71,
-      "cny": 191.5
+      "runs": 418,
+      "prompt_tokens": 308211155,
+      "completion_tokens": 127558703,
+      "usd": 47.49,
+      "cny": 316.76
     },
     {
       "category": "total",
       "model": "deepseek-v4-1-flash-261017",
-      "runs": 133,
-      "prompt_tokens": 17212669,
-      "completion_tokens": 67707063,
-      "usd": 86.37,
-      "cny": 576.08
+      "runs": 201,
+      "prompt_tokens": 79239118,
+      "completion_tokens": 173898537,
+      "usd": 232.33,
+      "cny": 1549.67
     },
     {
       "category": "total",
       "model": "kimi-k3-1-pro-261024",
-      "runs": 37,
-      "prompt_tokens": 1397184,
-      "completion_tokens": 4339184,
-      "usd": 46.96,
-      "cny": 313.23
+      "runs": 181,
+      "prompt_tokens": 47979038,
+      "completion_tokens": 80102614,
+      "usd": 910.15,
+      "cny": 6070.71
     },
     {
       "category": "total",
       "model": "glm-5-3-flash-260828",
-      "runs": 1,
-      "prompt_tokens": 2274,
-      "completion_tokens": 13134,
-      "usd": 0.01,
-      "cny": 0.04
+      "runs": 145,
+      "prompt_tokens": 61877849,
+      "completion_tokens": 628320359,
+      "usd": 271.18,
+      "cny": 1808.8
+    },
+    {
+      "category": "total",
+      "model": "doubao-seed-2-1-lite-260915",
+      "runs": 143,
+      "prompt_tokens": 154690668,
+      "completion_tokens": 167402117,
+      "usd": 86.32,
+      "cny": 575.74
+    },
+    {
+      "category": "total",
+      "model": "u2-flash",
+      "runs": 148,
+      "prompt_tokens": 84446381,
+      "completion_tokens": 193778452,
+      "usd": 70.77,
+      "cny": 472.0
+    },
+    {
+      "category": "total",
+      "model": "claude-haiku-5.5",
+      "runs": 141,
+      "prompt_tokens": 134834705,
+      "completion_tokens": 38101100,
+      "usd": 32.53,
+      "cny": 217.0
+    },
+    {
+      "category": "total",
+      "model": "gpt-6-luna",
+      "runs": 141,
+      "prompt_tokens": 85403352,
+      "completion_tokens": 27505185,
+      "usd": 22.29,
+      "cny": 148.69
+    },
+    {
+      "category": "total",
+      "model": "minimax-m3.1-flash",
+      "runs": 141,
+      "prompt_tokens": 85948650,
+      "completion_tokens": 129234247,
+      "usd": 90.43,
+      "cny": 603.19
     },
     {
       "category": "total",
       "model": "all",
-      "runs": 373,
-      "prompt_tokens": 169400630,
-      "completion_tokens": 152729287,
-      "usd": 162.05,
-      "cny": 1080.85
+      "runs": 1659,
+      "prompt_tokens": 1042630916,
+      "completion_tokens": 1565901314,
+      "usd": 1763.5,
+      "cny": 11762.56
     }
   ]
 }

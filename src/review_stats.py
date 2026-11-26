@@ -34,6 +34,9 @@ REUSE_R0 = ("ds_v41f", "doubao_mini")           # 复用第 3 阶段 / Original-
 # 只用于 review 的组：GLM-5.3-Flash 在 ClassEval 上输出极长，超时的题续跑补一次后仍超时即按未通过计入分母
 # （2026-11-24 定，见 docs/补充实验统计方案.md 第八节）；第 3 阶段与 Original-30 仍用 TIMEOUT_AS_FAIL。
 REVIEW_TIMEOUT_AS_FAIL = TIMEOUT_AS_FAIL | {"glm53f"}
+# 第 0 轮与同一格其他组不同的组：不参与任何配对比较（方案第一、七节），只在描述表中列出。
+# GLM ClassEval syntax 的第 0 轮在 Aliyun 上重新生成过，agent15 三组用的是旧的那份（见方案第九节）。
+R0_SPLIT = frozenset({("glm53f", "ce", "syntax", "agent15")})
 FAMILIES = {
     "G": ("推广到其他模型", PAIRS),
     "A": ("Agent 基线", (("agent", "rag"), ("agent15", "agent"))),
@@ -64,7 +67,9 @@ def load_all_r0(review: str, olds: list[str]) -> dict[tuple, tuple[int, int]]:
 
 
 def family_groups(groups: dict[tuple, dict], fam: str) -> dict[tuple, dict]:
-    """族 G 只含新模型、重跑的 Kimi 与 DeepSeek ClassEval syntax，以免重复第 3 阶段已有的比较；族 A、R 含全部模型。"""
+    """族 G 只含新模型、重跑的 Kimi 与 DeepSeek ClassEval syntax，以免重复第 3 阶段已有的比较；族 A、R 含全部模型。
+    R0_SPLIT 中的组在各族都不参与比较。"""
+    groups = {k: v for k, v in groups.items() if k not in R0_SPLIT}
     if fam != "G":
         return groups
     return {k: v for k, v in groups.items()
@@ -164,6 +169,8 @@ def write_markdown(res: dict, pilot: bool) -> str:
          "DeepSeek / Doubao-mini 的原有组取自第 3 阶段与 Original-30。", ""]
     if res["missing"]:
         L += [f"尚未完整的组（{len(res['missing'])} 个，括号内为已完成重复数 / 应有重复数）：" + "、".join(res["missing"]), ""]
+    L += ["第 0 轮与同格其他组不同、不参与配对比较的配置（只列入下表）：" + "、".join("_".join(k) for k in sorted(R0_SPLIT))
+          + "（见 docs/补充实验统计方案.md 第九节）。", ""]
     L += ["## 各配置通过率与成本", "",
           "| 模型 | 数据集 | 起点 | 反馈 | 重复 | 超时题次 | R0 | R5 均值 ± sd | 美元/解（含 R0） |",
           "|---|---|---|---|---|---|---|---|---|"]
