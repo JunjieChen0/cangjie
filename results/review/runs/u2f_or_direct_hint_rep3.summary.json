@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "u2-flash",
+    "prompt": "direct",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/u2f_or_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 8,
+    "output": "/root/cangjie/results/review/runs/u2f_or_direct_hint_rep3.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "u2-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    36.67,
+    80.0,
+    93.33,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 40.0,
+  "total_prompt_tokens": 27762,
+  "total_completion_tokens": 106519,
+  "errors": 0
+}

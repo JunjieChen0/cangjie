@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "doubao-seed-2-1-lite-260915",
+    "prompt": "syntax",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\review\\r0\\doubao21l_or_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\review\\runs\\doubao21l_or_syntax_rag2_rep3.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-1-lite-260915",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    86.67,
+    90.0,
+    90.0,
+    96.67,
+    96.67,
+    96.67
+  ],
+  "round0_compile_rate": 86.67,
+  "total_prompt_tokens": 70317,
+  "total_completion_tokens": 59959,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 3244,
+  "total_rewrite_completion_tokens": 9808
+}

@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "u2-flash",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": "E:\\cangjie\\results\\review\\r0\\u2f_he_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 2,
+    "output": "E:\\cangjie\\results\\review\\runs\\u2f_he_direct_raw_rep1.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "u2-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    46.34,
+    75.0,
+    87.8,
+    91.46,
+    96.95,
+    98.17
+  ],
+  "round0_compile_rate": 48.17,
+  "total_prompt_tokens": 193000,
+  "total_completion_tokens": 484929,
+  "errors": 0
+}

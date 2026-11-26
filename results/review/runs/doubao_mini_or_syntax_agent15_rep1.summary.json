@@ -1,0 +1,46 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "rounds": 15,
+    "init": "/home/ec2-user/cangjie/results/original30/r0/doubao_mini_or_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 2,
+    "output": "/home/ec2-user/cangjie/results/review/runs/doubao_mini_or_syntax_agent15_rep1.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-0-mini-260428",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    46.67,
+    60.0,
+    70.0,
+    76.67,
+    83.33,
+    83.33,
+    83.33,
+    83.33,
+    86.67,
+    90.0,
+    90.0,
+    90.0,
+    90.0,
+    90.0,
+    90.0,
+    90.0
+  ],
+  "round0_compile_rate": 46.67,
+  "total_prompt_tokens": 562434,
+  "total_completion_tokens": 81904,
+  "errors": 0
+}

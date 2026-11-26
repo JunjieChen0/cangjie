@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "doubao-seed-2-1-lite-260915",
+    "prompt": "syntax",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\review\\r0\\doubao21l_or_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 8,
+    "output": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\review\\runs\\doubao21l_or_syntax_raw_rep1.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-1-lite-260915",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    86.67,
+    96.67,
+    96.67,
+    96.67,
+    96.67,
+    96.67
+  ],
+  "round0_compile_rate": 86.67,
+  "total_prompt_tokens": 34879,
+  "total_completion_tokens": 51355,
+  "errors": 0
+}

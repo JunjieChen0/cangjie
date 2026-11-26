@@ -1,0 +1,46 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "doubao-seed-2-0-mini-260428",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "rounds": 15,
+    "init": "/home/ec2-user/cangjie/results/stage3/r0/doubao_mini_he_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 2,
+    "output": "/home/ec2-user/cangjie/results/review/runs/doubao_mini_he_syntax_agent15_rep2.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-0-mini-260428",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    48.78,
+    63.41,
+    73.78,
+    79.88,
+    82.32,
+    85.37,
+    85.98,
+    85.98,
+    86.59,
+    88.41,
+    89.63,
+    89.63,
+    89.63,
+    89.63,
+    90.24,
+    90.24
+  ],
+  "round0_compile_rate": 50.61,
+  "total_prompt_tokens": 2524422,
+  "total_completion_tokens": 387236,
+  "errors": 0
+}

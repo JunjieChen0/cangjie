@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "gpt-6-luna",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/gpt6l_he_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/gpt6l_he_direct_raw_rep1.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "gpt-6-luna",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    60.37,
+    88.41,
+    92.68,
+    93.29,
+    95.12,
+    95.73
+  ],
+  "round0_compile_rate": 64.02,
+  "total_prompt_tokens": 120910,
+  "total_completion_tokens": 134800,
+  "errors": 0
+}

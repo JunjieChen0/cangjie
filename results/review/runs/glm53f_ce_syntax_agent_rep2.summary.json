@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "glm-5-3-flash-260828",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/glm53f_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 10,
+    "output": "/root/cangjie/results/review/runs/glm53f_ce_syntax_agent_rep2.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "glm-5-3-flash-260828",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    28.57,
+    51.19,
+    63.1,
+    66.67,
+    69.05,
+    73.81
+  ],
+  "round0_compile_rate": 59.52,
+  "total_prompt_tokens": 1092692,
+  "total_completion_tokens": 8718039,
+  "errors": 0
+}

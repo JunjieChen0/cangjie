@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "claude-haiku-5.5",
+    "prompt": "direct",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/haiku55_or_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/haiku55_or_direct_rag2_rep1.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "claude-haiku-5.5",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    73.33,
+    96.67,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 73.33,
+  "total_prompt_tokens": 21107,
+  "total_completion_tokens": 10113,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 2008,
+  "total_rewrite_completion_tokens": 6012
+}

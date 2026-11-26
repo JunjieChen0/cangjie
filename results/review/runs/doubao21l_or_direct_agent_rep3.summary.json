@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "doubao-seed-2-1-lite-260915",
+    "prompt": "direct",
+    "feedback": "agent",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/doubao21l_or_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 3,
+    "output": "/root/cangjie/results/review/runs/doubao21l_or_direct_agent_rep3.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "doubao-seed-2-1-lite-260915",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    16.67,
+    36.67,
+    50.0,
+    56.67,
+    63.33,
+    80.0
+  ],
+  "round0_compile_rate": 16.67,
+  "total_prompt_tokens": 140032,
+  "total_completion_tokens": 171730,
+  "errors": 0
+}

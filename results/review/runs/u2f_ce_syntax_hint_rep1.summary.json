@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "u2-flash",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": "/home/ec2-user/cangjie/results/review/r0/u2f_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "/home/ec2-user/cangjie/results/review/runs/u2f_ce_syntax_hint_rep1.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "u2-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    23.81,
+    46.43,
+    58.33,
+    65.48,
+    69.05,
+    71.43
+  ],
+  "round0_compile_rate": 40.48,
+  "total_prompt_tokens": 1200480,
+  "total_completion_tokens": 3997363,
+  "errors": 0
+}

@@ -1,0 +1,46 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "rounds": 15,
+    "init": "/home/ec2-user/cangjie/results/review/r0/ds_v41f_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 2,
+    "output": "/home/ec2-user/cangjie/results/review/runs/ds_v41f_ce_syntax_agent15_rep2.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "deepseek-v4-1-flash-261017",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    39.29,
+    51.19,
+    57.14,
+    61.9,
+    64.29,
+    64.29,
+    64.29,
+    65.48,
+    66.67,
+    67.86,
+    67.86,
+    72.62,
+    73.81,
+    75.0,
+    75.0,
+    75.0
+  ],
+  "round0_compile_rate": 70.24,
+  "total_prompt_tokens": 5740220,
+  "total_completion_tokens": 4170097,
+  "errors": 0
+}

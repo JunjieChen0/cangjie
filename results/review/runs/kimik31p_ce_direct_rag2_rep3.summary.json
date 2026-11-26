@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "kimi-k3-1-pro-261024",
+    "prompt": "direct",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/kimik31p_ce_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 1.0,
+    "limit": 0,
+    "ids": null,
+    "workers": 1,
+    "output": "/root/cangjie/results/review/runs/kimik31p_ce_direct_rag2_rep3.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "kimi-k3-1-pro-261024",
+  "temperature_used": [
+    1.0
+  ],
+  "pass@1_by_round": [
+    35.71,
+    57.14,
+    66.67,
+    71.43,
+    73.81,
+    76.19
+  ],
+  "round0_compile_rate": 57.14,
+  "total_prompt_tokens": 804516,
+  "total_completion_tokens": 1887053,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 40693,
+  "total_rewrite_completion_tokens": 124948
+}

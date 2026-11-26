@@ -20,3 +20,6 @@ results/retrieval_eval/cache/
 results/review/pilot/
 results/review/logs/
 results/review/**/*.jsonl
+*.tar.gz
+*.zip.sha256
+results/snapshot_*/

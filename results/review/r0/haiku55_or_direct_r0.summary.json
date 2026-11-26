@@ -1,0 +1,31 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "claude-haiku-5.5",
+    "prompt": "direct",
+    "feedback": "raw",
+    "rounds": 0,
+    "init": null,
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/r0/haiku55_or_direct_r0.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "claude-haiku-5.5",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    73.33
+  ],
+  "round0_compile_rate": 73.33,
+  "total_prompt_tokens": 8593,
+  "total_completion_tokens": 34228,
+  "errors": 0
+}

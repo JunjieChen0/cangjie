@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "deepseek-v4-1-flash-261017",
+    "prompt": "direct",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\stage3\\r0\\ds_v41f_he_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 6,
+    "output": "C:\\Users\\Administrator\\Documents\\Qoder\\2026-11-21\\b7575f4e\\results\\review\\runs\\ds_v41f_he_direct_rag2_rep2.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "deepseek-v4-1-flash-261017",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    75.0,
+    96.34,
+    98.78,
+    99.39,
+    100.0,
+    100.0
+  ],
+  "round0_compile_rate": 77.44,
+  "total_prompt_tokens": 77103,
+  "total_completion_tokens": 328091,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 12780,
+  "total_rewrite_completion_tokens": 39235
+}

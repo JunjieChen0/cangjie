@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "minimax-m3.1-flash",
+    "prompt": "syntax",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/mm31f_he_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/mm31f_he_syntax_rag2_rep1.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "minimax-m3.1-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    85.37,
+    97.56,
+    98.78,
+    98.78,
+    99.39,
+    99.39
+  ],
+  "round0_compile_rate": 89.63,
+  "total_prompt_tokens": 127226,
+  "total_completion_tokens": 190877,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 6885,
+  "total_rewrite_completion_tokens": 23555
+}

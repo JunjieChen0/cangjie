@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "kimi-k3-1-pro-261024",
+    "prompt": "direct",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": "/home/ec2-user/cangjie/results/review/r0/kimik31p_ce_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 1.0,
+    "limit": 0,
+    "ids": null,
+    "workers": 2,
+    "output": "/home/ec2-user/cangjie/results/review/runs/kimik31p_ce_direct_hint_rep1.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "kimi-k3-1-pro-261024",
+  "temperature_used": [
+    1.0
+  ],
+  "pass@1_by_round": [
+    35.71,
+    58.33,
+    67.86,
+    76.19,
+    78.57,
+    78.57
+  ],
+  "round0_compile_rate": 57.14,
+  "total_prompt_tokens": 561047,
+  "total_completion_tokens": 1770177,
+  "errors": 0
+}

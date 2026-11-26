@@ -1,0 +1,46 @@
+{
+  "config": {
+    "dataset": "humaneval",
+    "model": "minimax-m3.1-flash",
+    "prompt": "direct",
+    "feedback": "agent",
+    "rounds": 15,
+    "init": "/home/ec2-user/cangjie/results/review/r0/mm31f_he_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/home/ec2-user/cangjie/results/review/runs/mm31f_he_direct_agent15_rep2.jsonl"
+  },
+  "n": 164,
+  "prompt_version": 2,
+  "model_resolved": "minimax-m3.1-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    70.12,
+    83.54,
+    89.02,
+    92.07,
+    93.9,
+    94.51,
+    95.73,
+    97.56,
+    97.56,
+    97.56,
+    97.56,
+    97.56,
+    98.17,
+    98.17,
+    98.17,
+    98.17
+  ],
+  "round0_compile_rate": 71.95,
+  "total_prompt_tokens": 432466,
+  "total_completion_tokens": 208532,
+  "errors": 0
+}

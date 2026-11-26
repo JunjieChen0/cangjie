@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "claude-haiku-5.5",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/haiku55_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/haiku55_ce_syntax_hint_rep1.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "claude-haiku-5.5",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    39.29,
+    52.38,
+    60.71,
+    64.29,
+    64.29,
+    64.29
+  ],
+  "round0_compile_rate": 71.43,
+  "total_prompt_tokens": 2078297,
+  "total_completion_tokens": 688305,
+  "errors": 0
+}

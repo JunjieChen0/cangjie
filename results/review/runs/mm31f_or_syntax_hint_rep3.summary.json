@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dataset": "original",
+    "model": "minimax-m3.1-flash",
+    "prompt": "syntax",
+    "feedback": "hint",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/mm31f_or_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": false,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/mm31f_or_syntax_hint_rep3.jsonl"
+  },
+  "n": 30,
+  "prompt_version": 2,
+  "model_resolved": "minimax-m3.1-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    80.0,
+    96.67,
+    96.67,
+    96.67,
+    96.67,
+    96.67
+  ],
+  "round0_compile_rate": 83.33,
+  "total_prompt_tokens": 43578,
+  "total_completion_tokens": 91659,
+  "errors": 0
+}

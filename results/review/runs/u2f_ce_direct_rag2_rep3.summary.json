@@ -1,0 +1,39 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "u2-flash",
+    "prompt": "direct",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/u2f_ce_direct_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 8,
+    "output": "/root/cangjie/results/review/runs/u2f_ce_direct_rag2_rep3.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "u2-flash",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    13.1,
+    33.33,
+    50.0,
+    59.52,
+    61.9,
+    67.86
+  ],
+  "round0_compile_rate": 22.62,
+  "total_prompt_tokens": 1297969,
+  "total_completion_tokens": 4019928,
+  "errors": 0,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 94052,
+  "total_rewrite_completion_tokens": 188349
+}

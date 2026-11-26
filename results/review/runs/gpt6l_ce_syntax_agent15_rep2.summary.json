@@ -1,0 +1,46 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "gpt-6-luna",
+    "prompt": "syntax",
+    "feedback": "agent",
+    "rounds": 15,
+    "init": "/root/cangjie/results/review/r0/gpt6l_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 4,
+    "output": "/root/cangjie/results/review/runs/gpt6l_ce_syntax_agent15_rep2.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "gpt-6-luna",
+  "temperature_used": [
+    0.3
+  ],
+  "pass@1_by_round": [
+    28.57,
+    40.48,
+    46.43,
+    51.19,
+    57.14,
+    60.71,
+    60.71,
+    61.9,
+    63.1,
+    65.48,
+    66.67,
+    66.67,
+    69.05,
+    70.24,
+    70.24,
+    70.24
+  ],
+  "round0_compile_rate": 45.24,
+  "total_prompt_tokens": 5709050,
+  "total_completion_tokens": 967636,
+  "errors": 0
+}

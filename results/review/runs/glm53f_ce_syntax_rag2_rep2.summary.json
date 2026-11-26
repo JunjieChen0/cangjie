@@ -1,0 +1,37 @@
+{
+  "config": {
+    "dataset": "classeval",
+    "model": "glm-5-3-flash-260828",
+    "prompt": "syntax",
+    "feedback": "rag2",
+    "rounds": 5,
+    "init": "/root/cangjie/results/review/r0/glm53f_ce_syntax_r0.jsonl",
+    "strip_main": true,
+    "compile_only_feedback": false,
+    "all_tests": true,
+    "temperature": 0.3,
+    "limit": 0,
+    "ids": null,
+    "workers": 10,
+    "output": "/root/cangjie/results/review/runs/glm53f_ce_syntax_rag2_rep2.jsonl"
+  },
+  "n": 84,
+  "prompt_version": 2,
+  "model_resolved": "glm-5-3-flash-260828",
+  "temperature_used": [],
+  "pass@1_by_round": [
+    33.33,
+    33.33,
+    33.33,
+    33.33,
+    33.33,
+    33.33
+  ],
+  "round0_compile_rate": 33.33,
+  "total_prompt_tokens": 0,
+  "total_completion_tokens": 0,
+  "errors": 56,
+  "rewrite_model": "doubao-seed-2-0-mini-260428",
+  "total_rewrite_prompt_tokens": 0,
+  "total_rewrite_completion_tokens": 0
+}
