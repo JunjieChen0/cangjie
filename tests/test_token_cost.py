@@ -78,3 +78,4 @@ def test_rag2_rewrite_tokens_are_costed_at_rewriter_price(tmp_path):
     assert [(r["model"], r["category"]) for r in rows] == [(DS, "review"), (DB, "review")]
     lines = {(x["category"], x["model"]): x for x in T.aggregate(rows)}
     assert lines[("review", "all")]["cny"] == 2.0 + 2.0          # DeepSeek 输入 1M×2 元 + 改写输出 1M×2 元
+    assert lines[("review", "all")]["runs"] == 1                  # 改写只计费，不算一次运行

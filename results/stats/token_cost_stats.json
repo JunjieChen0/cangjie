@@ -162,7 +162,7 @@
     {
       "category": "review",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 213,
+      "runs": 54,
       "prompt_tokens": 157363835,
       "completion_tokens": 46858318,
       "usd": 18.77,
@@ -243,7 +243,7 @@
     {
       "category": "review",
       "model": "all",
-      "runs": 1267,
+      "runs": 1108,
       "prompt_tokens": 872975020,
       "completion_tokens": 1412788760,
       "usd": 1600.97,
@@ -315,7 +315,7 @@
     {
       "category": "early",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 27,
+      "runs": 26,
       "prompt_tokens": 22566834,
       "completion_tokens": 21010644,
       "usd": 6.98,
@@ -351,7 +351,7 @@
     {
       "category": "early",
       "model": "all",
-      "runs": 40,
+      "runs": 39,
       "prompt_tokens": 24314024,
       "completion_tokens": 28939697,
       "usd": 24.52,
@@ -360,7 +360,7 @@
     {
       "category": "formal",
       "model": "all",
-      "runs": 1451,
+      "runs": 1292,
       "prompt_tokens": 1008547768,
       "completion_tokens": 1528715198,
       "usd": 1726.74,
@@ -369,7 +369,7 @@
     {
       "category": "total",
       "model": "doubao-seed-2-0-mini-260428",
-      "runs": 418,
+      "runs": 258,
       "prompt_tokens": 308211155,
       "completion_tokens": 127558703,
       "usd": 47.49,
@@ -450,7 +450,7 @@
     {
       "category": "total",
       "model": "all",
-      "runs": 1659,
+      "runs": 1499,
       "prompt_tokens": 1042630916,
       "completion_tokens": 1565901314,
       "usd": 1763.5,

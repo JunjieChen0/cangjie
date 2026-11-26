@@ -75,7 +75,7 @@ def load_usage(root: str = ROOT) -> list[dict]:
 def _line(cat: str, model: str, items: list[dict]) -> dict:
     def total(fn):
         return round(sum(fn(r["model"], r["prompt_tokens"], r["completion_tokens"]) for r in items), 2)
-    return {"category": cat, "model": model, "runs": len(items),
+    return {"category": cat, "model": model, "runs": sum(not r["path"].endswith("#rewrite") for r in items),  # 改写行只计费
             "prompt_tokens": sum(r["prompt_tokens"] for r in items),
             "completion_tokens": sum(r["completion_tokens"] for r in items),
             "usd": total(usd_cost), "cny": total(cny_cost)}
