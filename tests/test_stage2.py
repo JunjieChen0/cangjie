@@ -139,3 +139,15 @@ def test_get_client_routes_u2_models_to_unisound(monkeypatch):
     assert llm.get_client("doubao-seed-2-0-mini-260428") == ("LLM_BASE_URL", "LLM_API_KEY")
     llm.get_client("u2-flash")
     assert len(made) == 2                       # 每个服务商只建一次客户端
+
+
+def test_chat_records_served_model_when_api_returns_it(monkeypatch):
+    def create(model, messages, temperature):
+        return SimpleNamespace(model="gpt-6-luna-2026-10-01",
+                               usage=SimpleNamespace(prompt_tokens=1, completion_tokens=2),
+                               choices=[SimpleNamespace(message=SimpleNamespace(content="ok"))])
+
+    fake = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+    monkeypatch.setattr(llm, "_client", fake)
+    _, usage = llm.chat([{"role": "user", "content": "hi"}], model="m", temperature=0.3)
+    assert usage["served_model"] == "gpt-6-luna-2026-10-01"

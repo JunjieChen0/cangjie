@@ -53,3 +53,17 @@ def test_agent_budget_counts_every_model_call():
     assert not res.passed and code == "v1" and len(obs) == 3
     assert [h["action"] for h in hist] == ["invalid", "search", "test"]
     assert "neither" in obs[1]
+
+
+def test_solve_records_served_models_per_problem(monkeypatch):
+    served = iter(["m-a", "m-b", "m-a"])
+    monkeypatch.setattr(repair, "chat", lambda messages, model, temperature: (
+        "```cangjie\nfunc f() {}\n```",
+        {"prompt_tokens": 1, "completion_tokens": 1, "temperature": temperature, "served_model": next(served)}))
+    results = iter([RunResult(False, "compile_error", compile_stderr="e"), RunResult(False, "compile_error", compile_stderr="e"),
+                    RunResult(True, "passed")])
+    monkeypatch.setattr(repair, "evaluate", lambda code, item, all_tests: next(results))
+    args = SimpleNamespace(strip_main=False, model="m", temperature=0.3, feedback="raw", rounds=5,
+                           compile_only_feedback=False, all_tests=False, prompt="direct")
+    row = repair.solve({"id": 1, "prompt": "q"}, args, "", None)
+    assert row["passed"] and row["served_models"] == ["m-a", "m-b"]

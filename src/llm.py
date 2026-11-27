@@ -66,7 +66,8 @@ def get_client(model: str | None = None):
 
 def chat(messages: list[dict], model: str | None = None, temperature: float = 0.0,
          max_retries: int = 5) -> tuple[str, dict]:
-    """返回 (回复文本, token 用量)。usage 中额外带上本次实际使用的 temperature。"""
+    """返回 (回复文本, token 用量)。usage 中额外带上本次实际使用的 temperature，
+    以及服务端返回的模型标识 served_model（响应中有 model 字段时）。"""
     model = model or os.environ.get("LLM_MODEL", "deepseek-chat")
     for attempt in range(max_retries):
         try:
@@ -77,6 +78,9 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
             usage = {"prompt_tokens": getattr(u, "prompt_tokens", 0) or 0,
                      "completion_tokens": getattr(u, "completion_tokens", 0) or 0,
                      "temperature": temperature}
+            served = getattr(resp, "model", None)   # 服务端返回的模型标识（中转服务可能与请求的不同）
+            if served:
+                usage["served_model"] = served
             return resp.choices[0].message.content or "", usage
         except Exception as e:  # 限流/网络抖动时退避重试
             if "temperature" in str(e) and temperature != 1.0:

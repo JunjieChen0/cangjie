@@ -117,3 +117,47 @@ def test_rag2_jobs_cover_all_models_and_reuse_r0():
     cmd = M.build_cmd(j, M.out_dir(False, "review"), False, 4)
     assert cmd[cmd.index("--feedback") + 1] == "rag2" and cmd[cmd.index("--rounds") + 1] == "5"
     assert j.init_matrix == "stage3"
+
+
+# ---------- 修订实验（docs/修订实验方案.md）----------
+def test_revision_matrix_has_fixed15_and_kimi_linux_reruns_only():
+    r0, rep = M.expand_matrix("revision")
+    assert r0 == []                                   # 第 0 轮全部复用已有矩阵
+    names = {j.name for j in rep}
+    assert len(names) == len(rep) == 3 * 2 * 3 + 2 * 3
+    assert {f"{m}_ce_direct_{fb}_rep{r}" for m in ("doubao21l", "gpt6l", "ds_v41f")
+            for fb in ("raw15", "rag15") for r in M.REPS} <= names
+    assert {f"kimik31p_ce_direct_{fb}_rep{r}" for fb in ("blind", "agent") for r in M.REPS} <= names
+    assert M.out_dir(False, "revision").replace("\\", "/").endswith("results/revision/")
+
+
+def test_fixed15_jobs_use_15_rounds_base_feedback_and_shared_r0():
+    _, rep = M.expand_matrix("revision")
+    base = M.out_dir(False, "revision")
+    for name, fb, r0_dir in (("doubao21l_ce_direct_raw15_rep1", "raw", "review"),
+                             ("gpt6l_ce_direct_rag15_rep3", "rag", "review"),
+                             ("ds_v41f_ce_direct_raw15_rep2", "raw", "stage3")):
+        j = next(x for x in rep if x.name == name)
+        assert j.rounds == 15 and j.temp == M.TEMP and j.env == {"LLM_TIMEOUT": "1800"}
+        cmd = M.build_cmd(j, base, False, 4)
+        assert cmd[cmd.index("--feedback") + 1] == fb and cmd[cmd.index("--rounds") + 1] == "15"
+        assert "--all-tests" in cmd
+        model = name.split("_ce_")[0]
+        assert cmd[cmd.index("--init") + 1].replace("\\", "/").endswith(
+            f"results/{r0_dir}/r0/{model}_ce_direct_r0.jsonl")
+        assert cmd[cmd.index("-o") + 1].replace("\\", "/").endswith(f"results/revision/runs/{name}.jsonl")
+
+
+def test_kimi_reruns_match_review_protocol():
+    _, rep = M.expand_matrix("revision")
+    kimi = [j for j in rep if j.model == "kimik31p"]
+    assert len(kimi) == 6
+    assert all(j.temp == M.KIMI_TEMP and j.env == {"LLM_TIMEOUT": M.KIMI_REVIEW_TIMEOUT} for j in kimi)
+    assert all(j.rounds == M.ROUNDS and j.init_matrix == "review" for j in kimi)
+    cmd = M.build_cmd(next(j for j in kimi if j.feedback == "agent"), M.out_dir(False, "revision"), False, 4)
+    assert cmd[cmd.index("--feedback") + 1] == "agent" and cmd[cmd.index("--rounds") + 1] == "5"
+
+
+def test_revision_does_not_change_review_matrix():
+    _, rep = M.expand_matrix("review")
+    assert not [j for j in rep if j.feedback in ("raw15", "rag15")]

@@ -8,6 +8,7 @@
   python src/run_matrix.py --pilot -p 2              # 试跑：每组 10 题，输出到 results/stage3/pilot/
   python src/run_matrix.py -p 2 --only doubao        # 正式跑（--only 按名称正则筛选）
   python src/run_matrix.py --check                   # 只做检查：完成度、errors、第 0 轮一致性、实际温度
+  python src/run_matrix.py --matrix revision -p 2    # 投稿前修订实验（docs/修订实验方案.md）
 """
 from __future__ import annotations
 
@@ -36,7 +37,7 @@ MODELS = {
 }
 N_TASKS = {"he": 164, "ce": 84, "or": 30}
 DATASET_ARG = {"he": "humaneval", "ce": "classeval", "or": "original"}
-OUT_SUBDIR = {"stage3": "stage3", "original": "original30", "review": "review"}
+OUT_SUBDIR = {"stage3": "stage3", "original": "original30", "review": "review", "revision": "revision"}
 NEW_MODELS = ("glm53f", "doubao21l", "u2f", "mm31f", "haiku55", "gpt6l")
 KIMI_REVIEW_TIMEOUT = "1800"
 PILOT_LIMIT = 10
@@ -66,13 +67,15 @@ class Job:
 
 
 AGENT_ARMS = {"agent": ROUNDS, "agent15": 15}       # Agent 基线：与修复循环同预算（5 步）与放宽预算（15 步）
-FEEDBACK_ARG = {"agent15": "agent"}                 # 组名中的反馈 → repair.py --feedback 的取值
+FIXED15_ARMS = {"raw15": 15, "rag15": 15}           # 修订实验：固定反馈放宽到 15 轮，与 agent15 同预算
+ARM_ROUNDS = {**AGENT_ARMS, **FIXED15_ARMS}
+FEEDBACK_ARG = {"agent15": "agent", "raw15": "raw", "rag15": "rag"}   # 组名中的反馈 → repair.py --feedback 的取值
 
 
 def _repairs(model, ds, prompt, feedbacks, reps=REPS, temp=TEMP, compile_only=False, env=None, init_matrix=None):
     tag = "_co" if compile_only else ""
     return [Job(f"{model}_{ds}_{prompt}_{fb}{tag}_rep{r}", model, ds, prompt, temp, fb, compile_only, r, env or {},
-                AGENT_ARMS.get(fb, ROUNDS), init_matrix)
+                ARM_ROUNDS.get(fb, ROUNDS), init_matrix)
             for fb in feedbacks for r in reps]
 
 
@@ -145,10 +148,25 @@ def _arm_jobs(arms: tuple[str, ...]) -> list[Job]:
     return rep + _repairs("ds_v41f", "ce", "syntax", arms, env=env)        # 第 0 轮在 review 中新生成
 
 
+# 修订实验的 15 轮固定反馈：模型 → 共享第 0 轮所在矩阵（与同格已有的 raw / rag / agent15 配对）
+REVISION_FIXED15 = {"doubao21l": "review", "gpt6l": "review", "ds_v41f": "stage3"}
+
+
+def _revision_repairs() -> list[Job]:
+    """投稿前修订实验（results/revision/，见 docs/修订实验方案.md）：三个模型 ClassEval direct 的 raw15 / rag15，
+    以及在 Linux 上重跑 Kimi ClassEval direct 的 blind / agent（原来的 6 次在 Windows 上完成）。第 0 轮全部复用。"""
+    rep = []
+    for m, init in REVISION_FIXED15.items():
+        rep += _repairs(m, "ce", "direct", tuple(FIXED15_ARMS), env={"LLM_TIMEOUT": "1800"}, init_matrix=init)
+    return rep + _repairs("kimik31p", "ce", "direct", ("blind", "agent"), temp=KIMI_TEMP,
+                          env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT}, init_matrix="review")
+
+
 def expand_matrix(matrix: str = "stage3") -> tuple[list[Job], list[Job]]:
-    """返回 (第 0 轮任务, 修复任务)。matrix 为 stage3（默认）、original 或 review。
+    """返回 (第 0 轮任务, 修复任务)。matrix 为 stage3（默认）、original、review 或 revision。
     第 0 轮取自其他矩阵的修复组（init_matrix）不在本矩阵生成第 0 轮。"""
-    rep = {"stage3": _stage3_repairs, "original": _original_repairs, "review": _review_repairs}[matrix]()
+    rep = {"stage3": _stage3_repairs, "original": _original_repairs, "review": _review_repairs,
+           "revision": _revision_repairs}[matrix]()
     r0, seen = [], set()
     for j in rep:
         if j.init_matrix is None and j.r0_name not in seen:
@@ -280,7 +298,8 @@ def select(r0_jobs: list[Job], rep_jobs: list[Job], pattern: str | None) -> tupl
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--matrix", choices=sorted(OUT_SUBDIR), default="stage3",
-                    help="stage3 = 第 3 阶段矩阵（results/stage3/）；original = 新题集（results/original30/）；review = 审稿后补充实验（results/review/）")
+                    help="stage3 = 第 3 阶段矩阵（results/stage3/）；original = 新题集（results/original30/）；"
+                         "review = 审稿后补充实验（results/review/）；revision = 投稿前修订实验（results/revision/）")
     ap.add_argument("--pilot", action="store_true", help=f"每组只跑 {PILOT_LIMIT} 题，输出到 <结果目录>/pilot/")
     ap.add_argument("--only", help="只运行名称匹配该正则的组（所需的第 0 轮自动包含）")
     ap.add_argument("-p", "--parallel", type=int, default=1, help="同时运行的组数")

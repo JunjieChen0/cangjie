@@ -183,6 +183,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
     history, usage_total = [], {"prompt_tokens": 0, "completion_tokens": 0}
     rewrite_total = {"prompt_tokens": 0, "completion_tokens": 0}     # rag2 查询改写（REWRITER）的用量，单独记账
     temps_used: set[float] = set()
+    served: set[str] = set()       # 服务端返回的模型标识（docs/修订实验方案.md 第五节）
 
     def post(code: str) -> str:
         return strip_main(code) if args.strip_main else code
@@ -195,6 +196,8 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         for k in usage_total:
             usage_total[k] += u[k]
         temps_used.add(u.get("temperature", args.temperature))
+        if u.get("served_model"):
+            served.add(u["served_model"])
         return reply
 
     def ask() -> str:
@@ -219,7 +222,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
         res, code = agent_steps(item, args, res, code, ask_raw, post, record)
         return {"id": item["id"], "passed": res.passed, "rounds_used": len(history) - 1, "usage": usage_total,
                 "history": history, "solution": code, "model": args.model or os.environ.get("LLM_MODEL"),
-                "temperature_used": sorted(temps_used)}
+                "temperature_used": sorted(temps_used), "served_models": sorted(served)}
 
     for rnd in range(args.rounds + 1):
         if args.compile_only_feedback:
@@ -244,7 +247,7 @@ def solve(item: dict, args, syntax_rule: str, init_code: str | None) -> dict:
     row = {"id": item["id"], "passed": history[-1]["failure_kind"] == "passed",
            "rounds_used": len(history) - 1, "usage": usage_total, "history": history,
            "solution": code, "model": args.model or os.environ.get("LLM_MODEL"),
-           "temperature_used": sorted(temps_used)}
+           "temperature_used": sorted(temps_used), "served_models": sorted(served)}
     if args.feedback == "rag2":
         row["rewrite_usage"] = rewrite_total
     return row
@@ -334,6 +337,7 @@ def main():
         "config": vars(args), "n": n, "prompt_version": P.PROMPT_VERSION,
         "model_resolved": args.model or os.environ.get("LLM_MODEL"),
         "temperature_used": sorted({t for r in rows for t in r.get("temperature_used", [])}),
+        "served_models": sorted({m for r in rows for m in r.get("served_models", [])}),
         "pass@1_by_round": curve,
         "round0_compile_rate": round(100 * sum(
             1 for r in rows if r.get("history") and r["history"][0]["failure_kind"] != "compile_error") / n, 2),
