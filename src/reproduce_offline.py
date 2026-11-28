@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STEPS = (["stage3_stats.py"], ["stage3_stats.py", "--matrix", "original"], ["rounds10_stats.py"],
          ["residual_failures.py"], ["extra_stats.py"], ["token_cost.py"], ["manual_check_agreement.py"],
          ["review_stats.py"], ["sensitivity_report.py"], ["robustness_checks.py"], ["posthoc_checks.py"],
-         ["case_examples.py"],
+         ["case_examples.py"], ["heldout_eval.py", "stats"],
          ["plot_figures.py"])
 OUTPUT_GLOBS = ("results/stats/*.md", "results/stats/*.json", "results/case_examples.md",
                 "results/retrieval_eval/manual_check_agreement.*", "results/figures/*.png")
