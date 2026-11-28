@@ -124,7 +124,7 @@ def test_revision_matrix_has_fixed15_and_kimi_linux_reruns_only():
     r0, rep = M.expand_matrix("revision")
     assert r0 == []                                   # 第 0 轮全部复用已有矩阵
     names = {j.name for j in rep}
-    assert len(names) == len(rep) == 3 * 2 * 3 + 2 * 3
+    assert len(names) == len(rep) == 3 * 2 * 3 + 2 * 3 + 3 * 3
     assert {f"{m}_ce_direct_{fb}_rep{r}" for m in ("doubao21l", "gpt6l", "ds_v41f")
             for fb in ("raw15", "rag15") for r in M.REPS} <= names
     assert {f"kimik31p_ce_direct_{fb}_rep{r}" for fb in ("blind", "agent") for r in M.REPS} <= names
@@ -156,6 +156,24 @@ def test_kimi_reruns_match_review_protocol():
     assert all(j.rounds == M.ROUNDS and j.init_matrix == "review" for j in kimi)
     cmd = M.build_cmd(next(j for j in kimi if j.feedback == "agent"), M.out_dir(False, "revision"), False, 4)
     assert cmd[cmd.index("--feedback") + 1] == "agent" and cmd[cmd.index("--rounds") + 1] == "5"
+
+
+def test_gpt_redo_matches_review_jobs_except_r0_and_output():
+    """方案第十二节：MyUSAPI 补跑的 raw / rag / agent15 与 review 同名组参数相同，第 0 轮取 review，输出到 revision。"""
+    _, rev = M.expand_matrix("revision")
+    _, old = M.expand_matrix("review")
+    redo = [j for j in rev if j.model == "gpt6l" and j.feedback in M.REVISION_GPT_REDO]
+    assert len(redo) == 9
+    rb, ob = M.out_dir(False, "revision"), M.out_dir(False, "review")
+    for j in redo:
+        o = next(x for x in old if x.name == j.name)
+        assert (j.temp, j.rounds, j.env, j.feedback) == (o.temp, o.rounds, o.env, o.feedback)
+        assert j.init_matrix == "review" and o.init_matrix is None
+        a, b = M.build_cmd(j, rb, False, 4), M.build_cmd(o, ob, False, 4)
+        assert a[a.index("--init") + 1] == b[b.index("--init") + 1]          # 同一份共享第 0 轮
+        assert a[a.index("-o") + 1].replace("\\", "/").endswith(f"results/revision/runs/{j.name}.jsonl")
+        strip = lambda c: [x for i, x in enumerate(c) if i not in (c.index("-o") + 1,)]   # noqa: E731
+        assert strip(a) == strip(b)
 
 
 def test_revision_does_not_change_review_matrix():

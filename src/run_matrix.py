@@ -158,8 +158,13 @@ def _revision_repairs() -> list[Job]:
     rep = []
     for m, init in REVISION_FIXED15.items():
         rep += _repairs(m, "ce", "direct", tuple(FIXED15_ARMS), env={"LLM_TIMEOUT": "1800"}, init_matrix=init)
-    return rep + _repairs("kimik31p", "ce", "direct", ("blind", "agent"), temp=KIMI_TEMP,
-                          env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT}, init_matrix="review")
+    rep += _repairs("kimik31p", "ce", "direct", ("blind", "agent"), temp=KIMI_TEMP,
+                    env={"LLM_TIMEOUT": KIMI_REVIEW_TIMEOUT}, init_matrix="review")
+    # 方案第十二节：GPT-6-Luna 族 B 统一到 MyUSAPI，补跑 raw / rag / agent15（参数同 review 中的同名组）
+    return rep + _repairs("gpt6l", "ce", "direct", REVISION_GPT_REDO, env={"LLM_TIMEOUT": "1800"}, init_matrix="review")
+
+
+REVISION_GPT_REDO = ("raw", "rag", "agent15")
 
 
 def expand_matrix(matrix: str = "stage3") -> tuple[list[Job], list[Job]]:
