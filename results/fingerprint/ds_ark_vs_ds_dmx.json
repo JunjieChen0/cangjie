@@ -1,0 +1,108 @@
+{
+ "a": "ds_ark",
+ "b": "ds_dmx",
+ "n_prompts": 10,
+ "prompt_tokens": {
+  "0": [
+   601,
+   601
+  ],
+  "1": [
+   623,
+   623
+  ],
+  "10": [
+   550,
+   550
+  ],
+  "11": [
+   602,
+   602
+  ],
+  "12": [
+   1210,
+   1210
+  ],
+  "13": [
+   509,
+   509
+  ],
+  "15": [
+   554,
+   554
+  ],
+  "16": [
+   668,
+   668
+  ],
+  "17": [
+   2626,
+   2626
+  ],
+  "18": [
+   752,
+   752
+  ]
+ },
+ "served": {
+  "ds_ark": [
+   "deepseek-v4-1-flash-261017"
+  ],
+  "ds_dmx": [
+   "deepseek-v4.1-flash-1017"
+  ]
+ },
+ "within": {
+  "ds_ark": {
+   "n": 10,
+   "identical_rate": 0.0,
+   "median_lp_diff": 0.0029
+  },
+  "ds_dmx": {
+   "n": 10,
+   "identical_rate": 0.0,
+   "median_lp_diff": 0.0027
+  }
+ },
+ "cross": {
+  "n": 20,
+  "identical_rate": 0.0,
+  "median_lp_diff": 0.0029
+ },
+ "has_logprobs": true,
+ "checks": {
+  "C1_prompt_tokens_equal": true,
+  "C2_logprob_close": true,
+  "C3_cross_agreement": true
+ },
+ "verdict": "一致",
+ "descriptive": {
+  "top5": {
+   "ds_ark": {
+    "positions": 69,
+    "top5_overlap": 0.835,
+    "top1_agree": 0.957,
+    "median_lp_diff": 0.4196,
+    "p90_lp_diff": 2.375
+   },
+   "ds_dmx": {
+    "positions": 75,
+    "top5_overlap": 0.912,
+    "top1_agree": 0.96,
+    "median_lp_diff": 0.367,
+    "p90_lp_diff": 1.8105
+   },
+   "cross": {
+    "positions": 142,
+    "top5_overlap": 0.793,
+    "top1_agree": 0.93,
+    "median_lp_diff": 0.7376,
+    "p90_lp_diff": 3.0233
+   }
+  },
+  "median_completion_tokens": {
+   "ds_ark": 20.0,
+   "ds_dmx": 20.0
+  }
+ }
+}

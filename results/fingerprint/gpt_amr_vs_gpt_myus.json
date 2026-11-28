@@ -1,0 +1,86 @@
+{
+ "a": "gpt_amr",
+ "b": "gpt_myus",
+ "n_prompts": 10,
+ "prompt_tokens": {
+  "0": [
+   583,
+   583
+  ],
+  "1": [
+   583,
+   583
+  ],
+  "10": [
+   504,
+   504
+  ],
+  "11": [
+   573,
+   573
+  ],
+  "12": [
+   1169,
+   1169
+  ],
+  "13": [
+   487,
+   487
+  ],
+  "15": [
+   539,
+   539
+  ],
+  "16": [
+   635,
+   635
+  ],
+  "17": [
+   2633,
+   2633
+  ],
+  "18": [
+   720,
+   720
+  ]
+ },
+ "served": {
+  "gpt_amr": [
+   "gpt-6-luna"
+  ],
+  "gpt_myus": [
+   "gpt-6-luna"
+  ]
+ },
+ "within": {
+  "gpt_amr": {
+   "n": 10,
+   "identical_rate": 0.0,
+   "median_lp_diff": null
+  },
+  "gpt_myus": {
+   "n": 10,
+   "identical_rate": 0.0,
+   "median_lp_diff": null
+  }
+ },
+ "cross": {
+  "n": 20,
+  "identical_rate": 0.0,
+  "median_lp_diff": null
+ },
+ "has_logprobs": false,
+ "checks": {
+  "C1_prompt_tokens_equal": true,
+  "C2_logprob_close": null,
+  "C3_cross_agreement": true
+ },
+ "verdict": "一致",
+ "descriptive": {
+  "top5": null,
+  "median_completion_tokens": {
+   "gpt_amr": 3123.0,
+   "gpt_myus": 1023.5
+  }
+ }
+}

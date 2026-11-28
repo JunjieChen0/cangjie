@@ -32,17 +32,18 @@ def messages_for(item: dict) -> list[dict]:
             {"role": "user", "content": P.DIRECT.format(question=item["prompt"])}]
 
 
-def one_call(client, model: str, msgs: list[dict], temperature: float) -> dict:
-    kw = dict(model=model, messages=msgs, temperature=temperature, max_tokens=MAX_TOKENS)
+def one_call(client, model: str, msgs: list[dict], temperature: float, max_tokens: int = MAX_TOKENS) -> dict:
+    """max_tokens = 0 表示不设上限（推理模型在 20 个 token 内只做内部推理、返回空 choices）。"""
+    kw = dict(model=model, messages=msgs, temperature=temperature, **({"max_tokens": max_tokens} if max_tokens else {}))
     try:
         try:
             resp = client.chat.completions.create(**kw, logprobs=True, top_logprobs=TOP_K)
-        except Exception as e:                 # 渠道不接受 logprobs 参数时退回不带 logprobs
-            if "logprob" not in str(e).lower():
-                raise
+        except Exception:                      # 渠道不接受 logprobs 时（有的只报笼统的 400）退回不带 logprobs；再失败才记为错误
             resp = client.chat.completions.create(**kw)
     except Exception as e:
         return {"error": f"{type(e).__name__}: {str(e)[:300]}"}
+    if not getattr(resp, "choices", None):
+        return {"error": f"empty choices: {str(resp)[:300]}"}
     ch, u = resp.choices[0], resp.usage
     lp = getattr(ch, "logprobs", None)
     toks = ([{"t": t.token, "lp": t.logprob, "top": [[x.token, x.logprob] for x in (t.top_logprobs or [])]}
@@ -60,13 +61,13 @@ def cmd_probe(a) -> None:
     calls = []
     for i in task_ids():
         for rep in range(REPS):
-            c = {"id": i, "rep": rep, **one_call(client, a.model, messages_for(items[i]), a.temperature)}
+            c = {"id": i, "rep": rep, **one_call(client, a.model, messages_for(items[i]), a.temperature, a.max_tokens)}
             calls.append(c)
             print(i, rep, c.get("served_model"), c.get("prompt_tokens"), "logprobs" if c.get("tokens") else "-",
                   c.get("error", ""), flush=True)
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     with open(a.out, "w", encoding="utf-8", newline="\n") as f:
-        json.dump({"name": a.name, "model": a.model, "temperature": a.temperature, "calls": calls},
+        json.dump({"name": a.name, "model": a.model, "temperature": a.temperature, "max_tokens": a.max_tokens, "calls": calls},
                   f, ensure_ascii=False, indent=1)
     print("写入", a.out)
 
@@ -114,17 +115,50 @@ def compare(a: dict, b: dict) -> dict:
     c3 = (cross["identical_rate"] >= min(w) - AGREE_MARGIN
           if greedy and w and cross["identical_rate"] is not None else None)
     checks = {"C1_prompt_tokens_equal": c1, "C2_logprob_close": c2, "C3_cross_agreement": c3}
+    pairs_w = {n: [(c[(i, 0)], c[(i, 1)]) for i in ids if (i, 0) in c and (i, 1) in c]
+               for n, c in ((a["name"], ca), (b["name"], cb))}
+    pairs_x = [(ca[(i, r)], cb[(i, r)]) for i in ids for r in range(REPS) if (i, r) in ca and (i, r) in cb]
+    def comp(c: dict) -> float | None:
+        v = [x["completion_tokens"] for x in c.values() if x.get("completion_tokens")]
+        return st.median(v) if v else None
+    descriptive = {                         # 事后补充的描述性指标（方案第十一节补记），不参与判定
+        "top5": ({n: top5_stats(p) for n, p in pairs_w.items()} | {"cross": top5_stats(pairs_x)}) if has_lp else None,
+        "median_completion_tokens": {a["name"]: comp(ca), b["name"]: comp(cb)}}
     return {"a": a["name"], "b": b["name"], "n_prompts": len(ids), "prompt_tokens": pt,
             "served": {a["name"]: sorted({str(c["served_model"]) for c in ca.values()}),
                        b["name"]: sorted({str(c["served_model"]) for c in cb.values()})},
             "within": within, "cross": cross, "has_logprobs": has_lp, "checks": checks,
-            "verdict": "一致" if c1 and c2 is not False and c3 is not False else "不一致"}
+            "verdict": "一致" if c1 and c2 is not False and c3 is not False else "不一致",
+            "descriptive": descriptive}
+
+
+def top5_stats(pairs: list[tuple]) -> dict:
+    """在上下文相同的位置（公共前缀及分叉位）比较两次调用的 top-5 分布：重合率、top-1 一致率、共有候选的 |logprob 差|。"""
+    diffs, overlap, top1 = [], [], []
+    for x, y in pairs:
+        k = pair_stats(x, y)["prefix"]
+        for j in range(min(k + 1, len(x["tokens"]), len(y["tokens"]))):
+            px, py = dict(map(tuple, x["tokens"][j]["top"])), dict(map(tuple, y["tokens"][j]["top"]))
+            if not px or not py:
+                continue
+            common = set(px) & set(py)
+            overlap.append(len(common) / TOP_K)
+            diffs += [abs(px[t] - py[t]) for t in common]
+            top1.append(max(px, key=px.get) == max(py, key=py.get))
+    if not overlap:
+        return {"positions": 0}
+    return {"positions": len(overlap), "top5_overlap": round(st.mean(overlap), 3), "top1_agree": round(st.mean(top1), 3),
+            "median_lp_diff": round(st.median(diffs), 4), "p90_lp_diff": round(sorted(diffs)[int(0.9 * len(diffs))], 4)}
 
 
 def cmd_compare(a) -> None:
     with open(a.a, encoding="utf-8") as f, open(a.b, encoding="utf-8") as g:
         res = compare(json.load(f), json.load(g))
-    print(json.dumps(res, ensure_ascii=False, indent=1, default=str))
+    text = json.dumps(res, ensure_ascii=False, indent=1, default=str)
+    if a.out:
+        with open(a.out, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text + "\n")
+    print(text)
 
 
 if __name__ == "__main__":
@@ -136,9 +170,11 @@ if __name__ == "__main__":
     p.add_argument("--key-env", required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--temperature", type=float, default=0.0)
+    p.add_argument("--max-tokens", type=int, default=MAX_TOKENS)
     p.add_argument("--out", required=True)
     c = sub.add_parser("compare")
     c.add_argument("a")
     c.add_argument("b")
+    c.add_argument("--out")
     args = ap.parse_args()
     cmd_probe(args) if args.cmd == "probe" else cmd_compare(args)
